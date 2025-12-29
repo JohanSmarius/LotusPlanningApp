@@ -15,6 +15,9 @@ public class StaffAssignment
     [Required]
     public int StaffId { get; set; }
 
+    [Required]
+    public StaffRole Role { get; set; }
+
     public AssignmentStatus Status { get; set; } = AssignmentStatus.Assigned;
 
     public DateTime? CheckInTime { get; set; }

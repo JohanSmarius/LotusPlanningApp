@@ -219,7 +219,9 @@ else
                                                 <div class="flex-grow-1">
                                                     <h6 class="mb-1">@assignment.Staff.FullName</h6>
                                                     <div class="d-flex align-items-center">
-                                                        <span class="badge bg-@GetRoleColor(assignment.Staff.Role) me-2">@assignment.Staff.Role</span>
+                                                        <span class="badge bg-@GetRoleColor(assignment.Role) me-2">
+                                                            <i class="fas fa-user-tag me-1"></i>@assignment.Role
+                                                        </span>
                                                         <span class="badge bg-@GetAssignmentStatusColor(assignment.Status)">@assignment.Status</span>
                                                     </div>
                                                     @if (!string.IsNullOrEmpty(assignment.Staff.Phone))
@@ -363,6 +365,16 @@ else
                                                                 <br><i class="fas fa-phone me-1"></i>@staffMember.Phone
                                                             }
                                                         </small>
+                                                        @if (editShift.RequiredStaff > 2)
+                                                        {
+                                                            <div class="mt-2">
+                                                                <label class="form-label small mb-1">Rol voor deze dienst:</label>
+                                                                <select class="form-select form-select-sm" @bind="staffRoleSelections[staffMember.Id]">
+                                                                    <option value="@StaffRole.LOTUS">LOTUS</option>
+                                                                    <option value="@StaffRole.Coordinator">Coördinator</option>
+                                                                </select>
+                                                            </div>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -433,6 +445,7 @@ else
     private List<Entities.Staff> availableStaff = new();
     private List<Entities.Staff> filteredAvailableStaff = new();
     private Entities.StaffAssignment? staffToRemove;
+    private Dictionary<int, StaffRole> staffRoleSelections = new();
 
     private string staffSearchTerm = string.Empty;
     private string staffRoleFilter = string.Empty;
@@ -516,6 +529,8 @@ else
                 if (isAvailable)
                 {
                     availableStaffList.Add(staffMember);
+                    // Initialize role selection with staff member's default role
+                    staffRoleSelections[staffMember.Id] = staffMember.Role;
                 }
             }
 
@@ -583,6 +598,7 @@ else
         showAddStaffDialog = false;
         availableStaff.Clear();
         filteredAvailableStaff.Clear();
+        staffRoleSelections.Clear();
         StateHasChanged();
     }
 
@@ -590,10 +606,16 @@ else
     {
         try
         {
+            // Get the selected role (or default to staff member's role if not in dictionary)
+            var selectedRole = staffRoleSelections.ContainsKey(staffMember.Id) 
+                ? staffRoleSelections[staffMember.Id] 
+                : staffMember.Role;
+
             var assignment = new Entities.StaffAssignment
             {
                 ShiftId = ShiftId,
                 StaffId = staffMember.Id,
+                Role = selectedRole,
                 Status = AssignmentStatus.Assigned
             };
 
@@ -604,8 +626,9 @@ else
             createdAssignment.Staff = staffMember;
             currentAssignments.Add(createdAssignment);
             
-            // Remove from available staff
+            // Remove from available staff and role selection
             availableStaff.Remove(staffMember);
+            staffRoleSelections.Remove(staffMember.Id);
             ApplyStaffFilters();
             
             // Close dialog if shift is now full
