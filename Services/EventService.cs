@@ -1,8 +1,8 @@
-using CleanArchitectureBlazor.Models;
-using CleanArchitectureBlazor.Data;
+using LotusPlanningApp.Models;
+using LotusPlanningApp.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchitectureBlazor.Services;
+namespace LotusPlanningApp.Services;
 
 /// <summary>
 /// Service for managing events

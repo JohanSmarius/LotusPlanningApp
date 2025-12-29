@@ -1,11 +1,11 @@
-using CleanArchitectureBlazor.Models;
-using CleanArchitectureBlazor.Configuration;
+using LotusPlanningApp.Models;
+using LotusPlanningApp.Configuration;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 using System.Net;
 using System.Text;
 
-namespace CleanArchitectureBlazor.Services;
+namespace LotusPlanningApp.Services;
 
 /// <summary>
 /// SMTP-based email service for sending notifications

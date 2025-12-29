@@ -1,4 +1,4 @@
-namespace CleanArchitectureBlazor.Configuration;
+namespace LotusPlanningApp.Configuration;
 
 /// <summary>
 /// Configuration options for email settings

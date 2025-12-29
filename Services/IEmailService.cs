@@ -1,6 +1,6 @@
-using CleanArchitectureBlazor.Models;
+using LotusPlanningApp.Models;
 
-namespace CleanArchitectureBlazor.Services;
+namespace LotusPlanningApp.Services;
 
 /// <summary>
 /// Service for sending emails

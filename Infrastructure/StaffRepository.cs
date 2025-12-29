@@ -1,4 +1,4 @@
-using CleanArchitectureBlazor.Data;
+using LotusPlanningApp.Data;
 using Entities;
 using Application;
 using Microsoft.EntityFrameworkCore;

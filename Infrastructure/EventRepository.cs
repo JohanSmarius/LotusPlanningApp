@@ -1,6 +1,6 @@
 using Application;
 using Entities;
-using CleanArchitectureBlazor.Data;
+using LotusPlanningApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

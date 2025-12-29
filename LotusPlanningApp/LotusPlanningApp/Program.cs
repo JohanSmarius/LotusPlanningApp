@@ -3,10 +3,13 @@ using LotusPlanningApp.Components;
 using LotusPlanningApp.Components.Account;
 using LotusPlanningApp.Configuration;
 using LotusPlanningApp.Data;
-using LotusPlanningApp.Services;
+using System.IO;
+using Application;
+using Entities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +32,19 @@ builder.Services.AddAuthentication(options =>
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+{
+    var dataDirectory = Path.Combine(builder.Environment.ContentRootPath, "AppData");
+    Directory.CreateDirectory(dataDirectory);
+
+    // Ensure SQLite uses an absolute path so migrations and runtime share the same file
+    if (connectionString.Contains("AppData/lotus.db", StringComparison.OrdinalIgnoreCase) ||
+        connectionString.Contains("AppData\\lotus.db", StringComparison.OrdinalIgnoreCase))
+    {
+        connectionString = $"Data Source={Path.Combine(dataDirectory, "lotus.db")}";
+    }
+
+    options.UseSqlite(connectionString);
+});
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
@@ -43,16 +58,22 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-// Configure email options using the options pattern
-builder.Services.Configure<EmailOptions>(
-    builder.Configuration.GetSection(EmailOptions.SectionName));
-
 // Register our application services
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
+builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+builder.Services.AddScoped<IStaffAssignmentRepository, StaffAssignmentRepository>();
 builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddScoped<IShiftService, ShiftService>();
-builder.Services.AddScoped<IStaffService, StaffService>();
-builder.Services.AddScoped<IStaffAssignmentService, StaffAssignmentService>();
+builder.Services.AddScoped<ICreateEventUseCase, CreateEventUseCase>();
+builder.Services.AddScoped<IUpdateEventUseCase, UpdateEventUseCase>();
+
+builder.Services.Configure<EmailOptions>(
+    builder.Configuration.GetSection(EmailOptions.SectionName)
+);
+
+// Register IOptions<EmailOptions> if you need to inject it directly elsewhere
+builder.Services.AddOptions<EmailOptions>().Bind(builder.Configuration.GetSection(EmailOptions.SectionName));
 
 var app = builder.Build();
 
@@ -68,7 +89,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForErrors: true);
+app.UseStatusCodePagesWithReExecute("/not-found");
 
 app.UseHttpsRedirection();
 
@@ -82,5 +103,12 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["Cache-control"] = "no-cache, max-age=0, must-revalidate";
+
+    await next();
+});
 
 app.Run();
