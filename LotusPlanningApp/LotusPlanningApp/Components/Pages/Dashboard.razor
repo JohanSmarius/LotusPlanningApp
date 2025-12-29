@@ -3,10 +3,15 @@
 @using Application
 @using Application.DataAdapters
 @using Entities
+@using Microsoft.AspNetCore.Identity
+@using LotusPlanningApp.Data
+@using Microsoft.AspNetCore.Components.Authorization
 @inject IEventRepository EventService
 @inject IShiftRepository ShiftService
 @inject IStaffRepository StaffService
 @inject IStaffAssignmentRepository StaffAssignmentService
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 
 <PageTitle>Dashboard - LOTUS Planning App</PageTitle>
@@ -31,8 +36,10 @@
     }
     else
     {
-        <!-- Statistics Cards -->
-        <div class="row mb-4">
+        @if (isAdmin)
+        {
+            <!-- Admin Statistics Cards -->
+            <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body">
@@ -105,7 +112,92 @@
                 </div>
             </div>
         </div>
+        }
+        else
+        {
+            <!-- User-specific content -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-user-clock me-2"></i>Mijn toegewezen diensten
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (myAssignments.Any())
+                            {
+                                <div class="row">
+                                    @foreach (var assignment in myAssignments.OrderBy(a => a.Shift.StartTime))
+                                    {
+                                        var shift = assignment.Shift;
+                                        var eventItem = shift.Event;
+                                        <div class="col-md-6 col-lg-4 mb-3">
+                                            <div class="card h-100 border-0 bg-light">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                                        <h6 class="card-title mb-0">@shift.Name</h6>
+                                                        <span class="badge bg-@GetShiftStatusColor(shift.Status)">
+                                                            @shift.Status
+                                                        </span>
+                                                    </div>
+                                                    <p class="card-text small mb-2">
+                                                        <strong><i class="fas fa-calendar me-1"></i>Opdracht:</strong><br/>
+                                                        @eventItem.Name
+                                                    </p>
+                                                    <p class="card-text small mb-2">
+                                                        <strong><i class="fas fa-map-marker-alt me-1"></i>Locatie:</strong><br/>
+                                                        @eventItem.Location
+                                                    </p>
+                                                    <p class="card-text small mb-2">
+                                                        <strong><i class="fas fa-clock me-1"></i>Tijd:</strong><br/>
+                                                        @shift.StartTime.ToString("dd MMM yyyy HH:mm") - @shift.EndTime.ToString("HH:mm")
+                                                    </p>
+                                                    @if (shift.Description != null)
+                                                    {
+                                                        <p class="card-text small mb-2">
+                                                            <strong><i class="fas fa-info-circle me-1"></i>Beschrijving:</strong><br/>
+                                                            @shift.Description
+                                                        </p>
+                                                    }
+                                                    <div class="mt-3">
+                                                        <span class="badge bg-@GetAssignmentStatusColor(assignment.Status) me-1">
+                                                            @assignment.Status
+                                                        </span>
+                                                        @if (assignment.CheckInTime.HasValue)
+                                                        {
+                                                            <small class="text-muted">
+                                                                <i class="fas fa-sign-in-alt me-1"></i>@assignment.CheckInTime.Value.ToString("HH:mm")
+                                                            </small>
+                                                        }
+                                                        @if (assignment.CheckOutTime.HasValue)
+                                                        {
+                                                            <small class="text-muted ms-2">
+                                                                <i class="fas fa-sign-out-alt me-1"></i>@assignment.CheckOutTime.Value.ToString("HH:mm")
+                                                            </small>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-5">
+                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">Je hebt momenteel geen toegewezen diensten</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
 
+        @if (isAdmin)
+        {
         <!-- Quick Actions and Upcoming Events -->
         <div class="row">
             <!-- Quick Actions -->
@@ -217,31 +309,48 @@
                 </div>
             </div>
         }
+        }
     }
 </div>
 
 @code {
     private bool isLoading = true;
+    private bool isAdmin = false;
     private List<Entities.Event> upcomingEvents = new();
     private List<Entities.Shift> activeShifts = new();
     private List<Entities.Shift> todaysShifts = new();
     private List<Entities.Staff> activeStaff = new();
     private List<Entities.StaffAssignment> staffOnDuty = new();
+    private List<Entities.StaffAssignment> myAssignments = new();
+    private Entities.Staff? currentUserStaff;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            var loadTasks = new List<Task>
-            {
-                LoadUpcomingEventsAsync(),
-                LoadActiveShiftsAsync(),
-                LoadTodaysShiftsAsync(),
-                LoadActiveStaffAsync(),
-                LoadStaffOnDutyAsync()
-            };
+            // Check if user is admin
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            isAdmin = user.IsInRole("Admin");
 
-            await Task.WhenAll(loadTasks);
+            if (isAdmin)
+            {
+                var loadTasks = new List<Task>
+                {
+                    LoadUpcomingEventsAsync(),
+                    LoadActiveShiftsAsync(),
+                    LoadTodaysShiftsAsync(),
+                    LoadActiveStaffAsync(),
+                    LoadStaffOnDutyAsync()
+                };
+
+                await Task.WhenAll(loadTasks);
+            }
+            else
+            {
+                // Load user-specific assignments
+                await LoadMyAssignmentsAsync(user);
+            }
         }
         catch (Exception ex)
         {
@@ -286,6 +395,36 @@
             sa.Shift.EndTime >= now).ToList();
     }
 
+    private async Task LoadMyAssignmentsAsync(System.Security.Claims.ClaimsPrincipal user)
+    {
+        try
+        {
+            var userEmail = user.Identity?.Name;
+            if (string.IsNullOrEmpty(userEmail))
+                return;
+
+            // Find staff member by email
+            var allStaff = await StaffService.GetAllStaffAsync();
+            currentUserStaff = allStaff.FirstOrDefault(s => s.Email.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
+
+            if (currentUserStaff != null)
+            {
+                // Get all assignments for this staff member
+                var allAssignments = await StaffAssignmentService.GetAssignmentsByStaffIdAsync(currentUserStaff.Id);
+                
+                // Filter to show upcoming and recent assignments
+                var cutoffDate = DateTime.Now.AddDays(-7); // Show last 7 days
+                myAssignments = allAssignments
+                    .Where(a => a.Shift.StartTime >= cutoffDate)
+                    .ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user assignments: {ex.Message}");
+        }
+    }
+
     private string GetEventStatusColor(EventStatus status)
     {
         return status switch
@@ -308,6 +447,19 @@
             ShiftStatus.InProgress => "success",
             ShiftStatus.Completed => "secondary",
             ShiftStatus.Cancelled => "danger",
+            _ => "secondary"
+        };
+    }
+
+    private string GetAssignmentStatusColor(AssignmentStatus status)
+    {
+        return status switch
+        {
+            AssignmentStatus.Assigned => "primary",
+            AssignmentStatus.Confirmed => "info",
+            AssignmentStatus.CheckedIn => "success",
+            AssignmentStatus.CheckedOut => "secondary",
+            AssignmentStatus.NoShow => "danger",
             _ => "secondary"
         };
     }
