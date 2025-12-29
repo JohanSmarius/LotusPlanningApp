@@ -251,11 +251,8 @@ public class EmailService : IEmailService
         // Staff Role Badge
         var roleColor = staff.Role switch
         {
-            StaffRole.Doctor => "badge-danger",
-            StaffRole.Paramedic => "badge-warning",
-            StaffRole.TeamLeader => "badge-primary",
-            StaffRole.FirstAider => "badge-success",
-            StaffRole.Volunteer => "badge-info",
+            StaffRole.LOTUS => "badge-primary",
+            StaffRole.Coordinator => "badge-warning",
             _ => "badge-info"
         };
         

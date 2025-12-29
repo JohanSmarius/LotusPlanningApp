@@ -45,15 +45,3 @@ public class Staff
     // Navigation properties
     public List<StaffAssignment> StaffAssignments { get; set; } = new();
 }
-
-/// <summary>
-/// Role of a staff member
-/// </summary>
-public enum StaffRole
-{
-    FirstAider,
-    TeamLeader,
-    Paramedic,
-    Doctor,
-    Volunteer
-}

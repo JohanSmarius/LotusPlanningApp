@@ -45,7 +45,7 @@ public class LinkUserToStaffByEmailCommandHandler : ICommandHandler<LinkUserToSt
                 FirstName = user.FirstName ?? "Unknown",
                 LastName = user.LastName ?? "User",
                 Email = command.Email,
-                Role = StaffRole.Volunteer, // Default role
+                Role = StaffRole.LOTUS, // Default role
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             };

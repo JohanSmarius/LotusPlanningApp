@@ -302,11 +302,8 @@ else
                         <div class="col-md-4">
                             <select class="form-select" @bind="staffRoleFilter" @bind:after="OnStaffFilterChanged">
                                 <option value="">Alle rollen</option>
-                                <option value="@StaffRole.FirstAider">Eerstehulpverlener</option>
-                                <option value="@StaffRole.TeamLeader">Teamleider</option>
-                                <option value="@StaffRole.Paramedic">Paramedicus</option>
-                                <option value="@StaffRole.Doctor">Arts</option>
-                                <option value="@StaffRole.Volunteer">Vrijwilliger</option>
+                                <option value="@StaffRole.LOTUS">LOTUS</option>
+                                <option value="@StaffRole.Coordinator">Coördinator</option>
                             </select>
                         </div>
                     </div>
@@ -739,11 +736,8 @@ else
     {
         return role switch
         {
-            StaffRole.Doctor => "danger",
-            StaffRole.Paramedic => "warning",
-            StaffRole.TeamLeader => "primary",
-            StaffRole.FirstAider => "success",
-            StaffRole.Volunteer => "info",
+            StaffRole.LOTUS => "primary",
+            StaffRole.Coordinator => "warning",
             _ => "secondary"
         };
     }

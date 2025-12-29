@@ -45,3 +45,12 @@ public enum AssignmentStatus
     NoShow,
     Cancelled
 }
+
+/// <summary>
+/// Role of a staff member
+/// </summary>
+public enum StaffRole
+{
+    LOTUS,
+    Coordinator
+}

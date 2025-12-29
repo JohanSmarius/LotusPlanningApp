@@ -58,11 +58,8 @@
             <div class="col-md-3">
                 <select class="form-select" @bind="roleFilter" @bind:after="OnFilterChanged">
                     <option value="">All Roles</option>
-                    <option value="@StaffRole.Doctor">Doctor</option>
-                    <option value="@StaffRole.Paramedic">Paramedic</option>
-                    <option value="@StaffRole.TeamLeader">Team Leader</option>
-                    <option value="@StaffRole.FirstAider">First Aider</option>
-                    <option value="@StaffRole.Volunteer">Volunteer</option>
+                    <option value="@StaffRole.LOTUS">LOTUS</option>
+                    <option value="@StaffRole.Coordinator">Coordinator</option>
                 </select>
             </div>
             <div class="col-md-3">
@@ -244,11 +241,8 @@
                                 <label class="form-label">Role *</label>
                                 <InputSelect @bind-Value="staffForm.Role" class="form-select">
                                     <option value="">Select Role</option>
-                                    <option value="@StaffRole.Doctor">Doctor</option>
-                                    <option value="@StaffRole.Paramedic">Paramedic</option>
-                                    <option value="@StaffRole.TeamLeader">Team Leader</option>
-                                    <option value="@StaffRole.FirstAider">First Aider</option>
-                                    <option value="@StaffRole.Volunteer">Volunteer</option>
+                                    <option value="@StaffRole.LOTUS">LOTUS</option>
+                                    <option value="@StaffRole.Coordinator">Coordinator</option>
                                 </InputSelect>
                                 <ValidationMessage For="() => staffForm.Role" class="text-danger" />
                             </div>
@@ -590,11 +584,8 @@
     {
         return role switch
         {
-            StaffRole.Doctor => "danger",
-            StaffRole.Paramedic => "warning",
-            StaffRole.TeamLeader => "primary",
-            StaffRole.FirstAider => "success",
-            StaffRole.Volunteer => "info",
+            StaffRole.LOTUS => "primary",
+            StaffRole.Coordinator => "warning",
             _ => "secondary"
         };
     }

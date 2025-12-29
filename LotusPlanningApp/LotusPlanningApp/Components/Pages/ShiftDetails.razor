@@ -449,11 +449,8 @@ else
     {
         return role switch
         {
-            StaffRole.Doctor => "danger",
-            StaffRole.Paramedic => "warning",
-            StaffRole.TeamLeader => "primary",
-            StaffRole.FirstAider => "success",
-            StaffRole.Volunteer => "info",
+            StaffRole.LOTUS => "primary",
+            StaffRole.Coordinator => "warning",
             _ => "secondary"
         };
     }
