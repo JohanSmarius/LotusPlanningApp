@@ -89,10 +89,24 @@ builder.Services.AddOptions<EmailOptions>().Bind(builder.Configuration.GetSectio
 
 var app = builder.Build();
 
-// Seed roles and admin user
+// Apply migrations and seed roles and admin user
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    
+    // Apply pending migrations
+    try
+    {
+        var dbContext = services.GetRequiredService<ApplicationDbContext>();
+        await dbContext.Database.MigrateAsync();
+        Console.WriteLine("Database migrations applied successfully.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error applying migrations: {ex.Message}");
+        throw;
+    }
+    
     await SeedRolesAndAdminAsync(services);
     await BackfillStaffForExistingUsersAsync(services);
 }
