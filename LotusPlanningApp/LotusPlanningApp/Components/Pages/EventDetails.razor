@@ -1,4 +1,5 @@
 @page "/events/details/{EventId:int}"
+@attribute [Authorize(Roles = "Admin")]
 @using Application
 @using Application.DataAdapters
 @using Entities
