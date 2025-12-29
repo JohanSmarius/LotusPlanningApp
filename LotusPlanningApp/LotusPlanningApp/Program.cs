@@ -59,15 +59,15 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-// Register our application services
+// Register CQRS handlers and application layer services
+builder.Services.AddApplicationLayer();
+
+// Register infrastructure services
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<IStaffAssignmentRepository, StaffAssignmentRepository>();
-builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddScoped<ICreateEventUseCase, CreateEventUseCase>();
-builder.Services.AddScoped<IUpdateEventUseCase, UpdateEventUseCase>();
 
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(EmailOptions.SectionName)

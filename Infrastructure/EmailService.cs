@@ -121,9 +121,12 @@ public class EmailService : IEmailService
             {
             }
 
+            // Ensure we have a valid from address
+            var fromAddress = fromEmail ?? username ?? "noreply@lotusapp.com";
+
             var message = new MailMessage
             {
-                From = new MailAddress(fromEmail ?? username, fromName),
+                From = new MailAddress(fromAddress, fromName),
                 Subject = subject,
                 Body = htmlBody,
                 IsBodyHtml = true
