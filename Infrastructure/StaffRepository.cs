@@ -89,4 +89,10 @@ public class StaffRepository : IStaffRepository
 
         return !await query.AnyAsync();
     }
+
+    public async Task<Entities.Staff?> GetStaffByEmailAsync(string email)
+    {
+        return await _context.Staff
+            .FirstOrDefaultAsync(s => s.Email == email);
+    }
 }

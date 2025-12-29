@@ -5,7 +5,10 @@ using LotusPlanningApp.Configuration;
 using LotusPlanningApp.Data;
 using System.IO;
 using Application;
+using Application.Commands.StaffAssignments;
+using Application.Common;
 using Entities;
+using Infrastructure.Commands.StaffAssignments;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -69,6 +72,14 @@ builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<IStaffAssignmentRepository, StaffAssignmentRepository>();
 
+// Register CQRS command handlers for staff assignments (using factory pattern to avoid contravariance issues)
+builder.Services.AddScoped(typeof(ICommandHandler<LinkUserToStaffByEmailCommand, bool>), typeof(LinkUserToStaffByEmailCommandHandler));
+builder.Services.AddScoped(typeof(ICommandHandler<LinkUserToStaffByIdCommand, bool>), typeof(LinkUserToStaffByIdCommandHandler));
+builder.Services.AddScoped(typeof(ICommandHandler<UnlinkUserFromStaffCommand, bool>), typeof(UnlinkUserFromStaffCommandHandler));
+
+// Register command dispatcher
+builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
+
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(EmailOptions.SectionName)
 );
@@ -83,6 +94,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     await SeedRolesAndAdminAsync(services);
+    await BackfillStaffForExistingUsersAsync(services);
 }
 
 // Configure the HTTP request pipeline.
@@ -164,3 +176,30 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
         await userManager.UpdateAsync(adminUser);
     }
 }
+
+/// <summary>
+/// Backfills staff members for existing users who don't have staff links
+/// This handles users created before the auto-linking feature was implemented
+/// </summary>
+async Task BackfillStaffForExistingUsersAsync(IServiceProvider serviceProvider)
+{
+    var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var commandDispatcher = serviceProvider.GetRequiredService<ICommandDispatcher>();
+
+    // Get all users who don't have a staff link
+    var usersWithoutStaff = userManager.Users.Where(u => u.StaffId == null).ToList();
+
+    if (usersWithoutStaff.Count == 0)
+        return; // Nothing to backfill
+
+    foreach (var user in usersWithoutStaff)
+    {
+        if (string.IsNullOrEmpty(user.Email))
+            continue;
+
+        // Dispatch the link command which will create a staff member if needed
+        var linkCommand = new LinkUserToStaffByEmailCommand(user.Id, user.Email);
+        await commandDispatcher.DispatchAsync<LinkUserToStaffByEmailCommand, bool>(linkCommand);
+    }
+}
+

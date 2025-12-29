@@ -2,7 +2,9 @@
 @attribute [Authorize(Roles = "Admin")]
 @using Microsoft.AspNetCore.Identity
 @using LotusPlanningApp.Data
+@using Application
 @inject UserManager<ApplicationUser> UserManager
+@inject IStaffRepository StaffRepository
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
@@ -60,8 +62,8 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
+                                            <th>Full Name</th>
                                             <th>Email</th>
-                                            <th>Username</th>
                                             <th>Registered</th>
                                             <th class="text-end">Actions</th>
                                         </tr>
@@ -71,10 +73,13 @@
                                         {
                                             <tr>
                                                 <td>
+                                                    <i class="bi bi-person me-2 text-muted"></i>
+                                                    @user.FullName
+                                                </td>
+                                                <td>
                                                     <i class="bi bi-envelope me-2 text-muted"></i>
                                                     @user.Email
                                                 </td>
-                                                <td>@user.UserName</td>
                                                 <td>
                                                     <small class="text-muted">
                                                         @user.RegisteredAt.ToString("dd MMM yyyy HH:mm")
@@ -130,8 +135,8 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
+                                            <th>Full Name</th>
                                             <th>Email</th>
-                                            <th>Username</th>
                                             <th>Registered</th>
                                             <th>Approved</th>
                                             <th class="text-end">Actions</th>
@@ -142,10 +147,13 @@
                                         {
                                             <tr>
                                                 <td>
+                                                    <i class="bi bi-person me-2 text-muted"></i>
+                                                    @user.FullName
+                                                </td>
+                                                <td>
                                                     <i class="bi bi-envelope me-2 text-muted"></i>
                                                     @user.Email
                                                 </td>
-                                                <td>@user.UserName</td>
                                                 <td>
                                                     <small class="text-muted">
                                                         @user.RegisteredAt.ToString("dd MMM yyyy")

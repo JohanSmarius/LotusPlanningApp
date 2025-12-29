@@ -15,4 +15,5 @@ public interface IStaffRepository
     Task<List<Staff>> GetActiveStaffAsync();
     Task<List<Staff>> GetStaffByRoleAsync(StaffRole role);
     Task<bool> IsEmailUniqueAsync(string email, int? excludeId = null);
+    Task<Staff?> GetStaffByEmailAsync(string email);
 }
