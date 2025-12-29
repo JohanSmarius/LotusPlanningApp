@@ -9,6 +9,9 @@ namespace Infrastructure;
 /// </summary>
 public class CalendarService : ICalendarService
 {
+    // Priority constants according to RFC 5545 (1=highest, 9=lowest, 0=undefined)
+    private const int PRIORITY_MEDIUM = 5;
+    
     /// <summary>
     /// Generates an iCalendar (.ics) file content for a shift
     /// </summary>
@@ -36,8 +39,13 @@ public class CalendarService : ICalendarService
         icsBuilder.AppendLine($"DTSTAMP:{FormatDateTime(now)}");
         
         // Start and end times (convert to UTC)
-        var startUtc = shift.StartTime.ToUniversalTime();
-        var endUtc = shift.EndTime.ToUniversalTime();
+        // Handle DateTime with Unspecified kind by treating it as local time
+        var startUtc = shift.StartTime.Kind == DateTimeKind.Unspecified 
+            ? DateTime.SpecifyKind(shift.StartTime, DateTimeKind.Local).ToUniversalTime()
+            : shift.StartTime.ToUniversalTime();
+        var endUtc = shift.EndTime.Kind == DateTimeKind.Unspecified 
+            ? DateTime.SpecifyKind(shift.EndTime, DateTimeKind.Local).ToUniversalTime()
+            : shift.EndTime.ToUniversalTime();
         icsBuilder.AppendLine($"DTSTART:{FormatDateTime(startUtc)}");
         icsBuilder.AppendLine($"DTEND:{FormatDateTime(endUtc)}");
         
@@ -55,19 +63,25 @@ public class CalendarService : ICalendarService
             icsBuilder.AppendLine($"LOCATION:{EscapeText(shift.Event.Location)}");
         }
         
-        // Status
+        // Status according to RFC 5545
+        // TENTATIVE: Event is not confirmed yet
+        // CONFIRMED: Event is confirmed
+        // CANCELLED: Event has been cancelled
         var status = shift.Status switch
         {
             ShiftStatus.Cancelled => "CANCELLED",
             ShiftStatus.Completed => "CONFIRMED",
-            _ => "CONFIRMED"
+            ShiftStatus.InProgress => "CONFIRMED",
+            ShiftStatus.Full => "CONFIRMED",
+            ShiftStatus.Open => "TENTATIVE", // Open shifts are not yet confirmed/finalized
+            _ => "TENTATIVE"
         };
         icsBuilder.AppendLine($"STATUS:{status}");
         
         // Priority (optional, higher for urgent shifts)
         if (shift.StaffAssignments.Count < shift.RequiredStaff)
         {
-            icsBuilder.AppendLine("PRIORITY:5"); // Medium priority for understaffed shifts
+            icsBuilder.AppendLine($"PRIORITY:{PRIORITY_MEDIUM}"); // Medium priority for understaffed shifts
         }
         
         icsBuilder.AppendLine("END:VEVENT");

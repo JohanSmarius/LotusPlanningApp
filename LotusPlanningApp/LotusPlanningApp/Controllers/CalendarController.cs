@@ -68,8 +68,17 @@ public class CalendarController : ControllerBase
     /// </summary>
     private static string SanitizeFileName(string fileName)
     {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return "shift";
+        
         var invalidChars = Path.GetInvalidFileNameChars();
         var sanitized = string.Join("_", fileName.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries));
+        
+        // Ensure we have a valid filename
+        if (string.IsNullOrWhiteSpace(sanitized))
+            return "shift";
+        
+        // Limit length for filesystem compatibility
         return sanitized.Length > 50 ? sanitized.Substring(0, 50) : sanitized;
     }
 }
