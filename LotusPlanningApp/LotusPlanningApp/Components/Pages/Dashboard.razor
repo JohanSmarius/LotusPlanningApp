@@ -16,7 +16,7 @@
             <h1 class="h3 mb-0 text-primary">
                 <i class="fas fa-tachometer-alt me-2"></i>Dashboard
             </h1>
-            <p class="text-muted">Medical First Aid Event & Shift Management</p>
+            <p class="text-muted">LOTUS-opdrachten en dienstenbeheer</p>
         </div>
     </div>
 
@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1">Upcoming Events</h6>
+                                <h6 class="text-muted mb-1">Aankomende opdrachten</h6>
                                 <h4 class="mb-0">@upcomingEvents.Count</h4>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1">Active Shifts</h6>
+                                <h6 class="text-muted mb-1">Actieve diensten</h6>
                                 <h4 class="mb-0">@activeShifts.Count</h4>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1">Active Staff</h6>
+                                <h6 class="text-muted mb-1">Actief personeel</h6>
                                 <h4 class="mb-0">@activeStaff.Count</h4>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1">Staff On Duty</h6>
+                                <h6 class="text-muted mb-1">Personeel in dienst</h6>
                                 <h4 class="mb-0">@staffOnDuty.Count</h4>
                             </div>
                         </div>
@@ -112,16 +112,16 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-transparent border-0">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-bolt me-2 text-primary"></i>Quick Actions
+                            <i class="fas fa-bolt me-2 text-primary"></i>Snelle acties
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
                             <a href="/events" class="btn btn-outline-primary">
-                                <i class="fas fa-plus me-2"></i>Create Event
+                                <i class="fas fa-plus me-2"></i>Opdracht aanmaken
                             </a>
                             <a href="/staff" class="btn btn-outline-info">
-                                <i class="fas fa-user-plus me-2"></i>Add Staff
+                                <i class="fas fa-user-plus me-2"></i>Personeel toevoegen
                             </a>
                         </div>
                     </div>
@@ -133,9 +133,9 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-calendar-check me-2 text-primary"></i>Upcoming Events
+                            <i class="fas fa-calendar-check me-2 text-primary"></i>Aankomende opdrachten
                         </h5>
-                        <a href="/events" class="btn btn-sm btn-outline-primary">View All</a>
+                        <a href="/events" class="btn btn-sm btn-outline-primary">Alles bekijken</a>
                     </div>
                     <div class="card-body">
                         @if (upcomingEvents.Any())
@@ -169,8 +169,8 @@
                         {
                             <div class="text-center py-4">
                                 <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                                <p class="text-muted">No upcoming events</p>
-                                <a href="/events" class="btn btn-primary">Create First Event</a>
+                                <p class="text-muted">Geen aankomende opdrachten</p>
+                                <a href="/events" class="btn btn-primary">Eerste opdracht aanmaken</a>
                             </div>
                         }
                     </div>
@@ -186,9 +186,9 @@
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-clock me-2 text-success"></i>Today's Shifts
+                                <i class="fas fa-clock me-2 text-success"></i>Diensten van vandaag
                             </h5>
-                            <a href="/shifts" class="btn btn-sm btn-outline-success">View All Shifts</a>
+                            <a href="/shifts" class="btn btn-sm btn-outline-success">Alle diensten bekijken</a>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -199,9 +199,9 @@
                                             <div class="card-body">
                                                 <h6 class="card-title">@shift.Name</h6>
                                                 <p class="card-text small">
-                                                    <strong>Event:</strong> @shift.Event.Name<br>
-                                                    <strong>Time:</strong> @shift.StartTime.ToString("HH:mm") - @shift.EndTime.ToString("HH:mm")<br>
-                                                    <strong>Staff:</strong> @shift.StaffAssignments.Count / @shift.RequiredStaff
+                                                    <strong>Opdracht:</strong> @shift.Event.Name<br>
+                                                    <strong>Tijd:</strong> @shift.StartTime.ToString("HH:mm") - @shift.EndTime.ToString("HH:mm")<br>
+                                                    <strong>Personeel:</strong> @shift.StaffAssignments.Count / @shift.RequiredStaff
                                                 </p>
                                                 <span class="badge bg-@GetShiftStatusColor(shift.Status)">
                                                     @shift.Status

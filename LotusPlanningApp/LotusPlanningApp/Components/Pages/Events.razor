@@ -10,7 +10,7 @@
 
 @rendermode InteractiveServer
 
-<PageTitle>Events - LOTUS Planning App</PageTitle>
+<PageTitle>Opdrachten - LOTUS Planning App</PageTitle>
 
 <div class="container-fluid">
     <div class="row mb-4">
@@ -18,12 +18,12 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h1 class="h3 mb-0 text-primary">
-                        <i class="fas fa-calendar-alt me-2"></i>Events
+                        <i class="fas fa-calendar-alt me-2"></i>Opdrachten
                     </h1>
-                    <p class="text-muted">Manage medical first aid events</p>
+                    <p class="text-muted">Beheer LOTUS-opdrachten</p>
                 </div>
                 <button class="btn btn-primary" @onclick="OpenCreateEventDialog">
-                    <i class="fas fa-plus me-2"></i>Create Event
+                    <i class="fas fa-plus me-2"></i>Opdracht aanmaken
                 </button>
             </div>
         </div>
@@ -33,10 +33,10 @@
     {
         <div class="alert alert-danger" role="alert">
             <i class="fas fa-exclamation-triangle me-2"></i>
-            <strong>Error Loading Events</strong>
+            <strong>Fout bij het laden van opdrachten</strong>
             <p class="mb-2">@errorMessage</p>
             <button class="btn btn-outline-danger btn-sm" @onclick="RetryLoadEvents">
-                <i class="fas fa-redo me-1"></i>Retry
+                <i class="fas fa-redo me-1"></i>Opnieuw proberen
             </button>
         </div>
     }
@@ -44,7 +44,7 @@
     {
         <div class="d-flex justify-content-center py-5">
             <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">Bezig met laden...</span>
             </div>
         </div>
     }
@@ -52,10 +52,10 @@
     {
         <div class="text-center py-5">
             <i class="fas fa-calendar-times fa-4x text-muted mb-4"></i>
-            <h4 class="text-muted">No Events Found</h4>
-            <p class="text-muted mb-4">Start by creating your first medical first aid event.</p>
+            <h4 class="text-muted">Geen opdrachten gevonden</h4>
+            <p class="text-muted mb-4">Begin met het aanmaken van je eerste LOTUS-opdracht.</p>
             <button class="btn btn-primary btn-lg" @onclick="OpenCreateEventDialog">
-                <i class="fas fa-plus me-2"></i>Create First Event
+                <i class="fas fa-plus me-2"></i>Eerste opdracht aanmaken
             </button>
         </div>
     }
@@ -68,27 +68,27 @@
                     <span class="input-group-text">
                         <i class="fas fa-search"></i>
                     </span>
-                    <input type="text" class="form-control" placeholder="Search events..." @bind="searchTerm" @oninput="OnSearchChanged" />
+                    <input type="text" class="form-control" placeholder="Zoek opdrachten..." @bind="searchTerm" @oninput="OnSearchChanged" />
                 </div>
             </div>
             <div class="col-md-2">
                 <select class="form-select" @bind="statusFilter" @bind:after="OnFilterChanged">
-                    <option value="">All Statuses</option>
-                    <option value="@EventStatus.Requested">Requested</option>
-                    <option value="@EventStatus.Planned">Planned</option>
-                    <option value="@EventStatus.Confirmed">Confirmed</option>
-                    <option value="@EventStatus.Active">Active</option>
-                    <option value="@EventStatus.Completed">Completed</option>
-                    <option value="@EventStatus.SendInvoice">Send Invoice</option>
-                    <option value="@EventStatus.Cancelled">Cancelled</option>
+                    <option value="">Alle statussen</option>
+                    <option value="@EventStatus.Requested">Aangevraagd</option>
+                    <option value="@EventStatus.Planned">Gepland</option>
+                    <option value="@EventStatus.Confirmed">Bevestigd</option>
+                    <option value="@EventStatus.Active">Actief</option>
+                    <option value="@EventStatus.Completed">Afgerond</option>
+                    <option value="@EventStatus.SendInvoice">Factuur verzenden</option>
+                    <option value="@EventStatus.Cancelled">Geannuleerd</option>
                 </select>
             </div>
             <div class="col-md-2">
                 <select class="form-select" @bind="sortBy" @bind:after="OnSortChanged">
-                    <option value="StartDate">Sort by Start Date</option>
-                    <option value="Name">Sort by Name</option>
-                    <option value="Location">Sort by Location</option>
-                    <option value="Status">Sort by Status</option>
+                    <option value="StartDate">Sorteren op startdatum</option>
+                    <option value="Name">Sorteren op naam</option>
+                    <option value="Location">Sorteren op locatie</option>
+                    <option value="Status">Sorteren op status</option>
                 </select>
             </div>
             <div class="col-md-3">
@@ -97,14 +97,14 @@
                         <button type="button" 
                                 class="btn @(viewMode == "cards" ? "btn-primary" : "btn-outline-primary")" 
                                 @onclick="@(() => SetViewMode("cards"))"
-                                title="Card View">
-                            <i class="fas fa-th-large me-1"></i>Cards
+                                title="Kaartenweergave">
+                            <i class="fas fa-th-large me-1"></i>Kaarten
                         </button>
                         <button type="button" 
                                 class="btn @(viewMode == "table" ? "btn-primary" : "btn-outline-primary")" 
                                 @onclick="@(() => SetViewMode("table"))"
-                                title="Table View">
-                            <i class="fas fa-table me-1"></i>Grid
+                                title="Tabelweergave">
+                            <i class="fas fa-table me-1"></i>Tabel
                         </button>
                     </div>
                 </div>
@@ -177,14 +177,14 @@
                             <div class="card-footer bg-transparent border-0">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-muted">
-                                        <i class="fas fa-clock me-1"></i>@eventItem.Shifts.Count shift(s)
+                                        <i class="fas fa-clock me-1"></i>@eventItem.Shifts.Count dienst(en)
                                     </small>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-outline-primary" @onclick="@((e) => NavigateToDetails(eventItem.Id))" @onclick:stopPropagation="true">
-                                            View Details
+                                            Details bekijken
                                         </button>
                                         <button class="btn btn-sm btn-outline-danger" @onclick="@((e) => ConfirmDelete(eventItem))" @onclick:stopPropagation="true">
-                                            <i class="fas fa-trash me-1"></i>Delete
+                                            <i class="fas fa-trash me-1"></i>Verwijderen
                                         </button>
                                     </div>
                                 </div>
@@ -201,9 +201,9 @@
                 <div class="card-header bg-transparent border-0">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-table me-2"></i>Events Grid (@filteredEvents.Count)
+                            <i class="fas fa-table me-2"></i>Opdrachtenoverzicht (@filteredEvents.Count)
                         </h5>
-                        <small class="text-muted">@filteredEvents.Count of @events.Count events</small>
+                        <small class="text-muted">@filteredEvents.Count van @events.Count opdrachten</small>
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -211,13 +211,13 @@
                         <table class="table table-hover mb-0 align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th scope="col">Event Name</th>
-                                    <th scope="col">Date & Time</th>
-                                    <th scope="col">Location</th>
+                                    <th scope="col">Opdrachtnaam</th>
+                                    <th scope="col">Datum & tijd</th>
+                                    <th scope="col">Locatie</th>
                                     <th scope="col">Contact</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Shifts</th>
-                                    <th scope="col" class="text-center">Actions</th>
+                                    <th scope="col">Diensten</th>
+                                    <th scope="col" class="text-center">Acties</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -239,7 +239,7 @@
                                                 @eventItem.StartDate.ToString("HH:mm") - @eventItem.EndDate.ToString("HH:mm")
                                                 @if (eventItem.StartDate.Date != eventItem.EndDate.Date)
                                                 {
-                                                    <text><br/>to @eventItem.EndDate.ToString("MMM dd")</text>
+                                                    <text><br/>tot @eventItem.EndDate.ToString("MMM dd")</text>
                                                 }
                                             </small>
                                         </td>
@@ -267,7 +267,7 @@
                                             }
                                             else
                                             {
-                                                <span class="text-muted">No contact</span>
+                                                <span class="text-muted">Geen contactpersoon</span>
                                             }
                                         </td>
                                         <td>
@@ -280,7 +280,7 @@
                                                 <span class="fw-medium me-2">@eventItem.Shifts.Count</span>
                                                 @if (eventItem.Shifts.Count == 0)
                                                 {
-                                                    <span class="badge bg-warning text-dark">No Shifts</span>
+                                                    <span class="badge bg-warning text-dark">Geen diensten</span>
                                                 }
                                                 else
                                                 {
@@ -288,15 +288,15 @@
                                                     var totalAssigned = eventItem.Shifts.Sum(s => s.StaffAssignments.Count);
                                                     if (totalAssigned >= totalRequired)
                                                     {
-                                                        <span class="badge bg-success">Fully Staffed</span>
+                                                        <span class="badge bg-success">Volledig bezet</span>
                                                     }
                                                     else if (totalAssigned > 0)
                                                     {
-                                                        <span class="badge bg-warning text-dark">Partial</span>
+                                                        <span class="badge bg-warning text-dark">Gedeeltelijk</span>
                                                     }
                                                     else
                                                     {
-                                                        <span class="badge bg-danger">Unstaffed</span>
+                                                        <span class="badge bg-danger">Onbezet</span>
                                                     }
                                                 }
                                             </div>
@@ -307,7 +307,7 @@
                                                     <i class="fas fa-edit me-1"></i>Details
                                                 </button>
                                                 <button class="btn btn-sm btn-outline-danger" @onclick="@((e) => ConfirmDelete(eventItem))" @onclick:stopPropagation="true">
-                                                    <i class="fas fa-trash me-1"></i>Delete
+                                                    <i class="fas fa-trash me-1"></i>Verwijderen
                                                 </button>
                                             </div>
                                         </td>
@@ -335,24 +335,24 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm Delete</h5>
+                    <h5 class="modal-title">Verwijderen bevestigen</h5>
                     <button type="button" class="btn-close" @onclick="CancelDelete"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete the event "<strong>@eventToDelete.Name</strong>"?</p>
+                    <p>Weet je zeker dat je de opdracht "<strong>@eventToDelete.Name</strong>" wilt verwijderen?</p>
                     <p class="text-danger small">
                         <i class="fas fa-exclamation-triangle me-1"></i>
-                        This action cannot be undone and will also delete all associated shifts and assignments.
+                        Deze actie kan niet ongedaan worden gemaakt en verwijdert ook alle gekoppelde diensten en toewijzingen.
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CancelDelete">Cancel</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CancelDelete">Annuleren</button>
                     <button type="button" class="btn btn-danger" @onclick="DeleteEvent" disabled="@isDeleting">
                         @if (isDeleting)
                         {
                             <span class="spinner-border spinner-border-sm me-2"></span>
                         }
-                        Delete Event
+                        Opdracht verwijderen
                     </button>
                 </div>
             </div>
@@ -368,7 +368,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-calendar-plus me-2"></i>Create New Event
+                        <i class="fas fa-calendar-plus me-2"></i>Nieuwe opdracht
                     </h5>
                     <button type="button" class="btn-close" @onclick="CloseCreateEventDialog"></button>
                 </div>
@@ -377,29 +377,29 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Event Name *</label>
-                                <InputText @bind-Value="newEvent.Name" class="form-control" placeholder="Enter event name" />
+                                <label class="form-label">Opdrachtnaam *</label>
+                                <InputText @bind-Value="newEvent.Name" class="form-control" placeholder="Voer een opdrachtnaam in" />
                                 <ValidationMessage For="() => newEvent.Name" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Location *</label>
-                                <InputTextArea @bind-Value="newEvent.Location" class="form-control" rows="5" placeholder="Enter event location" />
+                                <label class="form-label">Locatie *</label>
+                                <InputTextArea @bind-Value="newEvent.Location" class="form-control" rows="5" placeholder="Voer de locatie van de opdracht in" />
                                 <ValidationMessage For="() => newEvent.Location" class="text-danger" />
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    You can enter multiple lines for detailed address or location information
+                                    Je kunt meerdere regels invullen voor een gedetailleerd adres of locatie-informatie
                                 </div>
                             </div>
                         </div>
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Start Date & Time *</label>
+                                <label class="form-label">Startdatum & tijd *</label>
                                 <input type="datetime-local" @bind="newEvent.StartDate" class="form-control" />
                                 <ValidationMessage For="() => newEvent.StartDate" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">End Date & Time *</label>
+                                <label class="form-label">Einddatum & tijd *</label>
                                 <input type="datetime-local" @bind="newEvent.EndDate" class="form-control" />
                                 <ValidationMessage For="() => newEvent.EndDate" class="text-danger" />
                             </div>
@@ -407,48 +407,48 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Contact Person</label>
-                                <InputText @bind-Value="newEvent.ContactPerson" class="form-control" placeholder="Enter contact person name" />
+                                <label class="form-label">Contactpersoon</label>
+                                <InputText @bind-Value="newEvent.ContactPerson" class="form-control" placeholder="Naam contactpersoon" />
                                 <ValidationMessage For="() => newEvent.ContactPerson" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Contact Phone</label>
-                                <InputText @bind-Value="newEvent.ContactPhone" class="form-control" placeholder="Enter contact phone number" />
+                                <label class="form-label">Telefoon contactpersoon</label>
+                                <InputText @bind-Value="newEvent.ContactPhone" class="form-control" placeholder="Telefoonnummer contactpersoon" />
                                 <ValidationMessage For="() => newEvent.ContactPhone" class="text-danger" />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Contact Email</label>
-                                <InputText @bind-Value="newEvent.ContactEmail" class="form-control" placeholder="Enter contact email address" type="email" />
+                                <label class="form-label">E-mail contactpersoon</label>
+                                <InputText @bind-Value="newEvent.ContactEmail" class="form-control" placeholder="E-mailadres contactpersoon" type="email" />
                                 <ValidationMessage For="() => newEvent.ContactEmail" class="text-danger" />
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Required for status change notifications (Planned, Confirmed)
+                                    Vereist voor statusmeldingen (Gepland, Bevestigd)
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <InputTextArea @bind-Value="newEvent.Description" class="form-control" rows="3" placeholder="Enter event description (optional)" />
+                            <label class="form-label">Beschrijving</label>
+                            <InputTextArea @bind-Value="newEvent.Description" class="form-control" rows="3" placeholder="Omschrijving van de opdracht (optioneel)" />
                             <ValidationMessage For="() => newEvent.Description" class="text-danger" />
                         </div>
 
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
-                            <strong>Note:</strong> The event will be created with "Requested" status and one shift covering the entire event duration will be automatically added.
+                            <strong>Let op:</strong> De opdracht wordt aangemaakt met de status "Aangevraagd" en er wordt automatisch één dienst toegevoegd die de volledige duur dekt.
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @onclick="CloseCreateEventDialog">Cancel</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseCreateEventDialog">Annuleren</button>
                         <button type="submit" class="btn btn-primary" disabled="@isCreating">
                             @if (isCreating)
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            <i class="fas fa-save me-2"></i>Create Event
+                            <i class="fas fa-save me-2"></i>Opdracht aanmaken
                         </button>
                     </div>
                 </EditForm>
@@ -465,7 +465,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-edit me-2"></i>Edit Event
+                        <i class="fas fa-edit me-2"></i>Opdracht bewerken
                     </h5>
                     <button type="button" class="btn-close" @onclick="CloseEditEventDialog"></button>
                 </div>
@@ -474,29 +474,29 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Event Name *</label>
-                                <InputText @bind-Value="editEvent.Name" class="form-control" placeholder="Enter event name" />
+                                <label class="form-label">Opdrachtnaam *</label>
+                                <InputText @bind-Value="editEvent.Name" class="form-control" placeholder="Voer een opdrachtnaam in" />
                                 <ValidationMessage For="() => editEvent.Name" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Location *</label>
-                                <InputTextArea @bind-Value="editEvent.Location" class="form-control" rows="2" placeholder="Enter event location" />
+                                <label class="form-label">Locatie *</label>
+                                <InputTextArea @bind-Value="editEvent.Location" class="form-control" rows="2" placeholder="Voer de locatie van de opdracht in" />
                                 <ValidationMessage For="() => editEvent.Location" class="text-danger" />
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    You can enter multiple lines for detailed address or location information
+                                    Je kunt meerdere regels invullen voor een gedetailleerd adres of locatie-informatie
                                 </div>
                             </div>
                         </div>
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Start Date & Time *</label>
+                                <label class="form-label">Startdatum & tijd *</label>
                                 <input type="datetime-local" @bind="editEvent.StartDate" class="form-control" />
                                 <ValidationMessage For="() => editEvent.StartDate" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">End Date & Time *</label>
+                                <label class="form-label">Einddatum & tijd *</label>
                                 <input type="datetime-local" @bind="editEvent.EndDate" class="form-control" />
                                 <ValidationMessage For="() => editEvent.EndDate" class="text-danger" />
                             </div>
@@ -506,43 +506,43 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Status *</label>
                                 <InputSelect @bind-Value="editEvent.Status" class="form-select">
-                                    <option value="@EventStatus.Requested">Requested</option>
-                                    <option value="@EventStatus.Planned">Planned</option>
-                                    <option value="@EventStatus.Confirmed">Confirmed</option>
-                                    <option value="@EventStatus.Active">Active</option>
-                                    <option value="@EventStatus.Completed">Completed</option>
-                                    <option value="@EventStatus.SendInvoice">Send Invoice</option>
-                                    <option value="@EventStatus.Cancelled">Cancelled</option>
+                                    <option value="@EventStatus.Requested">Aangevraagd</option>
+                                    <option value="@EventStatus.Planned">Gepland</option>
+                                    <option value="@EventStatus.Confirmed">Bevestigd</option>
+                                    <option value="@EventStatus.Active">Actief</option>
+                                    <option value="@EventStatus.Completed">Afgerond</option>
+                                    <option value="@EventStatus.SendInvoice">Factuur verzenden</option>
+                                    <option value="@EventStatus.Cancelled">Geannuleerd</option>
                                 </InputSelect>
                                 <ValidationMessage For="() => editEvent.Status" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Contact Person</label>
-                                <InputText @bind-Value="editEvent.ContactPerson" class="form-control" placeholder="Enter contact person name" />
+                                <label class="form-label">Contactpersoon</label>
+                                <InputText @bind-Value="editEvent.ContactPerson" class="form-control" placeholder="Naam contactpersoon" />
                                 <ValidationMessage For="() => editEvent.ContactPerson" class="text-danger" />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Contact Phone</label>
-                                <InputText @bind-Value="editEvent.ContactPhone" class="form-control" placeholder="Enter contact phone number" />
+                                <label class="form-label">Telefoon contactpersoon</label>
+                                <InputText @bind-Value="editEvent.ContactPhone" class="form-control" placeholder="Telefoonnummer contactpersoon" />
                                 <ValidationMessage For="() => editEvent.ContactPhone" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Contact Email</label>
-                                <InputText @bind-Value="editEvent.ContactEmail" class="form-control" placeholder="Enter contact email address" type="email" />
+                                <label class="form-label">E-mail contactpersoon</label>
+                                <InputText @bind-Value="editEvent.ContactEmail" class="form-control" placeholder="E-mailadres contactpersoon" type="email" />
                                 <ValidationMessage For="() => editEvent.ContactEmail" class="text-danger" />
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Required for status change notifications (Planned, Confirmed)
+                                    Vereist voor statusmeldingen (Gepland, Bevestigd)
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <InputTextArea @bind-Value="editEvent.Description" class="form-control" rows="3" placeholder="Enter event description (optional)" />
+                            <label class="form-label">Beschrijving</label>
+                            <InputTextArea @bind-Value="editEvent.Description" class="form-control" rows="3" placeholder="Omschrijving van de opdracht (optioneel)" />
                             <ValidationMessage For="() => editEvent.Description" class="text-danger" />
                         </div>
 
@@ -550,18 +550,18 @@
                         {
                             <div class="alert alert-warning">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                <strong>Note:</strong> This event has @editEvent.Shifts.Count shift(s) assigned. Changing dates and times may affect existing shifts.
+                                <strong>Let op:</strong> Deze opdracht heeft @editEvent.Shifts.Count dienst(en) gekoppeld. Het aanpassen van datums of tijden kan bestaande diensten beïnvloeden.
                             </div>
                         }
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @onclick="CloseEditEventDialog">Cancel</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseEditEventDialog">Annuleren</button>
                         <button type="submit" class="btn btn-primary" disabled="@isUpdating">
                             @if (isUpdating)
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            <i class="fas fa-save me-2"></i>Update Event
+                            <i class="fas fa-save me-2"></i>Opdracht bijwerken
                         </button>
                     </div>
                 </EditForm>
@@ -578,7 +578,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-clock me-2"></i>Create New Shift
+                        <i class="fas fa-clock me-2"></i>Nieuwe dienst
                     </h5>
                     <button type="button" class="btn-close" @onclick="CloseCreateShiftDialog"></button>
                 </div>
@@ -589,7 +589,7 @@
                         {
                             <div class="alert alert-info mb-4">
                                 <i class="fas fa-info-circle me-2"></i>
-                                <strong>Creating shift for:</strong> @selectedEventForShift.Name
+                                <strong>Dienst aanmaken voor:</strong> @selectedEventForShift.Name
                                 <br>
                                 <small class="text-muted">
                                     <i class="fas fa-calendar me-1"></i>@selectedEventForShift.StartDate.ToString("MMM dd, yyyy HH:mm") - @selectedEventForShift.EndDate.ToString("MMM dd, yyyy HH:mm")
@@ -602,7 +602,7 @@
                             {
                                 <div class="alert alert-success mb-4">
                                     <i class="fas fa-clock me-2"></i>
-                                    <strong>Existing Coverage:</strong> This event has @selectedEventForShift.Shifts.Count existing shift(s).
+                                    <strong>Bestaande bezetting:</strong> Deze opdracht heeft @selectedEventForShift.Shifts.Count bestaande dienst(en).
                                     <div class="mt-2">
                                         @foreach (var existingShift in selectedEventForShift.Shifts.OrderBy(s => s.StartTime))
                                         {
@@ -615,7 +615,7 @@
                                     </div>
                                     <small class="text-muted mt-2 d-block">
                                         <i class="fas fa-lightbulb me-1"></i>
-                                        The times below are suggested based on remaining uncovered time.
+                                        De tijden hieronder zijn voorgesteld op basis van de resterende ongedekte tijd.
                                     </small>
                                 </div>
                             }
@@ -623,20 +623,20 @@
                             {
                                 <div class="alert alert-info mb-4">
                                     <i class="fas fa-plus-circle me-2"></i>
-                                    <strong>First Shift:</strong> This will be the first shift for this event.
-                                    The suggested times cover the entire event duration.
+                                    <strong>Eerste dienst:</strong> Dit wordt de eerste dienst voor deze opdracht.
+                                    De voorgestelde tijden dekken de volledige duur van de opdracht.
                                 </div>
                             }
                         }
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Shift Name *</label>
-                                <InputText @bind-Value="newShift.Name" class="form-control" placeholder="Enter shift name" />
+                                <label class="form-label">Dienstnaam *</label>
+                                <InputText @bind-Value="newShift.Name" class="form-control" placeholder="Voer een dienstnaam in" />
                                 <ValidationMessage For="() => newShift.Name" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Required Staff *</label>
+                                <label class="form-label">Benodigde medewerkers *</label>
                                 <InputNumber @bind-Value="newShift.RequiredStaff" class="form-control" min="1" max="50" />
                                 <ValidationMessage For="() => newShift.RequiredStaff" class="text-danger" />
                             </div>
@@ -644,44 +644,44 @@
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Start Time *</label>
+                                <label class="form-label">Starttijd *</label>
                                 <input type="datetime-local" @bind="newShift.StartTime" class="form-control" />
                                 <ValidationMessage For="() => newShift.StartTime" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">End Time *</label>
+                                <label class="form-label">Eindtijd *</label>
                                 <input type="datetime-local" @bind="newShift.EndTime" class="form-control" />
                                 <ValidationMessage For="() => newShift.EndTime" class="text-danger" />
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <InputTextArea @bind-Value="newShift.Description" class="form-control" rows="3" placeholder="Enter shift description (optional)" />
+                            <label class="form-label">Beschrijving</label>
+                            <InputTextArea @bind-Value="newShift.Description" class="form-control" rows="3" placeholder="Omschrijving van de dienst (optioneel)" />
                             <ValidationMessage For="() => newShift.Description" class="text-danger" />
                         </div>
 
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
-                            <strong>Smart Shift Timing:</strong> The suggested times above use the next available time period.
+                            <strong>Slimme planningssuggestie:</strong> De voorgestelde tijden gebruiken de eerstvolgende beschikbare periode.
                             <br>
                             <small class="text-muted">
-                                Event duration: @(selectedEventForShift?.StartDate.ToString("MMM dd HH:mm")) - @(selectedEventForShift?.EndDate.ToString("MMM dd HH:mm"))
+                                Duur opdracht: @(selectedEventForShift?.StartDate.ToString("MMM dd HH:mm")) - @(selectedEventForShift?.EndDate.ToString("MMM dd HH:mm"))
                                 @if (selectedEventForShift != null && selectedEventForShift.Shifts.Any())
                                 {
-                                    <br />@($"Current: {selectedEventForShift.Shifts.Count}")
+                                    <br />@($"Huidig: {selectedEventForShift.Shifts.Count}")
                                 }
                             </small>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @onclick="CloseCreateShiftDialog">Cancel</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseCreateShiftDialog">Annuleren</button>
                         <button type="submit" class="btn btn-primary" disabled="@isCreatingShift">
                             @if (isCreatingShift)
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            <i class="fas fa-save me-2"></i>Create Shift
+                            <i class="fas fa-save me-2"></i>Dienst aanmaken
                         </button>
                     </div>
                 </EditForm>

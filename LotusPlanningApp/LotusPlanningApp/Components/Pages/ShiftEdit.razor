@@ -8,13 +8,13 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<PageTitle>Edit Shift - LOTUS Planning App</PageTitle>
+<PageTitle>Dienst bewerken - LOTUS Planning App</PageTitle>
 
 @if (isLoading)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Bezig met laden...</span>
         </div>
     </div>
 }
@@ -25,11 +25,11 @@ else if (shift == null)
             <div class="col">
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Shift Not Found</strong>
-                    <p class="mb-0">The requested shift could not be found.</p>
+                    <strong>Dienst niet gevonden</strong>
+                    <p class="mb-0">De gevraagde dienst is niet gevonden.</p>
                 </div>
                 <a href="/events" class="btn btn-primary">
-                    <i class="fas fa-arrow-left me-2"></i>Back to Events
+                    <i class="fas fa-arrow-left me-2"></i>Terug naar opdrachten
                 </a>
             </div>
         </div>
@@ -44,31 +44,31 @@ else
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="/events" class="text-decoration-none">Events</a>
+                            <a href="/events" class="text-decoration-none">Opdrachten</a>
                         </li>
                         <li class="breadcrumb-item">
                             <a href="/events/details/@shift.EventId" class="text-decoration-none">@shift.Event.Name</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Edit Shift</li>
+                        <li class="breadcrumb-item active" aria-current="page">Dienst bewerken</li>
                     </ol>
                 </nav>
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h1 class="h3 mb-0 text-primary">
-                            <i class="fas fa-edit me-2"></i>Edit Shift
+                            <i class="fas fa-edit me-2"></i>Dienst bewerken
                         </h1>
                         <p class="text-muted mb-0">@shift.Name</p>
                     </div>
                     <div class="btn-group" role="group">
                         <button class="btn btn-outline-secondary" @onclick="Cancel">
-                            <i class="fas fa-times me-2"></i>Cancel
+                            <i class="fas fa-times me-2"></i>Annuleren
                         </button>
                         <button class="btn btn-primary" @onclick="SaveShift" disabled="@isSaving">
                             @if (isSaving)
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            <i class="fas fa-save me-2"></i>Save Changes
+                            <i class="fas fa-save me-2"></i>Wijzigingen opslaan
                         </button>
                     </div>
                 </div>
@@ -81,7 +81,7 @@ else
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-clock me-2"></i>Shift Details
+                            <i class="fas fa-clock me-2"></i>Dienstdetails
                         </h5>
                     </div>
                     <div class="card-body">
@@ -90,7 +90,7 @@ else
                             
                             <!-- Event Info (Read-only) -->
                             <div class="mb-3">
-                                <label class="form-label text-muted small">EVENT</label>
+                                <label class="form-label text-muted small">OPDRACHT</label>
                                 <div class="p-3 bg-light rounded">
                                     <div class="fw-medium">@shift.Event.Name</div>
                                     <small class="text-muted">
@@ -102,20 +102,20 @@ else
 
                             <!-- Shift Name -->
                             <div class="mb-3">
-                                <label class="form-label">Shift Name *</label>
-                                <InputText @bind-Value="editShift.Name" class="form-control" placeholder="Enter shift name" />
+                                <label class="form-label">Dienstnaam *</label>
+                                <InputText @bind-Value="editShift.Name" class="form-control" placeholder="Voer een dienstnaam in" />
                                 <ValidationMessage For="() => editShift.Name" class="text-danger" />
                             </div>
 
                             <!-- Times -->
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Start Time *</label>
+                                    <label class="form-label">Starttijd *</label>
                                     <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="editShift.StartTime" class="form-control" />
                                     <ValidationMessage For="() => editShift.StartTime" class="text-danger" />
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">End Time *</label>
+                                    <label class="form-label">Eindtijd *</label>
                                     <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="editShift.EndTime" class="form-control" />
                                     <ValidationMessage For="() => editShift.EndTime" class="text-danger" />
                                 </div>
@@ -124,22 +124,22 @@ else
                             <!-- Required Staff and Status -->
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Required Staff *</label>
+                                    <label class="form-label">Benodigde medewerkers *</label>
                                     <InputNumber @bind-Value="editShift.RequiredStaff" class="form-control" min="1" max="50" />
                                     <ValidationMessage For="() => editShift.RequiredStaff" class="text-danger" />
                                     <div class="form-text">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        Maximum staff that can be assigned to this shift
+                                        Maximum aantal medewerkers dat aan deze dienst kan worden gekoppeld
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Status *</label>
                                     <InputSelect @bind-Value="editShift.Status" class="form-select">
                                         <option value="@ShiftStatus.Open">Open</option>
-                                        <option value="@ShiftStatus.Full">Full</option>
-                                        <option value="@ShiftStatus.InProgress">In Progress</option>
-                                        <option value="@ShiftStatus.Completed">Completed</option>
-                                        <option value="@ShiftStatus.Cancelled">Cancelled</option>
+                                        <option value="@ShiftStatus.Full">Vol</option>
+                                        <option value="@ShiftStatus.InProgress">Bezig</option>
+                                        <option value="@ShiftStatus.Completed">Afgerond</option>
+                                        <option value="@ShiftStatus.Cancelled">Geannuleerd</option>
                                     </InputSelect>
                                     <ValidationMessage For="() => editShift.Status" class="text-danger" />
                                 </div>
@@ -147,19 +147,19 @@ else
 
                             <!-- Description -->
                             <div class="mb-3">
-                                <label class="form-label">Description</label>
-                                <InputTextArea @bind-Value="editShift.Description" class="form-control" rows="3" placeholder="Enter shift description (optional)" />
+                                <label class="form-label">Beschrijving</label>
+                                <InputTextArea @bind-Value="editShift.Description" class="form-control" rows="3" placeholder="Omschrijving van de dienst (optioneel)" />
                                 <ValidationMessage For="() => editShift.Description" class="text-danger" />
                             </div>
 
                             <!-- Validation Notes -->
                             <div class="alert alert-warning">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                <strong>Note:</strong> Make sure the shift times are within the event duration 
+                                <strong>Let op:</strong> Zorg dat de diensttijden binnen de duur van de opdracht vallen 
                                 (@shift.Event.StartDate.ToString("MMM dd HH:mm") - @shift.Event.EndDate.ToString("MMM dd HH:mm")).
                                 <br>
                                 <small class="text-muted mt-1">
-                                    Current assignment count: @currentAssignments.Count / @editShift.RequiredStaff
+                                    Huidig aantal toewijzingen: @currentAssignments.Count / @editShift.RequiredStaff
                                 </small>
                             </div>
                         </EditForm>
@@ -265,7 +265,7 @@ else
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-user-plus me-2"></i>Add Staff to Shift
+                        <i class="fas fa-user-plus me-2"></i>Personeel toevoegen aan dienst
                     </h5>
                     <button type="button" class="btn-close" @onclick="CloseAddStaffDialog"></button>
                 </div>
@@ -273,7 +273,7 @@ else
                     <!-- Shift Info -->
                     <div class="alert alert-info mb-4">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Adding staff to:</strong> @shift.Name<br>
+                        <strong>Personeel toevoegen aan:</strong> @shift.Name<br>
                         <small class="text-muted">
                             <i class="fas fa-calendar me-1"></i>@shift.StartTime.ToString("MMM dd, yyyy HH:mm") - @shift.EndTime.ToString("MMM dd, yyyy HH:mm")
                         </small>
@@ -286,18 +286,18 @@ else
                                 <span class="input-group-text">
                                     <i class="fas fa-search"></i>
                                 </span>
-                                <input type="text" class="form-control" placeholder="Search staff by name or email..." 
+                                    <input type="text" class="form-control" placeholder="Zoek personeel op naam of e-mail..." 
                                        @bind="staffSearchTerm" @oninput="OnStaffSearchChanged" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <select class="form-select" @bind="staffRoleFilter" @bind:after="OnStaffFilterChanged">
-                                <option value="">All Roles</option>
-                                <option value="@StaffRole.FirstAider">First Aider</option>
-                                <option value="@StaffRole.TeamLeader">Team Leader</option>
-                                <option value="@StaffRole.Paramedic">Paramedic</option>
-                                <option value="@StaffRole.Doctor">Doctor</option>
-                                <option value="@StaffRole.Volunteer">Volunteer</option>
+                                <option value="">Alle rollen</option>
+                                <option value="@StaffRole.FirstAider">Eerstehulpverlener</option>
+                                <option value="@StaffRole.TeamLeader">Teamleider</option>
+                                <option value="@StaffRole.Paramedic">Paramedicus</option>
+                                <option value="@StaffRole.Doctor">Arts</option>
+                                <option value="@StaffRole.Volunteer">Vrijwilliger</option>
                             </select>
                         </div>
                     </div>
@@ -307,7 +307,7 @@ else
                     {
                         <div class="text-center py-4">
                             <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading staff...</span>
+                                <span class="visually-hidden">Personeel laden...</span>
                             </div>
                         </div>
                     }
@@ -315,8 +315,8 @@ else
                     {
                         <div class="text-center py-4">
                             <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                            <h6 class="text-muted">No Available Staff</h6>
-                            <p class="text-muted">No staff members match your search criteria or are available for this time slot.</p>
+                            <h6 class="text-muted">Geen beschikbaar personeel</h6>
+                            <p class="text-muted">Er komt geen personeel overeen met je zoekcriteria of is beschikbaar in dit tijdslot.</p>
                         </div>
                     }
                     else
@@ -324,7 +324,7 @@ else
                         <div class="mb-3">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Showing @filteredAvailableStaff.Count available staff member(s)
+                                Toont @filteredAvailableStaff.Count beschikbare medewerker(s)
                             </small>
                         </div>
                         
@@ -362,7 +362,7 @@ else
                                             </div>
                                             <div>
                                                 <button class="btn btn-primary" @onclick="() => AddStaffToShift(staffMember)">
-                                                    <i class="fas fa-plus me-1"></i>Add
+                                                    <i class="fas fa-plus me-1"></i>Toevoegen
                                                 </button>
                                             </div>
                                         </div>
@@ -373,7 +373,7 @@ else
                     }
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CloseAddStaffDialog">Close</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CloseAddStaffDialog">Sluiten</button>
                 </div>
             </div>
         </div>
@@ -387,24 +387,24 @@ else
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm Staff Removal</h5>
+                    <h5 class="modal-title">Verwijderen bevestigen</h5>
                     <button type="button" class="btn-close" @onclick="CancelRemoveStaff"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to remove <strong>@staffToRemove.Staff.FullName</strong> from this shift?</p>
+                    <p>Weet je zeker dat je <strong>@staffToRemove.Staff.FullName</strong> van deze dienst wilt verwijderen?</p>
                     <p class="text-warning small">
                         <i class="fas fa-exclamation-triangle me-1"></i>
-                        This action will unassign the staff member from the shift.
+                        Deze actie verwijdert de medewerker uit de dienst.
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CancelRemoveStaff">Cancel</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CancelRemoveStaff">Annuleren</button>
                     <button type="button" class="btn btn-danger" @onclick="RemoveStaffFromShift" disabled="@isRemovingStaff">
                         @if (isRemovingStaff)
                         {
                             <span class="spinner-border spinner-border-sm me-2"></span>
                         }
-                        Remove Staff
+                        Medewerker verwijderen
                     </button>
                 </div>
             </div>
@@ -663,20 +663,20 @@ else
             // Validate that shift times are within event duration
             if (editShift.StartTime < shift.Event.StartDate || editShift.EndTime > shift.Event.EndDate)
             {
-                Console.WriteLine("Shift times must be within the event duration");
+                Console.WriteLine("Diensttijden moeten binnen de duur van de opdracht vallen");
                 return;
             }
 
             if (editShift.StartTime >= editShift.EndTime)
             {
-                Console.WriteLine("End time must be after start time");
+                Console.WriteLine("Eindtijd moet na de starttijd liggen");
                 return;
             }
 
             // If required staff is reduced below current assignments, we need to handle this
             if (editShift.RequiredStaff < currentAssignments.Count)
             {
-                Console.WriteLine($"Cannot reduce required staff below current assignments ({currentAssignments.Count})");
+                Console.WriteLine($"Aantal benodigde medewerkers kan niet lager zijn dan huidige toewijzingen ({currentAssignments.Count})");
                 return;
             }
 
@@ -687,7 +687,7 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error saving shift: {ex.Message}");
+            Console.WriteLine($"Fout bij het opslaan van de dienst: {ex.Message}");
         }
         finally
         {

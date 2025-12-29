@@ -9,7 +9,7 @@
 @inject IUpdateEventUseCase UpdateEventUseCase
 @rendermode InteractiveServer
 
-<PageTitle>Edit Event - LOTUS Planning App</PageTitle>
+<PageTitle>Opdracht bewerken - LOTUS Planning App</PageTitle>
 
 @if (isLoading)
 {
@@ -26,11 +26,11 @@ else if (eventToEdit == null)
             <div class="col">
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Event Not Found</strong>
-                    <p class="mb-0">The requested event could not be found.</p>
+                    <strong>Opdracht niet gevonden</strong>
+                    <p class="mb-0">De gevraagde opdracht is niet gevonden.</p>
                 </div>
                 <a href="/events" class="btn btn-primary">
-                    <i class="fas fa-arrow-left me-2"></i>Back to Events
+                    <i class="fas fa-arrow-left me-2"></i>Terug naar opdrachten
                 </a>
             </div>
         </div>
@@ -45,31 +45,31 @@ else
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="/events" class="text-decoration-none">Events</a>
+                            <a href="/events" class="text-decoration-none">Opdrachten</a>
                         </li>
                         <li class="breadcrumb-item">
                             <a href="/events/details/@eventToEdit.Id" class="text-decoration-none">@eventToEdit.Name</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                        <li class="breadcrumb-item active" aria-current="page">Bewerken</li>
                     </ol>
                 </nav>
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h1 class="h3 mb-0 text-primary">
-                            <i class="fas fa-edit me-2"></i>Edit Event
+                            <i class="fas fa-edit me-2"></i>Opdracht bewerken
                         </h1>
                         <p class="text-muted mb-0">@eventToEdit.Name</p>
                     </div>
                     <div class="btn-group" role="group">
                         <button class="btn btn-outline-secondary" @onclick="Cancel">
-                            <i class="fas fa-times me-2"></i>Cancel
+                            <i class="fas fa-times me-2"></i>Annuleren
                         </button>
                         <button class="btn btn-primary" @onclick="SaveEvent" disabled="@isSaving">
                             @if (isSaving)
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            <i class="fas fa-save me-2"></i>Save Changes
+                            <i class="fas fa-save me-2"></i>Wijzigingen opslaan
                         </button>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ else
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-calendar-edit me-2"></i>Event Details
+                            <i class="fas fa-calendar-edit me-2"></i>Opdrachtdetails
                         </h5>
                     </div>
                     <div class="card-body">
@@ -91,29 +91,29 @@ else
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Event Name *</label>
-                                    <InputText @bind-Value="editForm.Name" class="form-control" placeholder="Enter event name" />
+                                    <label class="form-label">Opdrachtnaam *</label>
+                                    <InputText @bind-Value="editForm.Name" class="form-control" placeholder="Voer een opdrachtnaam in" />
                                     <ValidationMessage For="() => editForm.Name" class="text-danger" />
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Location *</label>
-                                    <InputTextArea @bind-Value="editForm.Location" class="form-control" rows="5" placeholder="Enter event location" />
+                                    <label class="form-label">Locatie *</label>
+                                    <InputTextArea @bind-Value="editForm.Location" class="form-control" rows="5" placeholder="Voer de locatie van de opdracht in" />
                                     <ValidationMessage For="() => editForm.Location" class="text-danger" />
                                     <div class="form-text">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        You can enter multiple lines for detailed address or location information
+                                        Je kunt meerdere regels invullen voor een gedetailleerd adres of locatie-informatie
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Start Date & Time *</label>
+                                    <label class="form-label">Startdatum & tijd *</label>
                                     <input type="datetime-local" @bind="editForm.StartDate" class="form-control" />
                                     <ValidationMessage For="() => editForm.StartDate" class="text-danger" />
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">End Date & Time *</label>
+                                    <label class="form-label">Einddatum & tijd *</label>
                                     <input type="datetime-local" @bind="editForm.EndDate" class="form-control" />
                                     <ValidationMessage For="() => editForm.EndDate" class="text-danger" />
                                 </div>
@@ -123,43 +123,43 @@ else
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Status *</label>
                                     <InputSelect @bind-Value="editForm.Status" class="form-select">
-                                        <option value="@EventStatus.Requested">Requested</option>
-                                        <option value="@EventStatus.Planned">Planned</option>
-                                        <option value="@EventStatus.Confirmed">Confirmed</option>
-                                        <option value="@EventStatus.Active">Active</option>
-                                        <option value="@EventStatus.SendInvoice">Send invoice</option>
-                                        <option value="@EventStatus.Completed">Completed</option>
-                                        <option value="@EventStatus.Cancelled">Cancelled</option>
+                                        <option value="@EventStatus.Requested">Aangevraagd</option>
+                                        <option value="@EventStatus.Planned">Gepland</option>
+                                        <option value="@EventStatus.Confirmed">Bevestigd</option>
+                                        <option value="@EventStatus.Active">Actief</option>
+                                        <option value="@EventStatus.SendInvoice">Factuur verzenden</option>
+                                        <option value="@EventStatus.Completed">Afgerond</option>
+                                        <option value="@EventStatus.Cancelled">Geannuleerd</option>
                                     </InputSelect>
                                     <ValidationMessage For="() => editForm.Status" class="text-danger" />
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Contact Person</label>
-                                    <InputText @bind-Value="editForm.ContactPerson" class="form-control" placeholder="Enter contact person name" />
+                                    <label class="form-label">Contactpersoon</label>
+                                    <InputText @bind-Value="editForm.ContactPerson" class="form-control" placeholder="Naam contactpersoon" />
                                     <ValidationMessage For="() => editForm.ContactPerson" class="text-danger" />
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Contact Phone</label>
-                                    <InputText @bind-Value="editForm.ContactPhone" class="form-control" placeholder="Enter contact phone number" />
+                                    <label class="form-label">Telefoon contactpersoon</label>
+                                    <InputText @bind-Value="editForm.ContactPhone" class="form-control" placeholder="Telefoonnummer contactpersoon" />
                                     <ValidationMessage For="() => editForm.ContactPhone" class="text-danger" />
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Contact Email</label>
-                                    <InputText @bind-Value="editForm.ContactEmail" class="form-control" placeholder="Enter contact email address" type="email" />
+                                    <label class="form-label">E-mail contactpersoon</label>
+                                    <InputText @bind-Value="editForm.ContactEmail" class="form-control" placeholder="E-mailadres contactpersoon" type="email" />
                                     <ValidationMessage For="() => editForm.ContactEmail" class="text-danger" />
                                     <div class="form-text">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        Required for status change notifications (Planned, Confirmed)
+                                        Vereist voor statusmeldingen (Gepland, Bevestigd)
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Description</label>
-                                <InputTextArea @bind-Value="editForm.Description" class="form-control" rows="4" placeholder="Enter event description (optional)" />
+                                <label class="form-label">Beschrijving</label>
+                                <InputTextArea @bind-Value="editForm.Description" class="form-control" rows="4" placeholder="Omschrijving van de opdracht (optioneel)" />
                                 <ValidationMessage For="() => editForm.Description" class="text-danger" />
                             </div>
 
@@ -200,12 +200,12 @@ else
                                 <i class="fas fa-calendar text-muted me-2"></i>
                                 @eventToEdit.StartDate.ToString("MMM dd, yyyy HH:mm")
                                 <br>
-                                <small class="text-muted">to @eventToEdit.EndDate.ToString("MMM dd, yyyy HH:mm")</small>
+                                <small class="text-muted">tot @eventToEdit.EndDate.ToString("MMM dd, yyyy HH:mm")</small>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small">DURATION</label>
+                            <label class="form-label text-muted small">DUUR</label>
                             <div class="fw-medium">
                                 <i class="fas fa-hourglass-half text-muted me-2"></i>
                                 @CalculateDuration()
@@ -213,7 +213,7 @@ else
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small">CURRENT STATUS</label>
+                            <label class="form-label text-muted small">HUIDIGE STATUS</label>
                             <div>
                                 <span class="badge bg-@GetEventStatusColor(eventToEdit.Status) fs-6">
                                     @eventToEdit.Status
@@ -222,7 +222,7 @@ else
                         </div>
 
                         <div class="mb-0">
-                            <label class="form-label text-muted small">LAST UPDATED</label>
+                            <label class="form-label text-muted small">LAATST BIJGEWERKT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
                                 @(eventToEdit.UpdatedAt?.ToString("MMM dd, yyyy HH:mm") ?? eventToEdit.CreatedAt.ToString("MMM dd, yyyy HH:mm"))
@@ -235,7 +235,7 @@ else
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-success text-white">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-chart-bar me-2"></i>Event Statistics
+                            <i class="fas fa-chart-bar me-2"></i>Statistieken opdracht
                         </h5>
                     </div>
                     <div class="card-body">
@@ -243,23 +243,23 @@ else
                             <div class="col-6">
                                 <div class="border-end">
                                     <h4 class="text-primary mb-0">@eventToEdit.Shifts.Count</h4>
-                                    <small class="text-muted">Total Shifts</small>
+                                    <small class="text-muted">Aantal diensten</small>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <h4 class="text-success mb-0">@TotalRequiredStaff</h4>
-                                <small class="text-muted">Required Staff</small>
+                                <small class="text-muted">Benodigde medewerkers</small>
                             </div>
                         </div>
                         <hr>
                         <div class="row text-center">
                             <div class="col-6">
                                 <h5 class="text-info mb-0">@TotalAssignedStaff</h5>
-                                <small class="text-muted">Assigned Staff</small>
+                                <small class="text-muted">Toegewezen medewerkers</small>
                             </div>
                             <div class="col-6">
                                 <h5 class="text-warning mb-0">@(TotalRequiredStaff - TotalAssignedStaff)</h5>
-                                <small class="text-muted">Still Needed</small>
+                                <small class="text-muted">Nog nodig</small>
                             </div>
                         </div>
                     </div>
@@ -269,24 +269,24 @@ else
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-warning text-dark">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-bolt me-2"></i>Quick Actions
+                            <i class="fas fa-bolt me-2"></i>Snelle acties
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
                             <a href="/events/details/@eventToEdit.Id" class="btn btn-outline-primary">
-                                <i class="fas fa-eye me-2"></i>View Details
+                                <i class="fas fa-eye me-2"></i>Details bekijken
                             </a>
                             <button class="btn btn-outline-success" @onclick="CreateShift">
-                                <i class="fas fa-plus me-2"></i>Add Shift
+                                <i class="fas fa-plus me-2"></i>Dienst toevoegen
                             </button>
                             <button class="btn btn-outline-info" @onclick="ManageShifts">
-                                <i class="fas fa-cogs me-2"></i>Manage Shifts
+                                <i class="fas fa-cogs me-2"></i>Diensten beheren
                             </button>
                             @if (eventToEdit.Status != EventStatus.Cancelled)
                             {
                                 <button class="btn btn-outline-danger" @onclick="ConfirmCancelEvent">
-                                    <i class="fas fa-times-circle me-2"></i>Cancel Event
+                                    <i class="fas fa-times-circle me-2"></i>Opdracht annuleren
                                 </button>
                             }
                         </div>
@@ -303,7 +303,7 @@ else
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-transparent border-0">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-clock me-2"></i>Associated Shifts (@eventToEdit.Shifts.Count)
+                                <i class="fas fa-clock me-2"></i>Gekoppelde diensten (@eventToEdit.Shifts.Count)
                             </h5>
                         </div>
                         <div class="card-body">
@@ -311,11 +311,11 @@ else
                                 <table class="table table-hover align-middle">
                                     <thead class="table-light">
                                         <tr>
-                                            <th scope="col">Shift Name</th>
-                                            <th scope="col">Date & Time</th>
-                                            <th scope="col">Staff</th>
+                                            <th scope="col">Dienstnaam</th>
+                                            <th scope="col">Datum & tijd</th>
+                                            <th scope="col">Medewerkers</th>
                                             <th scope="col">Status</th>
-                                            <th scope="col" class="text-center">Actions</th>
+                                            <th scope="col" class="text-center">Acties</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -334,22 +334,22 @@ else
                                                 <td>
                                                     <span class="fw-medium">@shift.StartTime.ToString("MMM dd, HH:mm")</span>
                                                     <br>
-                                                    <small class="text-muted">to @shift.EndTime.ToString("MMM dd, HH:mm")</small>
+                                                    <small class="text-muted">tot @shift.EndTime.ToString("MMM dd, HH:mm")</small>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <span class="fw-medium me-2">@shift.StaffAssignments.Count / @shift.RequiredStaff</span>
                                                         @if (shift.StaffAssignments.Count == shift.RequiredStaff)
                                                         {
-                                                            <span class="badge bg-success">Full</span>
+                                                            <span class="badge bg-success">Vol</span>
                                                         }
                                                         else if (shift.StaffAssignments.Count > 0)
                                                         {
-                                                            <span class="badge bg-warning">Partial</span>
+                                                            <span class="badge bg-warning">Gedeeltelijk</span>
                                                         }
                                                         else
                                                         {
-                                                            <span class="badge bg-danger">Empty</span>
+                                                            <span class="badge bg-danger">Leeg</span>
                                                         }
                                                     </div>
                                                 </td>
@@ -360,10 +360,10 @@ else
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
-                                                        <a href="/shifts/edit/@shift.Id" class="btn btn-outline-primary" title="Edit Shift">
+                                                        <a href="/shifts/edit/@shift.Id" class="btn btn-outline-primary" title="Dienst bewerken">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a href="/shifts/details/@shift.Id" class="btn btn-outline-info" title="View Details">
+                                                        <a href="/shifts/details/@shift.Id" class="btn btn-outline-info" title="Details bekijken">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     </div>
@@ -388,25 +388,25 @@ else
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm Event Cancellation</h5>
+                    <h5 class="modal-title">Annulering van opdracht bevestigen</h5>
                     <button type="button" class="btn-close" @onclick="CancelEventCancellation"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to cancel the event "<strong>@eventToEdit?.Name</strong>"?</p>
+                    <p>Weet je zeker dat je de opdracht "<strong>@eventToEdit?.Name</strong>" wilt annuleren?</p>
                     <p class="text-warning small">
                         <i class="fas fa-exclamation-triangle me-1"></i>
-                        This will set the event status to "Cancelled" but will preserve all shifts and assignments for record keeping.
-                        Staff members will need to be notified separately.
+                        Dit zet de status op "Geannuleerd" maar behoudt alle diensten en toewijzingen voor de administratie.
+                        Medewerkers moeten apart worden geïnformeerd.
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CancelEventCancellation">No, Keep Event</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CancelEventCancellation">Nee, behouden</button>
                     <button type="button" class="btn btn-danger" @onclick="CancelEvent" disabled="@isCancelling">
                         @if (isCancelling)
                         {
                             <span class="spinner-border spinner-border-sm me-2"></span>
                         }
-                        Yes, Cancel Event
+                        Ja, opdracht annuleren
                     </button>
                 </div>
             </div>
@@ -481,7 +481,7 @@ else
         }
         catch (Exception ex)
         {
-            validationError = $"Error saving event: {ex.Message}";
+            validationError = $"Fout bij het opslaan van de opdracht: {ex.Message}";
         }
         finally
         {
@@ -534,7 +534,7 @@ else
         }
         catch (Exception ex)
         {
-            validationError = $"Error cancelling event: {ex.Message}";
+            validationError = $"Fout bij het annuleren van de opdracht: {ex.Message}";
         }
         finally
         {
@@ -549,9 +549,9 @@ else
         var duration = eventToEdit.EndDate - eventToEdit.StartDate;
         if (duration.TotalDays >= 1)
         {
-            return $"{duration.Days} day(s), {duration.Hours} hour(s)";
+            return $"{duration.Days} dag(en), {duration.Hours} uur";
         }
-        return $"{duration.Hours} hour(s), {duration.Minutes} minute(s)";
+        return $"{duration.Hours} uur, {duration.Minutes} min";
     }
 
     private int TotalRequiredStaff => eventToEdit?.Shifts.Sum(s => s.RequiredStaff) ?? 0;

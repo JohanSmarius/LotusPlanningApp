@@ -1,12 +1,12 @@
-# Email Notification Setup for Staff Assignments
+# E-mailnotificaties instellen voor personeelsinzet
 
-This application automatically sends email notifications to staff members when they are assigned to shifts. The emails include detailed information about the event, shift details, and important instructions.
+Deze applicatie verstuurt automatisch e-mailnotificaties naar medewerkers wanneer ze aan diensten worden toegewezen. De e-mails bevatten details over de opdracht, de dienst en belangrijke instructies.
 
-## Email Configuration
+## E-mailconfiguratie
 
-### 1. SMTP Settings
+### 1. SMTP-instellingen
 
-Configure your SMTP settings in `appsettings.json` or `appsettings.Development.json`:
+Configureer de SMTP-instellingen in `appsettings.json` of `appsettings.Development.json`:
 
 ```json
 {
@@ -22,130 +22,130 @@ Configure your SMTP settings in `appsettings.json` or `appsettings.Development.j
 }
 ```
 
-### 2. Gmail Configuration
+### 2. Gmail-configuratie
 
-If using Gmail:
+Bij gebruik van Gmail:
 
-1. Enable 2-factor authentication on your Google account
-2. Generate an "App Password" for the application
-3. Use the app password (not your regular password) in `SmtpPassword`
-4. Set `SmtpHost` to `smtp.gmail.com`
-5. Set `SmtpPort` to `587`
-6. Set `EnableSsl` to `true`
+1. Schakel 2FA in op je Google-account
+2. Genereer een "App-wachtwoord" voor de applicatie
+3. Gebruik het app-wachtwoord (niet je gewone wachtwoord) in `SmtpPassword`
+4. Stel `SmtpHost` in op `smtp.gmail.com`
+5. Stel `SmtpPort` in op `587`
+6. Stel `EnableSsl` in op `true`
 
-### 3. Other Email Providers
+### 3. Andere e-mailproviders
 
-For other providers, configure the appropriate SMTP settings:
+Voor andere providers gebruik je de juiste SMTP-instellingen:
 
-- **Outlook/Hotmail**: `smtp-mail.outlook.com`, port 587
-- **Yahoo**: `smtp.mail.yahoo.com`, port 587
-- **Office 365**: `smtp.office365.com`, port 587
+- **Outlook/Hotmail**: `smtp-mail.outlook.com`, poort 587
+- **Yahoo**: `smtp.mail.yahoo.com`, poort 587
+- **Office 365**: `smtp.office365.com`, poort 587
 
-## Email Templates
+## E-mailsjablonen
 
-The email notification includes:
+De notificatie-e-mail bevat:
 
-- **Event Details**: Name, location, duration, contact information
-- **Shift Details**: Name, time, duration, description
-- **Staff Role**: Color-coded badge showing their role
-- **Important Notes**: Arrival instructions, required items
-- **Professional HTML Formatting**: Mobile-responsive design
+- **Opdrachtdetails**: naam, locatie, duur, contactgegevens
+- **Dienstdetails**: naam, tijd, duur, beschrijving
+- **Rol medewerker**: gekleurde badge met rol
+- **Belangrijke notities**: aankomstinstructies, benodigdheden
+- **Professionele HTML-opmaak**: mobiel-responsief ontwerp
 
-## Features
+## Functionaliteit
 
-### Automatic Email Sending
+### Automatisch e-mailen
 
-- ? **Assignment Creation**: Email sent when staff is assigned to a shift
-- ? **Rich HTML Content**: Professional formatting with event details
-- ? **Mobile Responsive**: Works on all devices
-- ? **Error Handling**: Email failures don't block assignment creation
-- ? **Logging**: Detailed logs for troubleshooting
+- **Toewijzing maken**: e-mail wordt verstuurd zodra een medewerker aan een dienst wordt gekoppeld
+- **Rijke HTML-content**: professionele opmaak met alle details
+- **Mobiel responsief**: werkt op alle apparaten
+- **Foutafhandeling**: mislukte e-mail blokkeert toewijzing niet
+- **Logging**: gedetailleerde logs voor troubleshooting
 
-### Email Content
+### Inhoud van de e-mail
 
-Each notification email includes:
+Elke notificatie bevat:
 
-1. **Personalized Greeting** with staff member's name
-2. **Event Information**:
-   - Event name and location
-   - Event duration
-   - Contact person and phone
-   - Event description
+1. **Persoonlijke aanhef** met naam van de medewerker
+2. **Opdrachtinformatie**:
+   - Naam en locatie
+   - Duur van de opdracht
+   - Contactpersoon en telefoon
+   - Omschrijving
 
-3. **Shift Details**:
-   - Shift name and time
-   - Duration calculation
-   - Shift description
-   - Staff role with color coding
+3. **Dienstdetails**:
+   - Naam en tijd
+   - Berekening van de duur
+   - Beschrijving van de dienst
+   - Rol met kleurcodering
 
-4. **Important Instructions**:
-   - Arrive 15 minutes early
-   - Bring certification documents
-   - Dress code requirements
-   - Contact information for questions
+4. **Belangrijke instructies**:
+   - Kom 15 minuten eerder
+   - Neem certificeringsdocumenten mee
+   - Kledingvoorschrift
+   - Contactgegevens voor vragen
 
-## Testing Email Configuration
+## E-mailconfiguratie testen
 
-To test your email configuration:
+Test de instellingen zo:
 
-1. Assign a staff member to a shift
-2. Check the application logs for email sending status
-3. Verify the staff member receives the notification
+1. Wijs een medewerker toe aan een dienst
+2. Controleer in de applicatielogs of de e-mail is verstuurd
+3. Kijk of de medewerker de notificatie ontvangt
 
-## Troubleshooting
+## Probleemoplossing
 
-### Common Issues
+### Veelvoorkomende issues
 
-1. **Email not sending**:
-   - Check SMTP credentials
-   - Verify network connectivity
-   - Check firewall settings
-   - Review application logs
+1. **E-mail wordt niet verzonden**:
+   - Controleer SMTP-gegevens
+   - Verifieer netwerkconnectiviteit
+   - Check firewall-instellingen
+   - Bekijk de applicatielogs
 
-2. **Gmail authentication errors**:
-   - Ensure 2FA is enabled
-   - Use app password, not regular password
-   - Check Google account security settings
+2. **Gmail-authenticatiefouten**:
+   - Zorg dat 2FA aanstaat
+   - Gebruik het app-wachtwoord, niet het normale wachtwoord
+   - Controleer Google-beveiligingsinstellingen
 
-3. **Email in spam folder**:
-   - Add sender to contacts
-   - Configure SPF/DKIM records if using custom domain
+3. **E-mail komt in spam**:
+   - Voeg afzender toe aan contacten
+   - Stel SPF/DKIM in bij een eigen domein
 
 ### Logging
 
-The application logs email activities:
+De applicatie logt e-mailactiviteiten:
 
-- `Information`: Successful email sending
-- `Warning`: Email settings not configured
-- `Error`: Email sending failures
+- `Information`: e-mail verzenden geslaagd
+- `Warning`: e-mailinstellingen niet geconfigureerd
+- `Error`: verzenden mislukt
 
-Check logs in the console or configure a logging provider to monitor email delivery.
+Bekijk de logs in de console of stel een loggingprovider in voor monitoring.
 
-## Security Considerations
+## Beveiliging
 
-- **Never commit real passwords** to source control
-- Use **environment variables** or **Azure Key Vault** for production
-- Consider using **managed identity** for cloud deployments
-- **Encrypt sensitive configuration** data
+- **Commit nooit echte wachtwoorden**
+- Gebruik **omgevingsvariabelen** of **Key Vault** in productie
+- Overweeg **managed identity** bij cloud-deployment
+- **Versleutel gevoelige configuratie**
 
-## Disabling Email Notifications
+## E-mailnotificaties uitschakelen
 
-To disable email notifications without removing the code:
+Uitschakelen zonder code te verwijderen:
 
-1. Leave email settings empty in configuration
-2. The service will log a warning and skip sending
-3. Staff assignments will still work normally
+1. Laat e-mailinstellingen leeg in de configuratie
+2. De service logt een waarschuwing en slaat verzenden over
+3. Personeelstoewijzingen blijven werken
 
-## Production Deployment
+## Productie-deploy
 
-For production environments:
+Voor productie:
 
-1. Use **Azure SendGrid**, **AWS SES**, or similar managed service
-2. Configure **environment variables** for sensitive settings
-3. Set up **monitoring** for email delivery failures
-4. Consider **rate limiting** to prevent spam
+1. Gebruik **SendGrid**, **AWS SES** of vergelijkbare dienst
+2. Zet **omgevingsvariabelen** voor gevoelige waarden
+3. Richt **monitoring** in voor verzendfouten
+4. Overweeg **rate limiting** om spam te voorkomen
 
-## Example Production Configuration
+## Voorbeeldconfiguratie productie
 
 ```json
 {
@@ -161,4 +161,4 @@ For production environments:
 }
 ```
 
-This implementation provides a robust, professional email notification system that enhances communication with your medical first aid staff.
+Deze implementatie levert een robuust, professioneel e-mailsysteem dat de communicatie met je LOTUS-team verbetert.

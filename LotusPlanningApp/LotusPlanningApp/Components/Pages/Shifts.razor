@@ -7,13 +7,13 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<PageTitle>Shifts - LOTUS Planning App</PageTitle>
+<PageTitle>Diensten - LOTUS Planning App</PageTitle>
 
 @if (isLoading)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Bezig met laden...</span>
         </div>
     </div>
 }
@@ -25,16 +25,16 @@ else
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h1 class="h3 mb-0 text-primary">
-                            <i class="fas fa-clock me-2"></i>All Shifts
+                            <i class="fas fa-clock me-2"></i>Alle diensten
                         </h1>
-                        <p class="text-muted">Manage event shifts and scheduling</p>
+                        <p class="text-muted">Beheer diensten en planning voor opdrachten</p>
                     </div>
                     <div class="btn-group" role="group">
                         <button class="btn btn-outline-secondary" @onclick="RefreshShifts">
-                            <i class="fas fa-refresh me-2"></i>Refresh
+                            <i class="fas fa-refresh me-2"></i>Verversen
                         </button>
                         <a href="/events" class="btn btn-success">
-                            <i class="fas fa-plus me-2"></i>Create Event & Shifts
+                            <i class="fas fa-plus me-2"></i>Opdracht en diensten aanmaken
                         </a>
                     </div>
                 </div>
@@ -48,34 +48,34 @@ else
                     <span class="input-group-text">
                         <i class="fas fa-search"></i>
                     </span>
-                    <input type="text" class="form-control" placeholder="Search shifts..." 
+                          <input type="text" class="form-control" placeholder="Zoek diensten..." 
                            @bind="searchTerm" @oninput="OnSearchChanged" />
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <select class="form-select" @bind="statusFilter" @bind:after="ApplyFilters">
-                    <option value="">All Statuses</option>
+                    <option value="">Alle statussen</option>
                     <option value="@ShiftStatus.Open">Open</option>
-                    <option value="@ShiftStatus.Full">Full</option>
-                    <option value="@ShiftStatus.InProgress">In Progress</option>
-                    <option value="@ShiftStatus.Completed">Completed</option>
-                    <option value="@ShiftStatus.Cancelled">Cancelled</option>
+                    <option value="@ShiftStatus.Full">Vol</option>
+                    <option value="@ShiftStatus.InProgress">Bezig</option>
+                    <option value="@ShiftStatus.Completed">Afgerond</option>
+                    <option value="@ShiftStatus.Cancelled">Geannuleerd</option>
                 </select>
             </div>
             <div class="col-md-3 mb-3">
                 <select class="form-select" @bind="timeFilter" @bind:after="ApplyFilters">
-                    <option value="">All Time</option>
-                    <option value="upcoming">Upcoming</option>
-                    <option value="today">Today</option>
-                    <option value="week">This Week</option>
-                    <option value="month">This Month</option>
-                    <option value="past">Past</option>
+                    <option value="">Alle tijden</option>
+                    <option value="upcoming">Aankomend</option>
+                    <option value="today">Vandaag</option>
+                    <option value="week">Deze week</option>
+                    <option value="month">Deze maand</option>
+                    <option value="past">Verleden</option>
                 </select>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="d-flex align-items-center justify-content-end">
                     <small class="text-muted">
-                        @filteredShifts.Count of @allShifts.Count shifts
+                        @filteredShifts.Count van @allShifts.Count diensten
                     </small>
                 </div>
             </div>
@@ -85,10 +85,10 @@ else
         {
             <div class="text-center py-5">
                 <i class="fas fa-clock fa-4x text-muted mb-4"></i>
-                <h4 class="text-muted">No Shifts Found</h4>
-                <p class="text-muted mb-4">There are no shifts created yet. Create an event first, then add shifts to it.</p>
+                <h4 class="text-muted">Geen diensten gevonden</h4>
+                <p class="text-muted mb-4">Er zijn nog geen diensten aangemaakt. Maak eerst een opdracht en voeg daarna diensten toe.</p>
                 <a href="/events" class="btn btn-primary btn-lg">
-                    <i class="fas fa-plus me-2"></i>Create Your First Event
+                    <i class="fas fa-plus me-2"></i>Maak je eerste opdracht
                 </a>
             </div>
         }
@@ -96,10 +96,10 @@ else
         {
             <div class="text-center py-4">
                 <i class="fas fa-filter fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">No Shifts Match Your Filters</h5>
-                <p class="text-muted mb-3">Try adjusting your search or filter criteria.</p>
+                <h5 class="text-muted">Geen diensten gevonden voor deze filters</h5>
+                <p class="text-muted mb-3">Pas je zoekopdracht of filters aan.</p>
                 <button class="btn btn-outline-primary" @onclick="ClearFilters">
-                    <i class="fas fa-times me-2"></i>Clear Filters
+                    <i class="fas fa-times me-2"></i>Filters wissen
                 </button>
             </div>
         }
@@ -129,15 +129,15 @@ else
                                         @eventGroup.Key.Status
                                     </span>
                                     <small class="text-muted">
-                                        @eventGroup.Count() shift(s)
+                                        @eventGroup.Count() dienst(en)
                                     </small>
                                 </div>
                             </div>
                             <div class="btn-group btn-group-sm" role="group">
-                                <a href="/events/details/@eventGroup.Key.Id" class="btn btn-outline-primary" title="View Event">
+                                <a href="/events/details/@eventGroup.Key.Id" class="btn btn-outline-primary" title="Opdracht bekijken">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="/events/edit/@eventGroup.Key.Id" class="btn btn-outline-secondary" title="Edit Event">
+                                <a href="/events/edit/@eventGroup.Key.Id" class="btn btn-outline-secondary" title="Opdracht bewerken">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             </div>
@@ -186,32 +186,32 @@ else
                                                     <span class="fw-medium">@shift.StaffAssignments.Count / @shift.RequiredStaff</span>
                                                     @if (shift.StaffAssignments.Count == shift.RequiredStaff)
                                                     {
-                                                        <span class="badge bg-success ms-1">Full</span>
+                                                        <span class="badge bg-success ms-1">Vol</span>
                                                     }
                                                     else if (shift.StaffAssignments.Count > 0)
                                                     {
-                                                        <span class="badge bg-warning ms-1">Partial</span>
+                                                        <span class="badge bg-warning ms-1">Gedeeltelijk</span>
                                                     }
                                                     else
                                                     {
-                                                        <span class="badge bg-danger ms-1">Empty</span>
+                                                        <span class="badge bg-danger ms-1">Leeg</span>
                                                     }
                                                 </div>
                                                 @if (shift.StaffAssignments.Count < shift.RequiredStaff)
                                                 {
                                                     <small class="text-warning">
                                                         <i class="fas fa-exclamation-triangle me-1"></i>
-                                                        @(shift.RequiredStaff - shift.StaffAssignments.Count) needed
+                                                        @(shift.RequiredStaff - shift.StaffAssignments.Count) nodig
                                                     </small>
                                                 }
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="btn-group btn-group-sm" role="group">
-                                                    <a href="/shifts/details/@shift.Id" class="btn btn-outline-primary" title="View Details">
+                                                    <a href="/shifts/details/@shift.Id" class="btn btn-outline-primary" title="Details bekijken">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="/shifts/edit/@shift.Id" class="btn btn-outline-secondary" title="Edit Shift">
+                                                    <a href="/shifts/edit/@shift.Id" class="btn btn-outline-secondary" title="Dienst bewerken">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </div>
@@ -237,26 +237,26 @@ else
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-secondary text-white">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-chart-bar me-2"></i>Shifts Summary
+                                <i class="fas fa-chart-bar me-2"></i>Samenvatting diensten
                             </h5>
                         </div>
                         <div class="card-body">
                             <div class="row text-center">
                                 <div class="col-md-2 col-6 mb-3">
                                     <h4 class="text-primary mb-0">@allShifts.Count</h4>
-                                    <small class="text-muted">Total Shifts</small>
+                                    <small class="text-muted">Aantal diensten</small>
                                 </div>
                                 <div class="col-md-2 col-6 mb-3">
                                     <h4 class="text-success mb-0">@upcomingShifts</h4>
-                                    <small class="text-muted">Upcoming</small>
+                                    <small class="text-muted">Aankomend</small>
                                 </div>
                                 <div class="col-md-2 col-6 mb-3">
                                     <h4 class="text-warning mb-0">@inProgressShifts</h4>
-                                    <small class="text-muted">In Progress</small>
+                                    <small class="text-muted">Bezig</small>
                                 </div>
                                 <div class="col-md-2 col-6 mb-3">
                                     <h4 class="text-info mb-0">@totalStaffRequired</h4>
-                                    <small class="text-muted">Staff Required</small>
+                                    <small class="text-muted">Benodigde medewerkers</small>
                                 </div>
                                 <div class="col-md-2 col-6 mb-3">
                                     <h4 class="text-@GetStaffingColor() mb-0">@totalStaffAssigned</h4>
