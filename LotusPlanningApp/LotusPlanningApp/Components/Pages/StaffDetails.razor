@@ -1,9 +1,13 @@
 @page "/staff/details/{StaffId:int}"
 @attribute [Authorize(Roles = "Admin")]
 @using Application
+@using Application.Queries.Staff
+@using Application.Commands.Staff
 @using Entities
-@inject IStaffRepository StaffService
-@inject IStaffAssignmentRepository StaffAssignmentService
+@inject GetStaffByIdQueryHandler GetStaffByIdHandler
+@inject UpdateStaffCommandHandler UpdateStaffHandler
+@inject DeleteStaffCommandHandler DeleteStaffHandler
+@inject IsEmailUniqueQueryHandler IsEmailUniqueHandler
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
@@ -532,7 +536,8 @@ else
 
     private async Task LoadStaffDetails()
     {
-        staffDetail = await StaffService.GetStaffByIdAsync(StaffId);
+        var query = new GetStaffByIdQuery(StaffId);
+        staffDetail = await GetStaffByIdHandler.Handle(query);
     }
 
     private int TotalAssignments => staffDetail?.StaffAssignments.Count ?? 0;
@@ -605,14 +610,16 @@ else
         try
         {
             // Check for email uniqueness
-            var isEmailUnique = await StaffService.IsEmailUniqueAsync(staffForm.Email, staffForm.Id);
+            var emailQuery = new IsEmailUniqueQuery(staffForm.Email, staffForm.Id);
+            var isEmailUnique = await IsEmailUniqueHandler.Handle(emailQuery);
             if (!isEmailUnique)
             {
                 emailError = "This email address is already in use by another staff member.";
                 return;
             }
 
-            await StaffService.UpdateStaffAsync(staffForm);
+            var updateCommand = new UpdateStaffCommand(staffForm);
+            await UpdateStaffHandler.Handle(updateCommand);
             
             // Reload staff details
             await LoadStaffDetails();
@@ -648,7 +655,8 @@ else
         isDeactivating = true;
         try
         {
-            await StaffService.DeleteStaffAsync(staffDetail.Id);
+            var deleteCommand = new DeleteStaffCommand(staffDetail.Id);
+            await DeleteStaffHandler.Handle(deleteCommand);
             
             // Reload staff details
             await LoadStaffDetails();
@@ -672,7 +680,8 @@ else
         try
         {
             staffDetail.IsActive = true;
-            await StaffService.UpdateStaffAsync(staffDetail);
+            var updateCommand = new UpdateStaffCommand(staffDetail);
+            await UpdateStaffHandler.Handle(updateCommand);
             
             // Reload staff details
             await LoadStaffDetails();

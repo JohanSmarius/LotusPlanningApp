@@ -2,10 +2,18 @@
 @attribute [Authorize(Roles = "Admin")]
 @using Application
 @using Application.DataAdapters
+@using Application.Queries.Shifts
+@using Application.Queries.Staff
+@using Application.Queries.StaffAssignments
+@using Application.Commands.Shifts
+@using Application.Commands.StaffAssignments
 @using Entities
-@inject IShiftRepository ShiftService
-@inject IStaffRepository StaffService
-@inject IStaffAssignmentRepository StaffAssignmentService
+@inject GetShiftByIdQueryHandler GetShiftByIdHandler
+@inject GetActiveStaffQueryHandler GetActiveStaffHandler
+@inject IsStaffAvailableQueryHandler IsStaffAvailableHandler
+@inject CreateStaffAssignmentCommandHandler CreateAssignmentHandler
+@inject DeleteStaffAssignmentCommandHandler DeleteAssignmentHandler
+@inject UpdateShiftCommandHandler UpdateShiftHandler
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
@@ -456,7 +464,8 @@ else
 
     private async Task LoadShiftDetails()
     {
-        shift = await ShiftService.GetShiftByIdAsync(ShiftId);
+        var query = new GetShiftByIdQuery(ShiftId);
+        shift = await GetShiftByIdHandler.Handle(query);
         if (shift != null)
         {
             // Create a copy for editing - exclude navigation properties to avoid tracking conflicts
@@ -486,7 +495,8 @@ else
         isLoadingStaff = true;
         try
         {
-            var allStaff = await StaffService.GetActiveStaffAsync();
+            var staffQuery = new GetActiveStaffQuery();
+            var allStaff = await GetActiveStaffHandler.Handle(staffQuery);
             var assignedStaffIds = currentAssignments.Select(a => a.StaffId).ToHashSet();
             
             // Filter out already assigned staff and check availability
@@ -499,11 +509,12 @@ else
                     continue;
 
                 // Check if staff is available during shift time
-                var isAvailable = await StaffAssignmentService.IsStaffAvailableAsync(
+                var availQuery = new IsStaffAvailableQuery(
                     staffMember.Id, 
                     editShift.StartTime, 
                     editShift.EndTime
                 );
+                var isAvailable = await IsStaffAvailableHandler.Handle(availQuery);
 
                 if (isAvailable)
                 {
@@ -589,7 +600,8 @@ else
                 Status = AssignmentStatus.Assigned
             };
 
-            var createdAssignment = await StaffAssignmentService.CreateAssignmentAsync(assignment);
+            var command = new CreateStaffAssignmentCommand(assignment);
+            var createdAssignment = await CreateAssignmentHandler.Handle(command);
             
             // Add to current assignments with staff info
             createdAssignment.Staff = staffMember;
@@ -632,7 +644,8 @@ else
         isRemovingStaff = true;
         try
         {
-            await StaffAssignmentService.DeleteAssignmentAsync(staffToRemove.Id);
+            var deleteCommand = new DeleteStaffAssignmentCommand(staffToRemove.Id);
+            await DeleteAssignmentHandler.Handle(deleteCommand);
             currentAssignments.Remove(staffToRemove);
             
             // If add staff dialog is open, refresh available staff
@@ -681,7 +694,8 @@ else
                 return;
             }
 
-            await ShiftService.UpdateShiftAsync(editShift);
+            var updateCommand = new UpdateShiftCommand(editShift);
+            await UpdateShiftHandler.Handle(updateCommand);
             
             // Navigate back to the calling page
             NavigateBack();

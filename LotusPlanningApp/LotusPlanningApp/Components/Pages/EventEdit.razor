@@ -2,12 +2,12 @@
 @attribute [Authorize(Roles = "Admin")]
 @using Application
 @using Application.DataAdapters
+@using Application.Queries.Events
+@using Application.Commands.Events
 @using Entities
-@inject IEventRepository EventRepository
-@inject IShiftRepository ShiftService
-@inject IEventService EventService
+@inject GetEventByIdQueryHandler GetEventByIdHandler
+@inject UpdateEventCommandHandler UpdateEventHandler
 @inject NavigationManager Navigation
-@inject IUpdateEventUseCase UpdateEventUseCase
 @rendermode InteractiveServer
 
 <PageTitle>Opdracht bewerken - LOTUS Planning App</PageTitle>
@@ -440,7 +440,8 @@ else
 
     private async Task LoadEventDetails()
     {
-        eventToEdit = await EventRepository.GetEventByIdAsync(EventId);
+        var query = new GetEventByIdQuery(EventId);
+        eventToEdit = await GetEventByIdHandler.Handle(query);
         if (eventToEdit != null)
         {
             // Create a copy for editing
@@ -471,7 +472,8 @@ else
         
         try
         {
-            await UpdateEventUseCase.Execute(editForm);
+            var command = new UpdateEventCommand(editForm);
+            await UpdateEventHandler.Handle(command);
             
             // Navigate back to event details
             Navigation.NavigateTo($"/events/details/{EventId}");
@@ -527,7 +529,8 @@ else
         try
         {
             editForm.Status = EventStatus.Cancelled;
-            await EventRepository.UpdateEventAsync(editForm);
+            var command = new UpdateEventCommand(editForm);
+            await UpdateEventHandler.Handle(command);
             
             // Reload to get updated data
             await LoadEventDetails();

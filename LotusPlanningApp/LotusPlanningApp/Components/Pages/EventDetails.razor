@@ -2,9 +2,12 @@
 @attribute [Authorize(Roles = "Admin")]
 @using Application
 @using Application.DataAdapters
+@using Application.Queries.Events
+@using Application.Commands.Shifts
 @using Entities
-@inject IEventRepository EventService
-@inject IShiftRepository ShiftService
+@inject GetEventByIdQueryHandler GetEventByIdHandler
+@inject CreateShiftCommandHandler CreateShiftHandler
+@inject DeleteShiftCommandHandler DeleteShiftHandler
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
@@ -473,7 +476,8 @@ else
 
     private async Task LoadEventDetails()
     {
-        eventDetail = await EventService.GetEventByIdAsync(EventId);
+        var query = new GetEventByIdQuery(EventId);
+        eventDetail = await GetEventByIdHandler.Handle(query);
     }
 
     private string GetEventStatusColor(EventStatus status)
@@ -593,7 +597,8 @@ else
             newShift.EventId = eventDetail.Id;
             
             // Create the shift
-            await ShiftService.CreateShiftAsync(newShift);
+            var command = new CreateShiftCommand(newShift);
+            await CreateShiftHandler.Handle(command);
             
             // Refresh the event details
             await LoadEventDetails();
@@ -632,7 +637,8 @@ else
         isDeletingShift = true;
         try
         {
-            await ShiftService.DeleteShiftAsync(shiftToDelete.Id);
+            var command = new DeleteShiftCommand(shiftToDelete.Id);
+            await DeleteShiftHandler.Handle(command);
             
             // Refresh the event details
             await LoadEventDetails();

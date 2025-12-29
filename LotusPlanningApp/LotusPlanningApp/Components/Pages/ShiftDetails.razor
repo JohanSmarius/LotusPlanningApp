@@ -2,9 +2,9 @@
 @attribute [Authorize(Roles = "Admin")]
 @using Application
 @using Application.DataAdapters
+@using Application.Queries.Shifts
 @using Entities
-@inject IShiftRepository ShiftService
-@inject IStaffAssignmentRepository StaffAssignmentService
+@inject GetShiftByIdQueryHandler GetShiftByIdHandler
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
@@ -416,7 +416,8 @@ else
 
     private async Task LoadShiftDetails()
     {
-        shiftDetail = await ShiftService.GetShiftByIdAsync(ShiftId);
+        var query = new GetShiftByIdQuery(ShiftId);
+        shiftDetail = await GetShiftByIdHandler.Handle(query);
     }
 
     private void GoBack()
