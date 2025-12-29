@@ -30,7 +30,7 @@
             await Page.GotoAsync("https://localhost:7096");
 
             // Expect a title "to contain" a substring.
-            await Expect(Page).ToHaveTitleAsync(new Regex("Medical First Aid Manager"));
+            await Expect(Page).ToHaveTitleAsync(new Regex("LOTUS Planning App"));
 
             // create a locator
             var viewDashboard = Page.Locator("text=View Dashboard");

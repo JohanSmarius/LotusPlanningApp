@@ -35,7 +35,7 @@ public class EmailOptions
     /// <summary>
     /// Display name for sent emails
     /// </summary>
-    public string FromName { get; set; } = "Medical First Aid Manager";
+    public string FromName { get; set; } = "LOTUS Planning App";
 
     /// <summary>
     /// Whether to enable SSL for SMTP connection

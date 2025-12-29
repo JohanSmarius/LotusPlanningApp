@@ -16,7 +16,7 @@ Configure your SMTP settings in `appsettings.json` or `appsettings.Development.j
     "SmtpUsername": "your-email@gmail.com",
     "SmtpPassword": "your-app-password",
     "FromEmail": "your-email@gmail.com",
-    "FromName": "Medical First Aid Manager",
+    "FromName": "LOTUS Planning App",
     "EnableSsl": "true"
   }
 }
@@ -155,7 +155,7 @@ For production environments:
     "SmtpUsername": "apikey",
     "SmtpPassword": "SG.your-sendgrid-api-key",
     "FromEmail": "noreply@yourcompany.com",
-    "FromName": "Medical First Aid Manager",
+    "FromName": "LOTUS Planning App",
     "EnableSsl": "true"
   }
 }

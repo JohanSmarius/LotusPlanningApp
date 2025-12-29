@@ -101,7 +101,7 @@ public class EmailService : IEmailService
             var username = smtpConfig["SmtpUsername"];
             var password = smtpConfig["SmtpPassword"];
             var fromEmail = smtpConfig["FromEmail"];
-            var fromName = smtpConfig["FromName"] ?? "Medical First Aid Manager";
+            var fromName = smtpConfig["FromName"] ?? "LOTUS Planning App";
             var enableSsl = bool.Parse(smtpConfig["EnableSsl"] ?? "true");
 
             if (string.IsNullOrEmpty(host)) // || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
