@@ -145,12 +145,22 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
         {
             UserName = adminEmail,
             Email = adminEmail,
-            EmailConfirmed = true
+            EmailConfirmed = true,
+            IsApproved = true, // Admin is automatically approved
+            ApprovedAt = DateTime.UtcNow,
+            RegisteredAt = DateTime.UtcNow
         };
         var result = await userManager.CreateAsync(adminUser, "Test123!");
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
         }
+    }
+    else if (!adminUser.IsApproved)
+    {
+        // Ensure existing admin is approved
+        adminUser.IsApproved = true;
+        adminUser.ApprovedAt = DateTime.UtcNow;
+        await userManager.UpdateAsync(adminUser);
     }
 }

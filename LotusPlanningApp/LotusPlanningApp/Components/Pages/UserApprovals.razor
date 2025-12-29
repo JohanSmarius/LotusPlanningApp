@@ -1,0 +1,350 @@
+@page "/admin/user-approvals"
+@attribute [Authorize(Roles = "Admin")]
+@using Microsoft.AspNetCore.Identity
+@using LotusPlanningApp.Data
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>User Approvals - LOTUS Planning App</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-primary">
+                        <i class="bi bi-person-check me-2"></i>User Approvals
+                    </h1>
+                    <p class="text-muted mb-0">Review and approve user registrations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Pending Approvals Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="bi bi-hourglass-split me-2"></i>
+                            Pending Approvals
+                            @if (pendingUsers.Count > 0)
+                            {
+                                <span class="badge bg-dark ms-2">@pendingUsers.Count</span>
+                            }
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if (pendingUsers.Count == 0)
+                        {
+                            <div class="text-center py-4 text-muted">
+                                <i class="bi bi-check-circle" style="font-size: 3rem;"></i>
+                                <p class="mt-2 mb-0">No pending user approvals</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Email</th>
+                                            <th>Username</th>
+                                            <th>Registered</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var user in pendingUsers.OrderByDescending(u => u.RegisteredAt))
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <i class="bi bi-envelope me-2 text-muted"></i>
+                                                    @user.Email
+                                                </td>
+                                                <td>@user.UserName</td>
+                                                <td>
+                                                    <small class="text-muted">
+                                                        @user.RegisteredAt.ToString("dd MMM yyyy HH:mm")
+                                                    </small>
+                                                </td>
+                                                <td class="text-end">
+                                                    <button class="btn btn-sm btn-success me-2" 
+                                                            @onclick="() => ApproveUser(user)"
+                                                            disabled="@isProcessing">
+                                                        <i class="bi bi-check-circle me-1"></i>Approve
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" 
+                                                            @onclick="() => RejectUser(user)"
+                                                            disabled="@isProcessing">
+                                                        <i class="bi bi-x-circle me-1"></i>Reject
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approved Users Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Approved Users
+                            @if (approvedUsers.Count > 0)
+                            {
+                                <span class="badge bg-light text-dark ms-2">@approvedUsers.Count</span>
+                            }
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if (approvedUsers.Count == 0)
+                        {
+                            <div class="text-center py-4 text-muted">
+                                <p class="mb-0">No approved users yet</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Email</th>
+                                            <th>Username</th>
+                                            <th>Registered</th>
+                                            <th>Approved</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var user in approvedUsers.OrderByDescending(u => u.ApprovedAt))
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <i class="bi bi-envelope me-2 text-muted"></i>
+                                                    @user.Email
+                                                </td>
+                                                <td>@user.UserName</td>
+                                                <td>
+                                                    <small class="text-muted">
+                                                        @user.RegisteredAt.ToString("dd MMM yyyy")
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <small class="text-success">
+                                                        <i class="bi bi-check-circle me-1"></i>
+                                                        @user.ApprovedAt?.ToString("dd MMM yyyy")
+                                                    </small>
+                                                </td>
+                                                <td class="text-end">
+                                                    <button class="btn btn-sm btn-warning" 
+                                                            @onclick="() => RevokeApproval(user)"
+                                                            disabled="@isProcessing">
+                                                        <i class="bi bi-x-circle me-1"></i>Revoke
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="toast show" role="alert">
+            <div class="toast-header bg-success text-white">
+                <i class="bi bi-check-circle me-2"></i>
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close btn-close-white" @onclick="() => successMessage = null"></button>
+            </div>
+            <div class="toast-body">
+                @successMessage
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="toast show" role="alert">
+            <div class="toast-header bg-danger text-white">
+                <i class="bi bi-exclamation-circle me-2"></i>
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close btn-close-white" @onclick="() => errorMessage = null"></button>
+            </div>
+            <div class="toast-body">
+                @errorMessage
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<ApplicationUser> pendingUsers = new();
+    private List<ApplicationUser> approvedUsers = new();
+    private bool isLoading = true;
+    private bool isProcessing = false;
+    private string? successMessage;
+    private string? errorMessage;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+
+    private async Task LoadUsers()
+    {
+        isLoading = true;
+        try
+        {
+            var allUsers = UserManager.Users.ToList();
+            
+            // Filter users with Lotus role
+            var lotusUsers = new List<ApplicationUser>();
+            foreach (var user in allUsers)
+            {
+                var roles = await UserManager.GetRolesAsync(user);
+                if (roles.Contains("Lotus"))
+                {
+                    lotusUsers.Add(user);
+                }
+            }
+
+            pendingUsers = lotusUsers.Where(u => !u.IsApproved).ToList();
+            approvedUsers = lotusUsers.Where(u => u.IsApproved).ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading users: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ApproveUser(ApplicationUser user)
+    {
+        isProcessing = true;
+        try
+        {
+            var authState = await AuthenticationState!;
+            var currentUserId = UserManager.GetUserId(authState.User);
+
+            user.IsApproved = true;
+            user.ApprovedAt = DateTime.UtcNow;
+            user.ApprovedByUserId = currentUserId;
+
+            var result = await UserManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                successMessage = $"User {user.Email} has been approved successfully.";
+                await LoadUsers();
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = $"Failed to approve user: {string.Join(", ", result.Errors.Select(e => e.Description))}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error approving user: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private async Task RejectUser(ApplicationUser user)
+    {
+        isProcessing = true;
+        try
+        {
+            var result = await UserManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                successMessage = $"User {user.Email} has been rejected and removed.";
+                await LoadUsers();
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = $"Failed to reject user: {string.Join(", ", result.Errors.Select(e => e.Description))}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error rejecting user: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private async Task RevokeApproval(ApplicationUser user)
+    {
+        isProcessing = true;
+        try
+        {
+            user.IsApproved = false;
+            user.ApprovedAt = null;
+            user.ApprovedByUserId = null;
+
+            var result = await UserManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                successMessage = $"Approval for {user.Email} has been revoked.";
+                await LoadUsers();
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = $"Failed to revoke approval: {string.Join(", ", result.Errors.Select(e => e.Description))}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error revoking approval: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+}
