@@ -38,6 +38,100 @@ This Blazor application manages events and shifts for a medical first aid team. 
 
 ---
 
+### CQRS Architecture (Command Query Responsibility Segregation)
+
+The application uses CQRS to separate read operations (Queries) from write operations (Commands).
+
+#### Structure
+
+```
+Application/
+├── Commands/                    # Write operations (state modifications)
+│   ├── Events/
+│   ├── Shifts/
+│   ├── Staff/
+│   └── StaffAssignments/
+├── Queries/                     # Read operations (data retrieval)
+│   ├── Events/
+│   ├── Shifts/
+│   ├── Staff/
+│   └── StaffAssignments/
+├── Common/                      # Base interfaces
+│   ├── ICommand.cs
+│   ├── ICommandHandler.cs
+│   ├── IQuery.cs
+│   └── IQueryHandler.cs
+└── ICommandDispatcher.cs        # Command dispatcher for Blazor components
+```
+
+#### Commands (Write Operations)
+
+Commands represent intentions to change state. Each command:
+- Inherits from `ICommand<TResult>`
+- Contains all data needed for the operation
+- Is processed by a corresponding `ICommandHandler<TCommand, TResult>`
+
+**Example:**
+```csharp
+public record LinkUserToStaffByEmailCommand(string UserId, string Email) : ICommand<bool>;
+
+public class LinkUserToStaffByEmailCommandHandler : ICommandHandler<LinkUserToStaffByEmailCommand, bool>
+{
+    public async Task<bool> Handle(LinkUserToStaffByEmailCommand command, CancellationToken cancellationToken)
+    {
+        // Business logic here
+    }
+}
+```
+
+#### Queries (Read Operations)
+
+Queries represent requests for data. Each query:
+- Inherits from `IQuery<TResult>`
+- Is processed by a corresponding `IQueryHandler<TQuery, TResult>`
+- Should not modify state
+
+**Example:**
+```csharp
+public record GetEventByIdQuery(int EventId) : IQuery<EventDTO>;
+
+public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDTO>
+{
+    public async Task<EventDTO> Handle(GetEventByIdQuery query, CancellationToken cancellationToken)
+    {
+        // Retrieve and return data
+    }
+}
+```
+
+#### Using CQRS in Blazor Components
+
+Use `ICommandDispatcher` to dispatch commands and queries from Blazor components:
+
+```csharp
+@inject ICommandDispatcher CommandDispatcher
+
+// Dispatch a command
+var createCommand = new CreateEventCommand(eventData);
+var result = await CommandDispatcher.DispatchAsync<CreateEventCommand, EventDTO>(createCommand);
+
+// Dispatch a query
+var query = new GetEventByIdQuery(eventId);
+var eventData = await CommandDispatcher.DispatchAsync<GetEventByIdQuery, EventDTO>(query);
+```
+
+#### Best Practices
+
+- **Commands** belong in `Application/Commands/` with handlers in `Infrastructure/Commands/`
+- **Queries** belong in `Application/Queries/` with handlers in `Infrastructure/Queries/`
+- Keep commands and queries **focused and single-purpose**
+- Use **DTOs (Data Transfer Objects)** for data transfer between layers
+- **Register handlers** in `Program.cs` dependency injection
+- Use **command dispatcher** in Blazor components instead of direct service calls
+- Handlers should use **repositories** for data access, not DbContext directly
+
+---
+
 ### Bootstrap Integration
 - Reference Bootstrap via CDN or include in `wwwroot/lib`.
 - Use Bootstrap grid system for layouts.
