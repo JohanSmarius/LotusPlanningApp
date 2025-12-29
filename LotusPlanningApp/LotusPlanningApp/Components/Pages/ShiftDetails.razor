@@ -1,5 +1,5 @@
 @page "/shifts/details/{ShiftId:int}"
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Admin,Lotus")]
 @using Application
 @using Application.DataAdapters
 @using Application.Queries.Shifts
@@ -68,6 +68,9 @@ else
                         <button class="btn btn-outline-secondary" @onclick="GoBack">
                             <i class="fas fa-arrow-left me-2"></i>Back
                         </button>
+                        <a href="@($"/api/calendar/shift/{ShiftId}.ics")" class="btn btn-success" title="Download calendar file">
+                            <i class="fas fa-download me-2"></i>Download Calendar
+                        </a>
                         <a href="/shifts/edit/@ShiftId" class="btn btn-primary">
                             <i class="fas fa-edit me-2"></i>Edit Shift
                         </a>
@@ -145,12 +148,18 @@ else
                             </div>
                         }
 
-                        <div class="mb-0">
+                        <div class="mb-3">
                             <label class="form-label text-muted small">CREATED</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
                                 @shiftDetail.CreatedAt.ToString("MMM dd, yyyy HH:mm")
                             </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="@($"/api/calendar/shift/{ShiftId}.ics")" class="btn btn-success" title="Add this shift to your calendar">
+                                <i class="fas fa-calendar-plus me-2"></i>Add to Calendar
+                            </a>
                         </div>
                     </div>
                 </div>
