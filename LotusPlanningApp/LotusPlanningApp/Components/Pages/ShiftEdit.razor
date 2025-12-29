@@ -607,8 +607,8 @@ else
         try
         {
             // Get the selected role (or default to staff member's role if not in dictionary)
-            var selectedRole = staffRoleSelections.ContainsKey(staffMember.Id) 
-                ? staffRoleSelections[staffMember.Id] 
+            var selectedRole = staffRoleSelections.TryGetValue(staffMember.Id, out var role) 
+                ? role 
                 : staffMember.Role;
 
             var assignment = new Entities.StaffAssignment
