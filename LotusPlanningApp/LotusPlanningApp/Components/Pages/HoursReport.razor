@@ -172,14 +172,6 @@
         await LoadDataAsync();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await UpdateChartAsync();
-        }
-    }
-
     private async Task OnYearChanged(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value?.ToString(), out int year))
@@ -196,7 +188,12 @@
         {
             var query = new GetStaffHoursPerYearQuery(selectedYear);
             staffHours = await QueryHandler.Handle(query);
-            await UpdateChartAsync();
+            
+            // Update chart after data is loaded (will run after render)
+            if (doughnutChart != null)
+            {
+                await UpdateChartAsync();
+            }
         }
         catch (Exception ex)
         {
@@ -211,8 +208,30 @@
 
     private async Task UpdateChartAsync()
     {
-        if (!staffHours.Any() || doughnutChart == null)
+        if (doughnutChart == null)
             return;
+
+        // Initialize with empty data if no staff hours available
+        if (!staffHours.Any())
+        {
+            var emptyDatasets = new List<IChartDataset>();
+            var emptyDataset = new DoughnutChartDataset
+            {
+                Label = "Uren",
+                Data = new List<double?>(),
+                BackgroundColor = new List<string>()
+            };
+            emptyDatasets.Add(emptyDataset);
+
+            chartData = new ChartData
+            {
+                Labels = new List<string>(),
+                Datasets = emptyDatasets
+            };
+
+            await doughnutChart.InitializeAsync(chartData, GetChartOptions());
+            return;
+        }
 
         var labels = staffHours.Select(s => s.StaffName).ToList();
         var data = staffHours.Select(s => (double?)s.TotalHours).ToList();
