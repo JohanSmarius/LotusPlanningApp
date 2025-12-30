@@ -8,6 +8,7 @@ namespace Application;
 public interface IStaffRepository
 {
     Task<List<Staff>> GetAllStaffAsync();
+    Task<List<Staff>> GetAllStaffExcludingAdminsAsync();
     Task<Staff?> GetStaffByIdAsync(int id);
     Task<Staff> CreateStaffAsync(Staff staff);
     Task<Staff> UpdateStaffAsync(Staff staff);
