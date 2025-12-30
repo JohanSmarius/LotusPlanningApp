@@ -93,24 +93,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="bg-warning bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-user-check text-white"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1">Personeel in dienst</h6>
-                                <h4 class="mb-0">@staffOnDuty.Count</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
         }
         else
@@ -167,18 +149,6 @@
                                                         <span class="badge bg-@GetAssignmentStatusColor(assignment.Status) me-1">
                                                             @assignment.Status
                                                         </span>
-                                                        @if (assignment.CheckInTime.HasValue)
-                                                        {
-                                                            <small class="text-muted">
-                                                                <i class="fas fa-sign-in-alt me-1"></i>@assignment.CheckInTime.Value.ToString("HH:mm")
-                                                            </small>
-                                                        }
-                                                        @if (assignment.CheckOutTime.HasValue)
-                                                        {
-                                                            <small class="text-muted ms-2">
-                                                                <i class="fas fa-sign-out-alt me-1"></i>@assignment.CheckOutTime.Value.ToString("HH:mm")
-                                                            </small>
-                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -323,7 +293,6 @@
     private List<Entities.Shift> activeShifts = new();
     private List<Entities.Shift> todaysShifts = new();
     private List<Entities.Staff> activeStaff = new();
-    private List<Entities.StaffAssignment> staffOnDuty = new();
     private List<Entities.StaffAssignment> myAssignments = new();
     private Entities.Staff? currentUserStaff;
 
@@ -343,8 +312,7 @@
                     LoadUpcomingEventsAsync(),
                     LoadActiveShiftsAsync(),
                     LoadTodaysShiftsAsync(),
-                    LoadActiveStaffAsync(),
-                    LoadStaffOnDutyAsync()
+                    LoadActiveStaffAsync()
                 };
 
                 await Task.WhenAll(loadTasks);
@@ -385,17 +353,14 @@
 
     private async Task LoadActiveStaffAsync()
     {
-        activeStaff = await StaffService.GetActiveStaffAsync();
-    }
-
-    private async Task LoadStaffOnDutyAsync()
-    {
-        var allAssignments = await StaffAssignmentService.GetAllAssignmentsAsync();
-        var now = DateTime.UtcNow;
-        staffOnDuty = allAssignments.Where(sa => 
-            sa.Status == AssignmentStatus.CheckedIn && 
-            sa.Shift.StartTime <= now && 
-            sa.Shift.EndTime >= now).ToList();
+        var allStaff = await StaffService.GetActiveStaffAsync();
+        var allUsers = await UserManager.GetUsersInRoleAsync("Admin");
+        var adminEmails = allUsers.Select(u => u.Email).ToList();
+        
+        // Exclude admin users
+        activeStaff = allStaff
+            .Where(s => !adminEmails.Contains(s.Email))
+            .ToList();
     }
 
     private async Task LoadMyAssignmentsAsync(System.Security.Claims.ClaimsPrincipal user)

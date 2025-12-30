@@ -20,10 +20,6 @@ public class StaffAssignment
 
     public AssignmentStatus Status { get; set; } = AssignmentStatus.Assigned;
 
-    public DateTime? CheckInTime { get; set; }
-
-    public DateTime? CheckOutTime { get; set; }
-
     [StringLength(300)]
     public string? Notes { get; set; }
 

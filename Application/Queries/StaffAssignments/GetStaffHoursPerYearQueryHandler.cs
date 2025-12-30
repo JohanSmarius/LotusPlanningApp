@@ -24,20 +24,19 @@ public class GetStaffHoursPerYearQueryHandler : IQueryHandler<GetStaffHoursPerYe
         // Get all assignments
         var allAssignments = await _assignmentRepository.GetAllAssignmentsAsync();
         
-        // Filter assignments for the specified year where both check-in and check-out times exist
+        // Filter assignments for the specified year based on shift start time
         var yearAssignments = allAssignments
-            .Where(a => a.CheckInTime.HasValue && 
-                       a.CheckOutTime.HasValue && 
-                       a.CheckInTime.Value.Year == query.Year)
+            .Where(a => a.Shift != null && 
+                       a.Shift.StartTime.Year == query.Year)
             .ToList();
 
-        // Group by staff and calculate hours
+        // Group by staff and calculate hours based on shift duration
         var staffHours = yearAssignments
             .GroupBy(a => a.StaffId)
             .Select(g => new
             {
                 StaffId = g.Key,
-                TotalHours = g.Sum(a => (a.CheckOutTime!.Value - a.CheckInTime!.Value).TotalHours),
+                TotalHours = g.Sum(a => (a.Shift.EndTime - a.Shift.StartTime).TotalHours),
                 TotalShifts = g.Count()
             })
             .ToList();

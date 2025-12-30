@@ -113,7 +113,6 @@ public class StaffAssignmentRepository : IStaffAssignmentRepository
         var assignment = await GetAssignmentByIdAsync(assignmentId);
         if (assignment != null)
         {
-            assignment.CheckInTime = DateTime.UtcNow;
             assignment.Status = AssignmentStatus.CheckedIn;
             await UpdateAssignmentAsync(assignment);
         }
@@ -125,7 +124,6 @@ public class StaffAssignmentRepository : IStaffAssignmentRepository
         var assignment = await GetAssignmentByIdAsync(assignmentId);
         if (assignment != null)
         {
-            assignment.CheckOutTime = DateTime.UtcNow;
             assignment.Status = AssignmentStatus.CheckedOut;
             await UpdateAssignmentAsync(assignment);
         }

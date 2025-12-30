@@ -269,20 +269,6 @@ else
                                                             <i class="fas fa-calendar-plus me-1"></i>
                                                             Assigned: @assignment.AssignedAt.ToString("MMM dd, yyyy HH:mm")
                                                         </div>
-                                                        @if (assignment.CheckInTime.HasValue)
-                                                        {
-                                                            <div class="small text-success mt-1">
-                                                                <i class="fas fa-sign-in-alt me-1"></i>
-                                                                Checked in: @assignment.CheckInTime.Value.ToString("HH:mm")
-                                                            </div>
-                                                        }
-                                                        @if (assignment.CheckOutTime.HasValue)
-                                                        {
-                                                            <div class="small text-secondary mt-1">
-                                                                <i class="fas fa-sign-out-alt me-1"></i>
-                                                                Checked out: @assignment.CheckOutTime.Value.ToString("HH:mm")
-                                                            </div>
-                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -315,82 +301,7 @@ else
                     </div>
                 </div>
 
-                <!-- Time Tracking (if shift has started or ended) -->
-                @if (shiftDetail.StaffAssignments.Any(a => a.CheckInTime.HasValue || a.CheckOutTime.HasValue))
-                {
-                    <div class="card border-0 shadow-sm mt-4">
-                        <div class="card-header bg-secondary text-white">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-clock me-2"></i>Time Tracking
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Staff Member</th>
-                                            <th>Check In</th>
-                                            <th>Check Out</th>
-                                            <th>Hours Worked</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var assignment in shiftDetail.StaffAssignments.Where(a => a.CheckInTime.HasValue || a.CheckOutTime.HasValue))
-                                        {
-                                            <tr>
-                                                <td>@assignment.Staff.FullName</td>
-                                                <td>
-                                                    @if (assignment.CheckInTime.HasValue)
-                                                    {
-                                                        <span class="text-success">
-                                                            <i class="fas fa-check me-1"></i>
-                                                            @assignment.CheckInTime.Value.ToString("HH:mm")
-                                                        </span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="text-muted">-</span>
-                                                    }
-                                                </td>
-                                                <td>
-                                                    @if (assignment.CheckOutTime.HasValue)
-                                                    {
-                                                        <span class="text-secondary">
-                                                            <i class="fas fa-sign-out-alt me-1"></i>
-                                                            @assignment.CheckOutTime.Value.ToString("HH:mm")
-                                                        </span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="text-muted">-</span>
-                                                    }
-                                                </td>
-                                                <td>
-                                                    @if (assignment.CheckInTime.HasValue && assignment.CheckOutTime.HasValue)
-                                                    {
-                                                        var hoursWorked = (assignment.CheckOutTime.Value - assignment.CheckInTime.Value).TotalHours;
-                                                        <span class="fw-medium">@hoursWorked.ToString("F1")h</span>
-                                                    }
-                                                    else if (assignment.CheckInTime.HasValue)
-                                                    {
-                                                        <span class="text-warning">
-                                                            <i class="fas fa-clock me-1"></i>In Progress
-                                                        </span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="text-muted">-</span>
-                                                    }
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                }
+                <!-- Time Tracking section removed - hours are now calculated from shift start/end times -->
             </div>
         </div>
     </div>

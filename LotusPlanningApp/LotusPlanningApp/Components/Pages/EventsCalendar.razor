@@ -130,6 +130,12 @@
                                                          @onclick:stopPropagation="true">
                                                         <small class="event-time">@evt.StartDate.ToString("HH:mm")</small>
                                                         <small class="event-title">@evt.Name</small>
+                                                        @if (HasUnplannedShifts(evt))
+                                                        {
+                                                            <small class="event-alert ms-1">
+                                                                <i class="fas fa-exclamation-triangle"></i>
+                                                            </small>
+                                                        }
                                                     </div>
                                                 }
                                                 @if (day.Events.Count > 3)
@@ -345,6 +351,16 @@
     .more-events:hover {
         color: #495057;
     }
+
+    .event-alert {
+        color: #dc3545;
+        font-weight: 700;
+    }
+
+    .event-item.has-unplanned {
+        border-left: 4px solid #dc3545;
+        padding-left: 2px !important;
+    }
 </style>
 
 @code {
@@ -523,6 +539,12 @@
             EventStatus.Cancelled => "danger",
             _ => "secondary"
         };
+    }
+
+    private bool HasUnplannedShifts(Event eventItem)
+    {
+        return eventItem.Shifts.Any(shift => 
+            shift.StaffAssignments.Count < shift.RequiredStaff);
     }
 
     private class CalendarDay

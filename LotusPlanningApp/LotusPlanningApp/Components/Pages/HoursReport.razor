@@ -166,10 +166,20 @@
     private int selectedYear = DateTime.Now.Year;
     private bool isLoading = true;
     private List<StaffHoursDTO> staffHours = new();
+    private bool chartInitialized = false;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadDataAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await UpdateChartAsync();
+            chartInitialized = true;
+        }
     }
 
     private async Task OnYearChanged(ChangeEventArgs e)
@@ -178,64 +188,63 @@
         {
             selectedYear = year;
             await LoadDataAsync();
+            await UpdateChartAsync();
         }
     }
 
     private async Task LoadDataAsync()
     {
         isLoading = true;
+        StateHasChanged();
+        
         try
         {
             var query = new GetStaffHoursPerYearQuery(selectedYear);
             staffHours = await QueryHandler.Handle(query);
             
-            // Update chart after data is loaded (will run after render)
-            if (doughnutChart != null)
+            Console.WriteLine($"Loaded {staffHours.Count} staff hours for year {selectedYear}");
+            foreach (var sh in staffHours)
             {
-                await UpdateChartAsync();
+                Console.WriteLine($"  {sh.StaffName}: {sh.TotalHours}h ({sh.TotalShifts} shifts)");
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading hours data: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
             staffHours = new();
         }
         finally
         {
             isLoading = false;
+            StateHasChanged();
         }
     }
 
     private async Task UpdateChartAsync()
     {
         if (doughnutChart == null)
-            return;
-
-        // Initialize with empty data if no staff hours available
-        if (!staffHours.Any())
         {
-            var emptyDatasets = new List<IChartDataset>();
-            var emptyDataset = new DoughnutChartDataset
-            {
-                Label = "Uren",
-                Data = new List<double?>(),
-                BackgroundColor = new List<string>()
-            };
-            emptyDatasets.Add(emptyDataset);
-
-            chartData = new ChartData
-            {
-                Labels = new List<string>(),
-                Datasets = emptyDatasets
-            };
-
-            await doughnutChart.InitializeAsync(chartData, GetChartOptions());
+            Console.WriteLine("Chart is null, skipping update");
             return;
         }
 
-        var labels = staffHours.Select(s => s.StaffName).ToList();
-        var data = staffHours.Select(s => (double?)s.TotalHours).ToList();
-        var colors = GenerateColors(staffHours.Count);
+        Console.WriteLine($"Updating chart with {staffHours.Count} staff hours");
+
+        // Prepare data
+        var labels = staffHours.Any() ? staffHours.Select(s => s.StaffName).ToList() : new List<string>();
+        var data = staffHours.Any() ? staffHours.Select(s => (double?)s.TotalHours).ToList() : new List<double?>();
+        var colors = staffHours.Any() ? GenerateColors(staffHours.Count) : new List<string>();
+
+        if (!staffHours.Any())
+        {
+            Console.WriteLine("No staff hours, showing empty chart");
+        }
+        else
+        {
+            Console.WriteLine("Chart labels: " + string.Join(", ", labels));
+            Console.WriteLine("Chart data: " + string.Join(", ", data));
+        }
 
         var datasets = new List<IChartDataset>();
         var dataset = new DoughnutChartDataset
@@ -252,7 +261,16 @@
             Datasets = datasets
         };
 
-        await doughnutChart.InitializeAsync(chartData, GetChartOptions());
+        if (!chartInitialized)
+        {
+            await doughnutChart.InitializeAsync(chartData, GetChartOptions());
+            Console.WriteLine("Chart initialized");
+        }
+        else
+        {
+            await doughnutChart.UpdateAsync(chartData, GetChartOptions());
+            Console.WriteLine("Chart updated");
+        }
     }
 
     private DoughnutChartOptions GetChartOptions()
