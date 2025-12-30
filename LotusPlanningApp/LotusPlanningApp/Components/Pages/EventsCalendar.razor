@@ -1,0 +1,535 @@
+@page "/events/calendar"
+@attribute [Authorize(Roles = "Admin")]
+@using Application
+@using Application.DataAdapters
+@using Entities
+@inject IEventRepository EventService
+@inject NavigationManager Navigation
+
+@rendermode InteractiveServer
+
+<PageTitle>Kalenderweergave - LOTUS Planning App</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-primary">
+                        <i class="fas fa-calendar-alt me-2"></i>Opdrachtkalender
+                    </h1>
+                    <p class="text-muted">Maandoverzicht van LOTUS-opdrachten</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" @onclick="NavigateToListView">
+                        <i class="fas fa-list me-2"></i>Terug naar lijst
+                    </button>
+                    <button class="btn btn-primary" @onclick="NavigateToCreateEvent">
+                        <i class="fas fa-plus me-2"></i>Opdracht aanmaken
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (hasError)
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Fout bij het laden van opdrachten</strong>
+            <p class="mb-2">@errorMessage</p>
+            <button class="btn btn-outline-danger btn-sm" @onclick="RetryLoadEvents">
+                <i class="fas fa-redo me-1"></i>Opnieuw proberen
+            </button>
+        </div>
+    }
+    else if (isLoading)
+    {
+        <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Bezig met laden...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Calendar Navigation -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-transparent border-0">
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-outline-primary" @onclick="PreviousMonth">
+                                <i class="fas fa-chevron-left"></i> Vorige
+                            </button>
+                            <button class="btn btn-outline-primary" @onclick="Today">
+                                Vandaag
+                            </button>
+                            <button class="btn btn-outline-primary" @onclick="NextMonth">
+                                Volgende <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h4 class="mb-0">@currentMonth.ToString("MMMM yyyy")</h4>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="input-group" style="max-width: 250px; float: right;">
+                            <span class="input-group-text">
+                                <i class="fas fa-filter"></i>
+                            </span>
+                            <select class="form-select" @bind="statusFilter" @bind:after="OnFilterChanged">
+                                <option value="">Alle statussen</option>
+                                <option value="@EventStatus.Requested">Aangevraagd</option>
+                                <option value="@EventStatus.Planned">Gepland</option>
+                                <option value="@EventStatus.Confirmed">Bevestigd</option>
+                                <option value="@EventStatus.Active">Actief</option>
+                                <option value="@EventStatus.Completed">Afgerond</option>
+                                <option value="@EventStatus.SendInvoice">Factuur verzenden</option>
+                                <option value="@EventStatus.Cancelled">Geannuleerd</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-0 calendar-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center">Maandag</th>
+                                <th class="text-center">Dinsdag</th>
+                                <th class="text-center">Woensdag</th>
+                                <th class="text-center">Donderdag</th>
+                                <th class="text-center">Vrijdag</th>
+                                <th class="text-center">Zaterdag</th>
+                                <th class="text-center">Zondag</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var week in calendarWeeks)
+                            {
+                                <tr>
+                                    @foreach (var day in week)
+                                    {
+                                        <td class="calendar-day @(day.IsCurrentMonth ? "" : "other-month") @(day.IsToday ? "today" : "")"
+                                            @onclick="() => SelectDate(day.Date)">
+                                            <div class="day-header">
+                                                <span class="day-number">@day.Date.Day</span>
+                                            </div>
+                                            <div class="day-events">
+                                                @foreach (var evt in day.Events.Take(3))
+                                                {
+                                                    <div class="event-item bg-@GetEventStatusColor(evt.Status)" 
+                                                         title="@evt.Name - @evt.Location"
+                                                         @onclick="() => NavigateToDetails(evt.Id)"
+                                                         @onclick:stopPropagation="true">
+                                                        <small class="event-time">@evt.StartDate.ToString("HH:mm")</small>
+                                                        <small class="event-title">@evt.Name</small>
+                                                    </div>
+                                                }
+                                                @if (day.Events.Count > 3)
+                                                {
+                                                    <div class="more-events">
+                                                        <small>+@(day.Events.Count - 3) meer</small>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Summary for Selected Date -->
+        @if (selectedDate.HasValue)
+        {
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calendar-day me-2"></i>
+                            Opdrachten op @selectedDate.Value.ToString("dddd, d MMMM yyyy")
+                        </h5>
+                        <button class="btn btn-sm btn-light" @onclick="ClearDateSelection">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @{
+                        var eventsOnSelectedDate = GetEventsForDate(selectedDate.Value);
+                    }
+                    @if (!eventsOnSelectedDate.Any())
+                    {
+                        <p class="text-muted text-center py-3">Geen opdrachten op deze datum</p>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            @foreach (var eventItem in eventsOnSelectedDate)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100 border-start border-4 border-@GetEventStatusColor(eventItem.Status)">
+                                        <div class="card-body">
+                                            <h6 class="card-title">@eventItem.Name</h6>
+                                            <div class="mb-2">
+                                                <span class="badge bg-@GetEventStatusColor(eventItem.Status)">
+                                                    @eventItem.Status
+                                                </span>
+                                            </div>
+                                            <p class="card-text mb-2">
+                                                <i class="fas fa-clock text-muted me-2"></i>
+                                                <small>@eventItem.StartDate.ToString("HH:mm") - @eventItem.EndDate.ToString("HH:mm")</small>
+                                            </p>
+                                            <p class="card-text mb-2">
+                                                <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                                <small>@eventItem.Location</small>
+                                            </p>
+                                            @if (!string.IsNullOrEmpty(eventItem.Description))
+                                            {
+                                                <p class="card-text text-muted small">
+                                                    @(eventItem.Description.Length > 100 ? eventItem.Description.Substring(0, 100) + "..." : eventItem.Description)
+                                                </p>
+                                            }
+                                            <button class="btn btn-sm btn-outline-primary" @onclick="() => NavigateToDetails(eventItem.Id)">
+                                                <i class="fas fa-eye me-1"></i>Details bekijken
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Legend -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body">
+                <h6 class="card-title mb-3">Status legenda</h6>
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <span class="badge bg-warning text-dark me-2">Aangevraagd</span>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <span class="badge bg-primary me-2">Gepland</span>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <span class="badge bg-success me-2">Bevestigd</span>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <span class="badge bg-success me-2">Actief</span>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <span class="badge bg-secondary me-2">Afgerond</span>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <span class="badge bg-info me-2">Factuur verzenden</span>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <span class="badge bg-danger me-2">Geannuleerd</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .calendar-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .calendar-table th {
+        padding: 12px;
+        font-weight: 600;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .calendar-day {
+        height: 120px;
+        vertical-align: top;
+        padding: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        position: relative;
+    }
+
+    .calendar-day:hover {
+        background-color: #f8f9fa;
+    }
+
+    .calendar-day.other-month {
+        background-color: #f8f9fa;
+        color: #6c757d;
+    }
+
+    .calendar-day.today {
+        background-color: #fff3cd;
+    }
+
+    .calendar-day.today .day-number {
+        background-color: #ffc107;
+        color: #000;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 50%;
+        display: inline-block;
+        min-width: 32px;
+        text-align: center;
+    }
+
+    .day-header {
+        margin-bottom: 4px;
+    }
+
+    .day-number {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .day-events {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .event-item {
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 11px;
+        color: white;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: opacity 0.2s;
+    }
+
+    .event-item:hover {
+        opacity: 0.8;
+    }
+
+    .event-time {
+        display: block;
+        font-weight: 600;
+    }
+
+    .event-title {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .more-events {
+        padding: 2px 6px;
+        text-align: center;
+        color: #6c757d;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .more-events:hover {
+        color: #495057;
+    }
+</style>
+
+@code {
+    private bool isLoading = true;
+    private bool hasError = false;
+    private string errorMessage = string.Empty;
+    
+    private List<Event> events = new();
+    private List<Event> filteredEvents = new();
+    private DateTime currentMonth = DateTime.Today;
+    private DateTime? selectedDate = null;
+    private string statusFilter = string.Empty;
+    
+    private List<List<CalendarDay>> calendarWeeks = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEventsWithErrorHandling();
+        BuildCalendar();
+        isLoading = false;
+    }
+
+    private async Task LoadEventsWithErrorHandling()
+    {
+        try
+        {
+            hasError = false;
+            errorMessage = string.Empty;
+            await LoadEvents();
+            ApplyFilters();
+        }
+        catch (Exception ex)
+        {
+            hasError = true;
+            errorMessage = ex.Message;
+            Console.WriteLine($"Error loading events: {ex}");
+        }
+    }
+
+    private async Task RetryLoadEvents()
+    {
+        isLoading = true;
+        await LoadEventsWithErrorHandling();
+        BuildCalendar();
+        isLoading = false;
+    }
+
+    private async Task LoadEvents()
+    {
+        events = await EventService.GetAllEventsAsync();
+    }
+
+    private void ApplyFilters()
+    {
+        var filtered = events.AsEnumerable();
+
+        // Apply status filter
+        if (!string.IsNullOrEmpty(statusFilter) && Enum.TryParse<EventStatus>(statusFilter, out var status))
+        {
+            filtered = filtered.Where(e => e.Status == status);
+        }
+
+        filteredEvents = filtered.ToList();
+    }
+
+    private void OnFilterChanged()
+    {
+        ApplyFilters();
+        BuildCalendar();
+        StateHasChanged();
+    }
+
+    private void BuildCalendar()
+    {
+        calendarWeeks = new();
+        
+        // Get first day of the month
+        var firstDayOfMonth = new DateTime(currentMonth.Year, currentMonth.Month, 1);
+        
+        // Find the Monday of the week containing the first day
+        var startDate = firstDayOfMonth;
+        while (startDate.DayOfWeek != DayOfWeek.Monday)
+        {
+            startDate = startDate.AddDays(-1);
+        }
+        
+        // Build 6 weeks to ensure we cover the entire month
+        for (int week = 0; week < 6; week++)
+        {
+            var calendarWeek = new List<CalendarDay>();
+            
+            for (int day = 0; day < 7; day++)
+            {
+                var currentDate = startDate.AddDays(week * 7 + day);
+                var dayEvents = GetEventsForDate(currentDate);
+                
+                calendarWeek.Add(new CalendarDay
+                {
+                    Date = currentDate,
+                    IsCurrentMonth = currentDate.Month == currentMonth.Month,
+                    IsToday = currentDate.Date == DateTime.Today,
+                    Events = dayEvents
+                });
+            }
+            
+            calendarWeeks.Add(calendarWeek);
+        }
+    }
+
+    private List<Event> GetEventsForDate(DateTime date)
+    {
+        return filteredEvents
+            .Where(e => e.StartDate.Date <= date.Date && e.EndDate.Date >= date.Date)
+            .OrderBy(e => e.StartDate)
+            .ToList();
+    }
+
+    private void PreviousMonth()
+    {
+        currentMonth = currentMonth.AddMonths(-1);
+        BuildCalendar();
+        StateHasChanged();
+    }
+
+    private void NextMonth()
+    {
+        currentMonth = currentMonth.AddMonths(1);
+        BuildCalendar();
+        StateHasChanged();
+    }
+
+    private void Today()
+    {
+        currentMonth = DateTime.Today;
+        BuildCalendar();
+        StateHasChanged();
+    }
+
+    private void SelectDate(DateTime date)
+    {
+        selectedDate = date;
+        StateHasChanged();
+    }
+
+    private void ClearDateSelection()
+    {
+        selectedDate = null;
+        StateHasChanged();
+    }
+
+    private void NavigateToDetails(int eventId)
+    {
+        Navigation.NavigateTo($"/events/details/{eventId}");
+    }
+
+    private void NavigateToListView()
+    {
+        Navigation.NavigateTo("/events");
+    }
+
+    private void NavigateToCreateEvent()
+    {
+        Navigation.NavigateTo("/events");
+    }
+
+    private string GetEventStatusColor(EventStatus status)
+    {
+        return status switch
+        {
+            EventStatus.Requested => "warning",
+            EventStatus.Planned => "primary",
+            EventStatus.Confirmed => "success",
+            EventStatus.Active => "success",
+            EventStatus.Completed => "secondary",
+            EventStatus.SendInvoice => "info",
+            EventStatus.Cancelled => "danger",
+            _ => "secondary"
+        };
+    }
+
+    private class CalendarDay
+    {
+        public DateTime Date { get; set; }
+        public bool IsCurrentMonth { get; set; }
+        public bool IsToday { get; set; }
+        public List<Event> Events { get; set; } = new();
+    }
+}
