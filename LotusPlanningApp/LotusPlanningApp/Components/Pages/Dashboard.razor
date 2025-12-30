@@ -149,6 +149,9 @@
                                                         <span class="badge bg-@GetAssignmentStatusColor(assignment.Status) me-1">
                                                             @assignment.Status
                                                         </span>
+                                                        <a href="@($"/api/calendar/shift/{shift.Id}.ics")" class="btn btn-sm btn-success ms-2" title="Download calendar file">
+                                                            <i class="fas fa-download"></i>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
