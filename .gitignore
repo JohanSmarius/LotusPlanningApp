@@ -201,7 +201,11 @@ PublishScripts/
 
 # SQLite dev database
 AppData/lotus.db
+AppData/lotus.db-shm
+AppData/lotus.db-wal
 **/AppData/lotus.db
+**/AppData/lotus.db-shm
+**/AppData/lotus.db-wal
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
