@@ -110,7 +110,7 @@ else
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Startdatum & tijd *</label>
-                                    <input type="datetime-local" @bind="editForm.StartDate" class="form-control" />
+                                    <input type="datetime-local" value="@editForm.StartDate.ToString("yyyy-MM-ddTHH:mm")" @onchange="OnStartDateChanged" class="form-control" />
                                     <ValidationMessage For="() => editForm.StartDate" class="text-danger" />
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -587,5 +587,22 @@ else
             ShiftStatus.Cancelled => "danger",
             _ => "secondary"
         };
+    }
+
+    private void OnStartDateChanged(ChangeEventArgs e)
+    {
+        if (e.Value != null && DateTime.TryParse(e.Value.ToString(), out var newStartDate))
+        {
+            // Store the original end date time part
+            var endDateTime = editForm.EndDate.TimeOfDay;
+            
+            // Update the start date
+            editForm.StartDate = newStartDate;
+            
+            // Update the end date: use the new start date's date part with the original end date's time part
+            editForm.EndDate = newStartDate.Date + endDateTime;
+            
+            StateHasChanged();
+        }
     }
 }
