@@ -1,6 +1,4 @@
-using Application;
-using Application.Queries.Shifts;
-using Entities;
+using Application.Queries.Calendar;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,15 +11,11 @@ namespace LotusPlanningApp.Controllers;
 [Route("api/[controller]")]
 public class CalendarController : ControllerBase
 {
-    private readonly GetShiftByIdQueryHandler _getShiftByIdHandler;
-    private readonly ICalendarService _calendarService;
+    private readonly GenerateShiftIcsQueryHandler _generateShiftIcsHandler;
 
-    public CalendarController(
-        GetShiftByIdQueryHandler getShiftByIdHandler,
-        ICalendarService calendarService)
+    public CalendarController(GenerateShiftIcsQueryHandler generateShiftIcsHandler)
     {
-        _getShiftByIdHandler = getShiftByIdHandler;
-        _calendarService = calendarService;
+        _generateShiftIcsHandler = generateShiftIcsHandler;
     }
 
     /// <summary>
@@ -35,20 +29,17 @@ public class CalendarController : ControllerBase
     {
         try
         {
-            // Get the shift details
-            var query = new GetShiftByIdQuery(shiftId);
-            var shift = await _getShiftByIdHandler.Handle(query);
+            // Execute the query to generate ICS content
+            var query = new GenerateShiftIcsQuery(shiftId);
+            var icsContent = await _generateShiftIcsHandler.Handle(query);
 
-            if (shift == null)
+            if (icsContent == null)
             {
                 return NotFound(new { message = "Shift not found" });
             }
 
-            // Generate the ICS file content
-            var icsContent = _calendarService.GenerateShiftIcsFile(shift);
-
             // Create a safe filename
-            var fileName = $"shift-{shift.Id}-{SanitizeFileName(shift.Name)}.ics";
+            var fileName = $"shift-{shiftId}.ics";
 
             // Return the file
             return File(
@@ -61,24 +52,5 @@ public class CalendarController : ControllerBase
         {
             return StatusCode(500, new { message = "An error occurred while generating the calendar file", error = ex.Message });
         }
-    }
-
-    /// <summary>
-    /// Sanitizes a filename by removing invalid characters
-    /// </summary>
-    private static string SanitizeFileName(string fileName)
-    {
-        if (string.IsNullOrWhiteSpace(fileName))
-            return "shift";
-        
-        var invalidChars = Path.GetInvalidFileNameChars();
-        var sanitized = string.Join("_", fileName.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries));
-        
-        // Ensure we have a valid filename
-        if (string.IsNullOrWhiteSpace(sanitized))
-            return "shift";
-        
-        // Limit length for filesystem compatibility
-        return sanitized.Length > 50 ? sanitized.Substring(0, 50) : sanitized;
     }
 }

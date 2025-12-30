@@ -7,6 +7,7 @@ using Application.Queries.Events;
 using Application.Queries.Shifts;
 using Application.Queries.Staff;
 using Application.Queries.StaffAssignments;
+using Application.Queries.Calendar;
 
 namespace Application;
 
@@ -64,6 +65,9 @@ public static class DependencyInjection
         services.AddScoped<GetAssignmentsByShiftIdQueryHandler>();
         services.AddScoped<GetAssignmentsByStaffIdQueryHandler>();
         services.AddScoped<IsStaffAvailableQueryHandler>();
+
+        // Register Calendar Query Handlers
+        services.AddScoped<GenerateShiftIcsQueryHandler>();
 
         // Register legacy wrappers for backward compatibility
         services.AddScoped<IEventService, EventService>();
