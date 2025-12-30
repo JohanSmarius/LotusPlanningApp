@@ -2,6 +2,7 @@
 @attribute [Authorize]
 @using Application
 @using Application.DataAdapters
+@using Application.Queries.StaffAssignments
 @using Entities
 @using Microsoft.AspNetCore.Identity
 @using LotusPlanningApp.Data
@@ -10,6 +11,7 @@
 @inject IShiftRepository ShiftService
 @inject IStaffRepository StaffService
 @inject IStaffAssignmentRepository StaffAssignmentService
+@inject GetConfirmedAssignmentsByStaffIdQueryHandler GetConfirmedAssignmentsHandler
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
@@ -380,14 +382,10 @@
 
             if (currentUserStaff != null)
             {
-                // Get all assignments for this staff member
-                var allAssignments = await StaffAssignmentService.GetAssignmentsByStaffIdAsync(currentUserStaff.Id);
-                
-                // Filter to show upcoming and recent assignments
+                // Use CQRS query to get assignments with confirmed events only
                 var cutoffDate = DateTime.Now.AddDays(-7); // Show last 7 days
-                myAssignments = allAssignments
-                    .Where(a => a.Shift.StartTime >= cutoffDate)
-                    .ToList();
+                var query = new GetConfirmedAssignmentsByStaffIdQuery(currentUserStaff.Id, cutoffDate);
+                myAssignments = await GetConfirmedAssignmentsHandler.Handle(query);
             }
         }
         catch (Exception ex)
