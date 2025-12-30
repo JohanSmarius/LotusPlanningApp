@@ -22,7 +22,7 @@ public class GetConfirmedAssignmentsByStaffIdQueryHandler : IQueryHandler<GetCon
         
         // Filter to show only assignments with confirmed events and within the date range
         return allAssignments
-            .Where(a => a.Shift.Event.Status == EventStatus.Confirmed && 
+            .Where(a => a.Shift?.Event?.Status == EventStatus.Confirmed && 
                        a.Shift.StartTime >= query.CutoffDate)
             .ToList();
     }
