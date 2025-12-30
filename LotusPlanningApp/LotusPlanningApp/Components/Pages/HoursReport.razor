@@ -2,9 +2,7 @@
 @attribute [Authorize(Roles = "Admin")]
 @using Application.DataAdapters
 @using Application.Queries.StaffAssignments
-@using Microsoft.JSInterop
 @inject GetStaffHoursPerYearQueryHandler QueryHandler
-@inject IJSRuntime JSInterop
 @rendermode InteractiveServer
 
 <PageTitle>Uren Overzicht - LOTUS Planning App</PageTitle>
@@ -147,7 +145,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <canvas id="hoursChart" style="max-height: 400px;"></canvas>
+                        <DoughnutChart @ref="doughnutChart" Width="400" Height="400" />
                     </div>
                 </div>
             </div>
@@ -163,6 +161,8 @@
 </div>
 
 @code {
+    private DoughnutChart doughnutChart = default!;
+    private ChartData chartData = default!;
     private int selectedYear = DateTime.Now.Year;
     private bool isLoading = true;
     private List<StaffHoursDTO> staffHours = new();
@@ -174,9 +174,9 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender && staffHours.Any())
+        if (firstRender)
         {
-            await RenderChartAsync();
+            await UpdateChartAsync();
         }
     }
 
@@ -196,6 +196,7 @@
         {
             var query = new GetStaffHoursPerYearQuery(selectedYear);
             staffHours = await QueryHandler.Handle(query);
+            await UpdateChartAsync();
         }
         catch (Exception ex)
         {
@@ -208,38 +209,50 @@
         }
     }
 
-    private async Task RenderChartAsync()
+    private async Task UpdateChartAsync()
     {
-        if (!staffHours.Any())
+        if (!staffHours.Any() || doughnutChart == null)
             return;
 
-        var labels = staffHours.Select(s => s.StaffName).ToArray();
-        var data = staffHours.Select(s => s.TotalHours).ToArray();
-        
-        // Generate colors for each staff member
+        var labels = staffHours.Select(s => s.StaffName).ToList();
+        var data = staffHours.Select(s => (double?)s.TotalHours).ToList();
         var colors = GenerateColors(staffHours.Count);
 
-        var chartData = new
+        var datasets = new List<IChartDataset>();
+        var dataset = new DoughnutChartDataset
         {
-            labels = labels,
-            datasets = new[]
+            Label = "Uren",
+            Data = data,
+            BackgroundColor = colors
+        };
+        datasets.Add(dataset);
+
+        chartData = new ChartData
+        {
+            Labels = labels,
+            Datasets = datasets
+        };
+
+        await doughnutChart.InitializeAsync(chartData, GetChartOptions());
+    }
+
+    private DoughnutChartOptions GetChartOptions()
+    {
+        return new DoughnutChartOptions
+        {
+            Responsive = true,
+            Plugins = new DoughnutChartPlugins
             {
-                new
+                Legend = new ChartPluginsLegend
                 {
-                    data = data,
-                    backgroundColor = colors,
-                    borderWidth = 1
+                    Display = true,
+                    Position = "bottom"
                 }
             }
         };
-
-        var chartJson = System.Text.Json.JsonSerializer.Serialize(chartData);
-        
-        // Call JavaScript to render chart
-        await JSInterop.InvokeVoidAsync("renderHoursChart", chartJson);
     }
 
-    private string[] GenerateColors(int count)
+    private List<string> GenerateColors(int count)
     {
         var baseColors = new[]
         {
@@ -252,6 +265,6 @@
         {
             colors.Add(baseColors[i % baseColors.Length]);
         }
-        return colors.ToArray();
+        return colors;
     }
 }

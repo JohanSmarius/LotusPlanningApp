@@ -80,6 +80,9 @@ builder.Services.AddScoped(typeof(ICommandHandler<UnlinkUserFromStaffCommand, bo
 // Register command dispatcher
 builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 
+// Register Blazor Bootstrap
+builder.Services.AddBlazorBootstrap();
+
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(EmailOptions.SectionName)
 );
