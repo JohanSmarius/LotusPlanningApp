@@ -25,25 +25,21 @@ public class StaffRepository : IStaffRepository
     public async Task<List<Entities.Staff>> GetAllStaffExcludingAdminsAsync()
     {
         // Get all staff members that are NOT linked to users with the "Admin" role
-        var adminUserIds = await _context.UserRoles
-            .Join(_context.Roles,
-                ur => ur.RoleId,
-                r => r.Id,
-                (ur, r) => new { ur.UserId, r.Name })
-            .Where(x => x.Name == "Admin")
-            .Select(x => x.UserId)
-            .ToListAsync();
+        // Using a single query with joins for better performance
+        var staffExcludingAdmins = await (
+            from staff in _context.Staff
+            where !(
+                from user in _context.Users
+                join userRole in _context.UserRoles on user.Id equals userRole.UserId
+                join role in _context.Roles on userRole.RoleId equals role.Id
+                where role.Name == "Admin" && user.StaffId == staff.Id
+                select user.Id
+            ).Any()
+            orderby staff.LastName, staff.FirstName
+            select staff
+        ).ToListAsync();
 
-        var adminStaffIds = await _context.Users
-            .Where(u => adminUserIds.Contains(u.Id) && u.StaffId.HasValue)
-            .Select(u => u.StaffId!.Value)
-            .ToListAsync();
-
-        return await _context.Staff
-            .Where(s => !adminStaffIds.Contains(s.Id))
-            .OrderBy(s => s.LastName)
-            .ThenBy(s => s.FirstName)
-            .ToListAsync();
+        return staffExcludingAdmins;
     }
 
     public async Task<Entities.Staff?> GetStaffByIdAsync(int id)
