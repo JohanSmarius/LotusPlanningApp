@@ -55,14 +55,13 @@ else
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <div class="me-3">
-                            <div class="bg-@GetRoleColor(staffDetail.Role) text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
                                 <span class="fw-bold display-6">@staffDetail.FirstName.Substring(0, 1)@staffDetail.LastName.Substring(0, 1)</span>
                             </div>
                         </div>
                         <div>
                             <h1 class="h3 mb-0 text-primary">@staffDetail.FullName</h1>
                             <div class="mt-2">
-                                <span class="badge bg-@GetRoleColor(staffDetail.Role) fs-6 me-2">@staffDetail.Role</span>
                                 @if (!staffDetail.IsActive)
                                 {
                                     <span class="badge bg-secondary fs-6">Inactive</span>
@@ -128,13 +127,6 @@ else
                                 </div>
                             </div>
                         }
-
-                        <div class="mb-3">
-                            <label class="form-label text-muted small">ROLE</label>
-                            <div class="fw-medium">
-                                <span class="badge bg-@GetRoleColor(staffDetail.Role) fs-6">@staffDetail.Role</span>
-                            </div>
-                        </div>
 
                         @if (!string.IsNullOrEmpty(staffDetail.CertificationLevel))
                         {
@@ -418,15 +410,6 @@ else
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Role *</label>
-                                <InputSelect @bind-Value="staffForm.Role" class="form-select">
-                                    <option value="">Select Role</option>
-                                    <option value="@StaffRole.LOTUS">LOTUS</option>
-                                    <option value="@StaffRole.Coordinator">Coordinator</option>
-                                </InputSelect>
-                                <ValidationMessage For="() => staffForm.Role" class="text-danger" />
-                            </div>
-                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Certification Level</label>
                                 <InputText @bind-Value="staffForm.CertificationLevel" class="form-control" placeholder="e.g., Level 1, Advanced, etc." />
                                 <ValidationMessage For="() => staffForm.CertificationLevel" class="text-danger" />
@@ -579,7 +562,6 @@ else
             LastName = staffDetail.LastName,
             Email = staffDetail.Email,
             Phone = staffDetail.Phone,
-            Role = staffDetail.Role,
             CertificationLevel = staffDetail.CertificationLevel,
             CertificationExpiry = staffDetail.CertificationExpiry,
             IsActive = staffDetail.IsActive,

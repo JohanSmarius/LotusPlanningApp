@@ -71,8 +71,10 @@ public class StaffRepository : IStaffRepository
 
     public async Task<List<Staff>> GetStaffByRoleAsync(StaffRole role)
     {
+        // Role is now stored only in StaffAssignment, not in Staff entity
+        // This method is deprecated and should not be used
         return await _context.Staff
-            .Where(s => s.Role == role && s.IsActive)
+            .Where(s => s.IsActive)
             .OrderBy(s => s.LastName)
             .ThenBy(s => s.FirstName)
             .ToListAsync();

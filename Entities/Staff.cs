@@ -25,9 +25,6 @@ public class Staff
     [StringLength(20)]
     public string? Phone { get; set; }
 
-    [Required]
-    public StaffRole Role { get; set; }
-
     [StringLength(50)]
     public string? CertificationLevel { get; set; }
 

@@ -80,13 +80,12 @@
                         <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
                                 <div class="me-3">
-                                    <div class="bg-@GetRoleColor(staffMember.Role) text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                         <span class="fw-bold fs-5">@staffMember.FirstName.Substring(0, 1)@staffMember.LastName.Substring(0, 1)</span>
                                     </div>
                                 </div>
                                 <div>
                                     <h5 class="card-title mb-1">@staffMember.FullName</h5>
-                                    <span class="badge bg-@GetRoleColor(staffMember.Role)">@staffMember.Role</span>
                                     @if (!staffMember.IsActive)
                                     {
                                         <span class="badge bg-secondary ms-1">Inactive</span>
@@ -238,15 +237,6 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Role *</label>
-                                <InputSelect @bind-Value="staffForm.Role" class="form-select">
-                                    <option value="">Select Role</option>
-                                    <option value="@StaffRole.LOTUS">LOTUS</option>
-                                    <option value="@StaffRole.Coordinator">Coordinator</option>
-                                </InputSelect>
-                                <ValidationMessage For="() => staffForm.Role" class="text-danger" />
-                            </div>
-                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Certification Level</label>
                                 <InputText @bind-Value="staffForm.CertificationLevel" class="form-control" placeholder="e.g., Level 1, Advanced, etc." />
                                 <ValidationMessage For="() => staffForm.CertificationLevel" class="text-danger" />
@@ -384,11 +374,12 @@
             );
         }
 
-        // Apply role filter
-        if (!string.IsNullOrEmpty(roleFilter) && Enum.TryParse<StaffRole>(roleFilter, out var role))
-        {
-            filtered = filtered.Where(s => s.Role == role);
-        }
+        // Apply role filter - disabled since Role is no longer on Staff entity
+        // Role is now per-shift in StaffAssignment
+        // if (!string.IsNullOrEmpty(roleFilter) && Enum.TryParse<StaffRole>(roleFilter, out var role))
+        // {
+        //     filtered = filtered.Where(s => s.Role == role);
+        // }
 
         // Apply status filter
         if (!string.IsNullOrEmpty(statusFilter) && bool.TryParse(statusFilter, out var isActive))
@@ -446,7 +437,6 @@
             LastName = staffMember.LastName,
             Email = staffMember.Email,
             Phone = staffMember.Phone,
-            Role = staffMember.Role,
             CertificationLevel = staffMember.CertificationLevel,
             CertificationExpiry = staffMember.CertificationExpiry,
             IsActive = staffMember.IsActive,
@@ -454,7 +444,6 @@
             UpdatedAt = staffMember.UpdatedAt
         };
         emailError = string.Empty;
-        showStaffDialog = true;
         StateHasChanged();
     }
 

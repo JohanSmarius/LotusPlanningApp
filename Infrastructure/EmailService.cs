@@ -248,19 +248,6 @@ public class EmailService : IEmailService
             sb.AppendLine("            </div>");
         }
         
-        // Staff Role Badge
-        var roleColor = staff.Role switch
-        {
-            StaffRole.LOTUS => "badge-primary",
-            StaffRole.Coordinator => "badge-warning",
-            _ => "badge-info"
-        };
-        
-        sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Your Role:</div>");
-        sb.AppendLine($"                <div><span class='badge {roleColor}'>{staff.Role}</span></div>");
-        sb.AppendLine("            </div>");
-        
         // Important Notes
         sb.AppendLine("            <h3>?? Important Notes</h3>");
         sb.AppendLine("            <ul>");

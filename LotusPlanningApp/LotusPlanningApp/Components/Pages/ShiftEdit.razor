@@ -352,7 +352,6 @@ else
                                                     <div class="flex-grow-1">
                                                         <h6 class="mb-1">@staffMember.FullName</h6>
                                                         <div class="d-flex align-items-center mb-1">
-                                                            <span class="badge bg-@GetRoleColor(staffMember.Role) me-2">@staffMember.Role</span>
                                                             @if (!string.IsNullOrEmpty(staffMember.CertificationLevel))
                                                             {
                                                                 <span class="badge bg-info me-2">@staffMember.CertificationLevel</span>
@@ -529,8 +528,8 @@ else
                 if (isAvailable)
                 {
                     availableStaffList.Add(staffMember);
-                    // Initialize role selection with staff member's default role
-                    staffRoleSelections[staffMember.Id] = staffMember.Role;
+                    // Initialize role selection with default LOTUS role
+                    staffRoleSelections[staffMember.Id] = StaffRole.LOTUS;
                 }
             }
 
@@ -557,11 +556,12 @@ else
             );
         }
 
-        // Apply role filter
-        if (!string.IsNullOrEmpty(staffRoleFilter) && Enum.TryParse<StaffRole>(staffRoleFilter, out var role))
-        {
-            filtered = filtered.Where(s => s.Role == role);
-        }
+        // Apply role filter - disabled since Role is no longer on Staff entity
+        // Role is now per-shift in StaffAssignment
+        // if (!string.IsNullOrEmpty(staffRoleFilter) && Enum.TryParse<StaffRole>(staffRoleFilter, out var role))
+        // {
+        //     filtered = filtered.Where(s => s.Role == role);
+        // }
 
         filteredAvailableStaff = filtered.OrderBy(s => s.LastName).ThenBy(s => s.FirstName).ToList();
         StateHasChanged();
@@ -606,10 +606,10 @@ else
     {
         try
         {
-            // Get the selected role (or default to staff member's role if not in dictionary)
+            // Get the selected role (or default to LOTUS if not in dictionary)
             var selectedRole = staffRoleSelections.TryGetValue(staffMember.Id, out var role) 
                 ? role 
-                : staffMember.Role;
+                : StaffRole.LOTUS;
 
             var assignment = new Entities.StaffAssignment
             {

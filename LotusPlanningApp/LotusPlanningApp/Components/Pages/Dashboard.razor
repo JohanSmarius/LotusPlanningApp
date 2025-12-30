@@ -161,6 +161,9 @@
                                                         </p>
                                                     }
                                                     <div class="mt-3">
+                                                        <span class="badge bg-@GetRoleColor(assignment.Role) me-1">
+                                                            <i class="fas fa-user-tag me-1"></i>@assignment.Role
+                                                        </span>
                                                         <span class="badge bg-@GetAssignmentStatusColor(assignment.Status) me-1">
                                                             @assignment.Status
                                                         </span>
@@ -460,6 +463,16 @@
             AssignmentStatus.CheckedIn => "success",
             AssignmentStatus.CheckedOut => "secondary",
             AssignmentStatus.NoShow => "danger",
+            _ => "secondary"
+        };
+    }
+
+    private string GetRoleColor(StaffRole role)
+    {
+        return role switch
+        {
+            StaffRole.LOTUS => "primary",
+            StaffRole.Coordinator => "warning",
             _ => "secondary"
         };
     }
