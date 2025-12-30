@@ -64,6 +64,7 @@ public static class DependencyInjection
         services.AddScoped<GetAssignmentsByShiftIdQueryHandler>();
         services.AddScoped<GetAssignmentsByStaffIdQueryHandler>();
         services.AddScoped<IsStaffAvailableQueryHandler>();
+        services.AddScoped<GetStaffHoursPerYearQueryHandler>();
 
         // Register legacy wrappers for backward compatibility
         services.AddScoped<IEventService, EventService>();

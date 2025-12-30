@@ -1,0 +1,289 @@
+@page "/hours-report"
+@attribute [Authorize(Roles = "Admin")]
+@using Application.DataAdapters
+@using Application.Queries.StaffAssignments
+@inject GetStaffHoursPerYearQueryHandler QueryHandler
+@rendermode InteractiveServer
+
+<PageTitle>Uren Overzicht - LOTUS Planning App</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0 text-primary">
+                <i class="fas fa-clock me-2"></i>Uren Overzicht per Medewerker
+            </h1>
+            <p class="text-muted">Geaggregeerde gewerkte uren per jaar</p>
+        </div>
+    </div>
+
+    <!-- Year Selector -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <label class="form-label">Selecteer Jaar</label>
+                    <select class="form-select" @onchange="OnYearChanged">
+                        @for (int year = DateTime.Now.Year; year >= DateTime.Now.Year - 5; year--)
+                        {
+                            <option value="@year" selected="@(year == selectedYear)">@year</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Laden...</span>
+            </div>
+        </div>
+    }
+    else if (staffHours.Any())
+    {
+        <!-- Summary Card -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="p-3">
+                                    <h4 class="text-primary">@staffHours.Count</h4>
+                                    <p class="text-muted mb-0">Medewerkers</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="p-3">
+                                    <h4 class="text-success">@staffHours.Sum(s => s.TotalHours).ToString("N1")</h4>
+                                    <p class="text-muted mb-0">Totaal Uren</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="p-3">
+                                    <h4 class="text-info">@staffHours.Sum(s => s.TotalShifts)</h4>
+                                    <p class="text-muted mb-0">Totaal Diensten</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="p-3">
+                                    <h4 class="text-warning">@(staffHours.Any() ? (staffHours.Sum(s => s.TotalHours) / staffHours.Count).ToString("N1") : "0")</h4>
+                                    <p class="text-muted mb-0">Gem. Uren per Medewerker</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Table View -->
+            <div class="col-lg-7 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-table me-2 text-primary"></i>Uren per Medewerker
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Medewerker</th>
+                                        <th>Email</th>
+                                        <th class="text-end">Diensten</th>
+                                        <th class="text-end">Totaal Uren</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var staff in staffHours)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <strong>@staff.StaffName</strong>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">@staff.Email</small>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="badge bg-info">@staff.TotalShifts</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <strong class="text-primary">@staff.TotalHours.ToString("N1")</strong>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <th colspan="2">Totaal</th>
+                                        <th class="text-end">
+                                            <span class="badge bg-info">@staffHours.Sum(s => s.TotalShifts)</span>
+                                        </th>
+                                        <th class="text-end">
+                                            <strong class="text-primary">@staffHours.Sum(s => s.TotalHours).ToString("N1")</strong>
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart View -->
+            <div class="col-lg-5 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-pie me-2 text-primary"></i>Verdeling Uren
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <DoughnutChart @ref="doughnutChart" Width="400" Height="400" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            Geen gegevens beschikbaar voor het jaar @selectedYear
+        </div>
+    }
+</div>
+
+@code {
+    private DoughnutChart doughnutChart = default!;
+    private ChartData chartData = default!;
+    private int selectedYear = DateTime.Now.Year;
+    private bool isLoading = true;
+    private List<StaffHoursDTO> staffHours = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task OnYearChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int year))
+        {
+            selectedYear = year;
+            await LoadDataAsync();
+        }
+    }
+
+    private async Task LoadDataAsync()
+    {
+        isLoading = true;
+        try
+        {
+            var query = new GetStaffHoursPerYearQuery(selectedYear);
+            staffHours = await QueryHandler.Handle(query);
+            
+            // Update chart after data is loaded (will run after render)
+            if (doughnutChart != null)
+            {
+                await UpdateChartAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading hours data: {ex.Message}");
+            staffHours = new();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task UpdateChartAsync()
+    {
+        if (doughnutChart == null)
+            return;
+
+        // Initialize with empty data if no staff hours available
+        if (!staffHours.Any())
+        {
+            var emptyDatasets = new List<IChartDataset>();
+            var emptyDataset = new DoughnutChartDataset
+            {
+                Label = "Uren",
+                Data = new List<double?>(),
+                BackgroundColor = new List<string>()
+            };
+            emptyDatasets.Add(emptyDataset);
+
+            chartData = new ChartData
+            {
+                Labels = new List<string>(),
+                Datasets = emptyDatasets
+            };
+
+            await doughnutChart.InitializeAsync(chartData, GetChartOptions());
+            return;
+        }
+
+        var labels = staffHours.Select(s => s.StaffName).ToList();
+        var data = staffHours.Select(s => (double?)s.TotalHours).ToList();
+        var colors = GenerateColors(staffHours.Count);
+
+        var datasets = new List<IChartDataset>();
+        var dataset = new DoughnutChartDataset
+        {
+            Label = "Uren",
+            Data = data,
+            BackgroundColor = colors
+        };
+        datasets.Add(dataset);
+
+        chartData = new ChartData
+        {
+            Labels = labels,
+            Datasets = datasets
+        };
+
+        await doughnutChart.InitializeAsync(chartData, GetChartOptions());
+    }
+
+    private DoughnutChartOptions GetChartOptions()
+    {
+        return new DoughnutChartOptions
+        {
+            Responsive = true,
+            Plugins = new DoughnutChartPlugins
+            {
+                Legend = new ChartPluginsLegend
+                {
+                    Display = true,
+                    Position = "bottom"
+                }
+            }
+        };
+    }
+
+    private List<string> GenerateColors(int count)
+    {
+        var baseColors = new[]
+        {
+            "#0d6efd", "#6c757d", "#198754", "#dc3545", "#ffc107",
+            "#0dcaf0", "#d63384", "#6610f2", "#fd7e14", "#20c997"
+        };
+
+        var colors = new List<string>();
+        for (int i = 0; i < count; i++)
+        {
+            colors.Add(baseColors[i % baseColors.Length]);
+        }
+        return colors;
+    }
+}
