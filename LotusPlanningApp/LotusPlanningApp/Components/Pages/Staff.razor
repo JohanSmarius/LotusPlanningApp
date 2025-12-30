@@ -1,7 +1,13 @@
 @page "/staff"
 @attribute [Authorize(Roles = "Admin")]
 @using Application
-@inject IStaffRepository StaffService
+@using Application.Commands.Staff
+@using Application.Queries.Staff
+@inject GetAllStaffQueryHandler GetAllStaffHandler
+@inject CreateStaffCommandHandler CreateStaffHandler
+@inject UpdateStaffCommandHandler UpdateStaffHandler
+@inject DeleteStaffCommandHandler DeleteStaffHandler
+@inject IsEmailUniqueQueryHandler IsEmailUniqueHandler
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
@@ -346,7 +352,8 @@
 
     private async Task LoadStaff()
     {
-        staff = await StaffService.GetAllStaffAsync();
+        var query = new GetAllStaffQuery();
+        staff = await GetAllStaffHandler.Handle(query);
     }
 
     private void OnSearchChanged(ChangeEventArgs e)
@@ -463,7 +470,8 @@
         try
         {
             // Check for email uniqueness
-            var isEmailUnique = await StaffService.IsEmailUniqueAsync(staffForm.Email, isEditMode ? staffForm.Id : null);
+            var uniqueQuery = new IsEmailUniqueQuery(staffForm.Email, isEditMode ? staffForm.Id : null);
+            var isEmailUnique = await IsEmailUniqueHandler.Handle(uniqueQuery);
             if (!isEmailUnique)
             {
                 emailError = "This email address is already in use by another staff member.";
@@ -472,7 +480,8 @@
 
             if (isEditMode)
             {
-                await StaffService.UpdateStaffAsync(staffForm);
+                var updateCommand = new UpdateStaffCommand(staffForm);
+                await UpdateStaffHandler.Handle(updateCommand);
                 
                 // Update the local staff list
                 var staffIndex = staff.FindIndex(s => s.Id == staffForm.Id);
@@ -483,7 +492,8 @@
             }
             else
             {
-                var createdStaff = await StaffService.CreateStaffAsync(staffForm);
+                var createCommand = new CreateStaffCommand(staffForm);
+                var createdStaff = await CreateStaffHandler.Handle(createCommand);
                 staff.Add(createdStaff);
             }
             
@@ -521,7 +531,8 @@
         isDeactivating = true;
         try
         {
-            await StaffService.DeleteStaffAsync(staffToDeactivate.Id);
+            var command = new DeleteStaffCommand(staffToDeactivate.Id);
+            await DeleteStaffHandler.Handle(command);
             
             // Update the local staff list
             var staffMember = staff.FirstOrDefault(s => s.Id == staffToDeactivate.Id);
@@ -551,7 +562,8 @@
         try
         {
             staffMember.IsActive = true;
-            await StaffService.UpdateStaffAsync(staffMember);
+            var command = new UpdateStaffCommand(staffMember);
+            await UpdateStaffHandler.Handle(command);
             
             // Update the local staff list
             var localStaff = staff.FirstOrDefault(s => s.Id == staffMember.Id);

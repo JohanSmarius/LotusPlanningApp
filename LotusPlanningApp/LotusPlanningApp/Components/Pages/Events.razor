@@ -2,12 +2,20 @@
 @attribute [Authorize(Roles = "Admin")]
 @using Application
 @using Application.DataAdapters
+@using Application.Commands.Events
+@using Application.Commands.Shifts
+@using Application.Queries.Events
+@using Application.Queries.Shifts
 @using Entities
-@inject IEventRepository EventService
-@inject IShiftRepository ShiftService
+@using Microsoft.AspNetCore.Components.Forms
+@inject GetAllEventsQueryHandler GetAllEventsHandler
+@inject GetEventByIdQueryHandler GetEventByIdHandler
+@inject CreateEventCommandHandler CreateEventHandler
+@inject UpdateEventCommandHandler UpdateEventHandler
+@inject DeleteEventCommandHandler DeleteEventHandler
+@inject CreateShiftCommandHandler CreateShiftHandler
+@inject DeleteShiftCommandHandler DeleteShiftHandler
 @inject NavigationManager Navigation
-@inject ICreateEventUseCase CreateEventUseCase
-@inject IUpdateEventUseCase UpdateEventUseCase
 
 @rendermode InteractiveServer
 
@@ -515,7 +523,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Startdatum & tijd *</label>
-                                <input type="datetime-local" @bind="editEvent.StartDate" class="form-control" />
+                                <input type="datetime-local" value="@editEvent.StartDate.ToString("yyyy-MM-ddTHH:mm")" @onchange="OnEditStartDateChanged" class="form-control" />
                                 <ValidationMessage For="() => editEvent.StartDate" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
@@ -787,7 +795,8 @@
 
     private async Task LoadEvents()
     {
-        events = await EventService.GetAllEventsAsync();
+        var query = new GetAllEventsQuery();
+        events = await GetAllEventsHandler.Handle(query);
     }
 
     private void OnSearchChanged(ChangeEventArgs e)
@@ -930,7 +939,8 @@
         isDeleting = true;
         try
         {
-            await EventService.DeleteEventAsync(eventToDelete.Id);
+            var command = new DeleteEventCommand(eventToDelete.Id);
+            await DeleteEventHandler.Handle(command);
             events.Remove(eventToDelete);
             ApplyFiltersAndSort();
             eventToDelete = null;
@@ -996,7 +1006,8 @@
         try
         {
             // Get the full event with all related data
-            var fullEvent = await EventService.GetEventByIdAsync(eventItem.Id);
+            var query = new GetEventByIdQuery(eventItem.Id);
+            var fullEvent = await GetEventByIdHandler.Handle(query);
             if (fullEvent != null)
             {
                 editEvent = new Event
@@ -1039,7 +1050,8 @@
         isUpdating = true;
         try
         {
-            await UpdateEventUseCase.Execute(editEvent);
+            var command = new UpdateEventCommand(editEvent);
+            await UpdateEventHandler.Handle(command);
             
             // Update the local events list
             var eventIndex = events.FindIndex(e => e.Id == editEvent.Id);
@@ -1069,7 +1081,8 @@
         isCreating = true;
         try
         {
-            var createdEvent = await CreateEventUseCase.Execute(newEvent);
+            var command = new CreateEventCommand(newEvent);
+            var createdEvent = await CreateEventHandler.Handle(command);
             
             // Refresh the events list
             await LoadEventsWithErrorHandling();
@@ -1108,7 +1121,8 @@
                 Status = ShiftStatus.Open
             };
 
-            await ShiftService.CreateShiftAsync(shift);
+            var command = new CreateShiftCommand(shift);
+            await CreateShiftHandler.Handle(command);
         }
         catch (Exception ex)
         {
@@ -1123,7 +1137,8 @@
         try
         {
             // Get the full event with all related data to see existing shifts
-            var fullEvent = await EventService.GetEventByIdAsync(eventItem.Id);
+            var query = new GetEventByIdQuery(eventItem.Id);
+            var fullEvent = await GetEventByIdHandler.Handle(query);
             if (fullEvent != null)
             {
                 selectedEventForShift = fullEvent;
@@ -1191,7 +1206,8 @@
             await HandleExistingShiftsAdjustment(selectedEventForShift, newShift);
             
             // Create the new shift
-            await ShiftService.CreateShiftAsync(newShift);
+            var command = new CreateShiftCommand(newShift);
+            await CreateShiftHandler.Handle(command);
             
             // Refresh the events list to update shift counts
             await LoadEventsWithErrorHandling();
@@ -1232,11 +1248,13 @@
             
             foreach (var remainingShift in remainingShifts)
             {
-                await ShiftService.CreateShiftAsync(remainingShift);
+                var createCommand = new CreateShiftCommand(remainingShift);
+                await CreateShiftHandler.Handle(createCommand);
             }
             
             // Delete the original full coverage shift since we're replacing it with split coverage
-            await ShiftService.DeleteShiftAsync(existingShift.Id);
+            var deleteCommand = new DeleteShiftCommand(existingShift.Id);
+            await DeleteShiftHandler.Handle(deleteCommand);
         }
     }
 
@@ -1278,6 +1296,23 @@
         }
 
         return remainingShifts;
+    }
+
+    private void OnEditStartDateChanged(ChangeEventArgs e)
+    {
+        if (e.Value != null && DateTime.TryParse(e.Value.ToString(), out var newStartDate))
+        {
+            // Store the original end date time part
+            var endDateTime = editEvent.EndDate.TimeOfDay;
+            
+            // Update the start date
+            editEvent.StartDate = newStartDate;
+            
+            // Update the end date: use the new start date's date part with the original end date's time part
+            editEvent.EndDate = newStartDate.Date + endDateTime;
+            
+            StateHasChanged();
+        }
     }
 
     /// <summary>
