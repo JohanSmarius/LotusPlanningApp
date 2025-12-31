@@ -2,6 +2,9 @@
 @attribute [Authorize]
 @using Application
 @using Application.DataAdapters
+@using Application.Queries.Events
+@using Application.Queries.Shifts
+@using Application.Queries.Staff
 @using Application.Queries.StaffAssignments
 @using Entities
 @using Microsoft.AspNetCore.Identity
@@ -12,6 +15,12 @@
 @inject IStaffRepository StaffService
 @inject IStaffAssignmentRepository StaffAssignmentService
 @inject GetConfirmedAssignmentsByStaffIdQueryHandler GetConfirmedAssignmentsHandler
+@inject GetUpcomingEventsQueryHandler GetUpcomingEventsHandler
+@inject GetUpcomingShiftsQueryHandler GetUpcomingShiftsHandler
+@inject GetAllShiftsQueryHandler GetAllShiftsHandler
+@inject GetActiveStaffQueryHandler GetActiveStaffHandler
+@inject GetAllStaffQueryHandler GetAllStaffHandler
+@inject GetAssignmentsByStaffIdQueryHandler GetAssignmentsByStaffIdHandler
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
@@ -341,24 +350,29 @@
 
     private async Task LoadUpcomingEventsAsync()
     {
-        upcomingEvents = await EventService.GetUpcomingEventsAsync();
+        var query = new GetUpcomingEventsQuery();
+        upcomingEvents = await GetUpcomingEventsHandler.Handle(query);
     }
 
     private async Task LoadActiveShiftsAsync()
     {
-        var allShifts = await ShiftService.GetUpcomingShiftsAsync();
+        var query = new GetUpcomingShiftsQuery();
+        var allShifts = await GetUpcomingShiftsHandler.Handle(query);
         var now = DateTime.UtcNow;
         activeShifts = allShifts.Where(s => s.StartTime <= now && s.EndTime >= now).ToList();
     }
 
     private async Task LoadTodaysShiftsAsync()
     {
-        todaysShifts = await ShiftService.GetShiftsByDateAsync(DateTime.Today);
+        var query = new GetAllShiftsQuery();
+        var allShifts = await GetAllShiftsHandler.Handle(query);
+        todaysShifts = allShifts.Where(s => s.StartTime.Date == DateTime.Today).ToList();
     }
 
     private async Task LoadActiveStaffAsync()
     {
-        var allStaff = await StaffService.GetActiveStaffAsync();
+        var query = new GetActiveStaffQuery();
+        var allStaff = await GetActiveStaffHandler.Handle(query);
         var allUsers = await UserManager.GetUsersInRoleAsync("Admin");
         var adminEmails = allUsers.Select(u => u.Email).ToList();
         
@@ -377,7 +391,8 @@
                 return;
 
             // Find staff member by email
-            var allStaff = await StaffService.GetAllStaffAsync();
+            var allStaffQuery = new GetAllStaffQuery();
+            var allStaff = await GetAllStaffHandler.Handle(allStaffQuery);
             currentUserStaff = allStaff.FirstOrDefault(s => s.Email.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
 
             if (currentUserStaff != null)

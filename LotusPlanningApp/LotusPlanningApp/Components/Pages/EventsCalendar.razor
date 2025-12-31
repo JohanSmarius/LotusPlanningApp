@@ -2,8 +2,9 @@
 @attribute [Authorize(Roles = "Admin")]
 @using Application
 @using Application.DataAdapters
+@using Application.Queries.Events
 @using Entities
-@inject IEventRepository EventService
+@inject GetAllEventsQueryHandler GetAllEventsHandler
 @inject NavigationManager Navigation
 
 @rendermode InteractiveServer
@@ -410,7 +411,8 @@
 
     private async Task LoadEvents()
     {
-        events = await EventService.GetAllEventsAsync();
+        var query = new GetAllEventsQuery();
+        events = await GetAllEventsHandler.Handle(query);
     }
 
     private void ApplyFilters()
