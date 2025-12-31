@@ -8,6 +8,8 @@
 @using LotusPlanningApp.Data
 @using Application
 @using Application.Commands.StaffAssignments
+@using Application.Commands.Customers
+@using Application.DataAdapters
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -21,46 +23,96 @@
 <PageTitle>Register</PageTitle>
 
 <div class="row justify-content-center">
-    <div class="col-lg-5 col-md-6">
+    <div class="col-lg-6 col-md-8">
         <h1 class="mb-4">Register</h1>
         <StatusMessage Message="@Message" />
-        <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
-            <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
-            <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.FirstName" id="Input.FirstName" class="form-control" aria-required="true" placeholder="First name" />
-                <label for="Input.FirstName">First Name</label>
-                <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+        
+        @if (!userTypeSelected)
+        {
+            <!-- User Type Selection -->
+            <div class="text-center mb-4">
+                <h2 class="mb-4">Kies uw account type</h2>
+                <p class="text-muted mb-4">Selecteer het type account dat u wilt aanmaken</p>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-outline-primary btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4" 
+                                @onclick="() => SelectUserType(false)">
+                            <i class="bi bi-person-fill mb-3" style="font-size: 3rem;"></i>
+                            <h4 class="mb-2">Aanvrager</h4>
+                            <p class="text-muted small mb-0">Voor organisaties die EHBO hulp willen aanvragen voor evenementen</p>
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-outline-success btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4" 
+                                @onclick="() => SelectUserType(true)">
+                            <i class="bi bi-heart-pulse-fill mb-3" style="font-size: 3rem;"></i>
+                            <h4 class="mb-2">Lotus EHBO</h4>
+                            <p class="text-muted small mb-0">Voor vrijwilligers die EHBO hulp willen verlenen</p>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.LastName" id="Input.LastName" class="form-control" aria-required="true" placeholder="Last name" />
-                <label for="Input.LastName">Last Name</label>
-                <ValidationMessage For="() => Input.LastName" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="Input.Email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.Password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.ConfirmPassword">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </EditForm>
+        }
+        else
+        {
+            <!-- Registration Form -->
+            <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
+                <DataAnnotationsValidator />
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2>@(isLotusUser ? "Lotus EHBO" : "Aanvrager") Account</h2>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => userTypeSelected = false">
+                        <i class="bi bi-arrow-left"></i> Terug
+                    </button>
+                </div>
+                <hr />
+                <ValidationSummary class="text-danger" role="alert" />
+                
+                @if (!isLotusUser)
+                {
+                    <!-- Company Name for Customers - Required and at top -->
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="Input.CompanyName" id="Input.CompanyName" class="form-control" aria-required="true" placeholder="Bedrijfsnaam" />
+                        <label for="Input.CompanyName">Bedrijfsnaam *</label>
+                        <ValidationMessage For="() => Input.CompanyName" class="text-danger" />
+                    </div>
+                }
+                
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.FirstName" id="Input.FirstName" class="form-control" aria-required="true" placeholder="Voornaam" />
+                    <label for="Input.FirstName">Voornaam</label>
+                    <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.LastName" id="Input.LastName" class="form-control" aria-required="true" placeholder="Achternaam" />
+                    <label for="Input.LastName">Achternaam</label>
+                    <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="naam@voorbeeld.nl" />
+                    <label for="Input.Email">Email</label>
+                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="wachtwoord" />
+                    <label for="Input.Password">Wachtwoord</label>
+                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="wachtwoord" />
+                    <label for="Input.ConfirmPassword">Bevestig Wachtwoord</label>
+                    <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                </div>
+                <button type="submit" class="w-100 btn btn-lg @(isLotusUser ? "btn-success" : "btn-primary")">Registreren</button>
+            </EditForm>
+        }
     </div>
 </div>
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
+    private bool userTypeSelected = false;
+    private bool isLotusUser = false;
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = default!;
@@ -75,8 +127,24 @@
         Input ??= new();
     }
 
+    private void SelectUserType(bool isLotus)
+    {
+        isLotusUser = isLotus;
+        userTypeSelected = true;
+        
+        // Reset form input
+        Input = new InputModel { IsLotusUser = isLotus };
+    }
+
     public async Task RegisterUser(EditContext editContext)
     {
+        // Manual validation for company name when not Lotus user
+        if (!isLotusUser && string.IsNullOrWhiteSpace(Input.CompanyName))
+        {
+            identityErrors = new[] { new IdentityError { Description = "Bedrijfsnaam is verplicht voor aanvragers." } };
+            return;
+        }
+
         var user = CreateUser();
 
         // Set user properties
@@ -94,17 +162,52 @@
             return;
         }
 
-        // Assign Lotus role to new user
-        await UserManager.AddToRoleAsync(user, "Lotus");
+        if (isLotusUser)
+        {
+            // Lotus user workflow
+            // Assign Lotus role to new user
+            await UserManager.AddToRoleAsync(user, "Lotus");
 
-        // Try to link user to staff member by email using CQRS command
-        var linkCommand = new LinkUserToStaffByEmailCommand(user.Id, user.Email!);
-        await CommandDispatcher.DispatchAsync<LinkUserToStaffByEmailCommand, bool>(linkCommand);
+            // Try to link user to staff member by email using CQRS command
+            var linkCommand = new LinkUserToStaffByEmailCommand(user.Id, user.Email!);
+            await CommandDispatcher.DispatchAsync<LinkUserToStaffByEmailCommand, bool>(linkCommand);
 
-        Logger.LogInformation("User created a new account with password.");
+            Logger.LogInformation("Lotus user created a new account with password.");
 
-        // Redirect to pending approval page instead of signing in
-        RedirectManager.RedirectTo("Account/PendingApproval");
+            // Redirect to pending approval page instead of signing in
+            RedirectManager.RedirectTo("Account/PendingApproval");
+        }
+        else
+        {
+            // Customer user workflow
+            // Assign Customer role to new user
+            await UserManager.AddToRoleAsync(user, "Customer");
+
+            // Create a Customer profile for this user
+            var customerDto = new CustomerDTO
+            {
+                FirstName = user.FirstName ?? "",
+                LastName = user.LastName ?? "",
+                Email = user.Email ?? "",
+                Company = Input.CompanyName,
+                UserId = user.Id
+            };
+
+            var createCustomerCommand = new CreateCustomerCommand(customerDto);
+            var createdCustomer = await CommandDispatcher.DispatchAsync<CreateCustomerCommand, CustomerDTO>(createCustomerCommand);
+
+            // Link the customer back to the user
+            user.CustomerId = createdCustomer.Id;
+            await UserManager.UpdateAsync(user);
+
+            Logger.LogInformation("Customer user created a new account with password and Customer profile.");
+
+            // Sign in the user immediately (customers don't need approval)
+            await SignInManager.SignInAsync(user, isPersistent: false);
+
+            // Redirect to home page or dashboard
+            RedirectManager.RedirectTo(ReturnUrl ?? "/");
+        }
     }
 
     private ApplicationUser CreateUser()
@@ -131,6 +234,8 @@
 
     private sealed class InputModel
     {
+        public bool IsLotusUser { get; set; }
+
         [Required]
         [StringLength(50, ErrorMessage = "The {0} must be at most {1} characters long.")]
         [Display(Name = "First Name")]
@@ -140,6 +245,10 @@
         [StringLength(50, ErrorMessage = "The {0} must be at most {1} characters long.")]
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = "";
+
+        [StringLength(200, ErrorMessage = "The {0} must be at most {1} characters long.")]
+        [Display(Name = "Company Name")]
+        public string? CompanyName { get; set; }
 
         [Required]
         [EmailAddress]
