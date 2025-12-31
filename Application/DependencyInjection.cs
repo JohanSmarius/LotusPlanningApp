@@ -64,6 +64,7 @@ public static class DependencyInjection
         services.AddScoped<GetAllAssignmentsQueryHandler>();
         services.AddScoped<GetAssignmentsByShiftIdQueryHandler>();
         services.AddScoped<GetAssignmentsByStaffIdQueryHandler>();
+        services.AddScoped<GetConfirmedAssignmentsByStaffIdQueryHandler>();
         services.AddScoped<IsStaffAvailableQueryHandler>();
         services.AddScoped<GetStaffHoursPerYearQueryHandler>();
 
