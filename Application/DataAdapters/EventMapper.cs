@@ -21,6 +21,8 @@ namespace Application.DataAdapters
                 ContactPhone = entityEvent.ContactPhone,
                 ContactEmail = entityEvent.ContactEmail,
                 NotificationSent = entityEvent.NotificationSent,
+                CustomerId = entityEvent.CustomerId,
+                CancellationRequested = entityEvent.CancellationRequested,
                 Shifts = entityEvent.Shifts != null
                     ? entityEvent.Shifts.ToDTOList()
                     : new List<ShiftDTO>()
@@ -43,6 +45,8 @@ namespace Application.DataAdapters
                 ContactPhone = dtoEvent.ContactPhone,
                 ContactEmail = dtoEvent.ContactEmail,
                 NotificationSent = dtoEvent.NotificationSent,
+                CustomerId = dtoEvent.CustomerId,
+                CancellationRequested = dtoEvent.CancellationRequested,
                 Shifts = dtoEvent.Shifts != null
                     ? dtoEvent.Shifts.ToEntityList()
                     : new List<Entities.Shift>()

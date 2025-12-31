@@ -6,8 +6,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using LotusPlanningApp.Data
-@using Application
-@using Application.Commands.StaffAssignments
+@using Application.Commands.Customers
+@using Application.DataAdapters
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -94,17 +94,32 @@
             return;
         }
 
-        // Assign Lotus role to new user
-        await UserManager.AddToRoleAsync(user, "Lotus");
+        // Assign Customer role to new user
+        await UserManager.AddToRoleAsync(user, "Customer");
 
-        // Try to link user to staff member by email using CQRS command
-        var linkCommand = new LinkUserToStaffByEmailCommand(user.Id, user.Email!);
-        await CommandDispatcher.DispatchAsync<LinkUserToStaffByEmailCommand, bool>(linkCommand);
+        // Create a Customer profile for this user
+        var customerDto = new CustomerDTO
+        {
+            FirstName = user.FirstName ?? "",
+            LastName = user.LastName ?? "",
+            Email = user.Email ?? "",
+            UserId = user.Id
+        };
 
-        Logger.LogInformation("User created a new account with password.");
+        var createCustomerCommand = new CreateCustomerCommand(customerDto);
+        var createdCustomer = await CommandDispatcher.DispatchAsync<CreateCustomerCommand, CustomerDTO>(createCustomerCommand);
 
-        // Redirect to pending approval page instead of signing in
-        RedirectManager.RedirectTo("Account/PendingApproval");
+        // Link the customer back to the user
+        user.CustomerId = createdCustomer.Id;
+        await UserManager.UpdateAsync(user);
+
+        Logger.LogInformation("User created a new account with password and Customer profile.");
+
+        // Sign in the user immediately (customers don't need approval)
+        await SignInManager.SignInAsync(user, isPersistent: false);
+
+        // Redirect to home page or dashboard
+        RedirectManager.RedirectTo(ReturnUrl ?? "/");
     }
 
     private ApplicationUser CreateUser()

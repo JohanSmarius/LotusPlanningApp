@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<GetEventByIdQueryHandler>();
         services.AddScoped<GetUpcomingEventsQueryHandler>();
         services.AddScoped<GetEventsByDateRangeQueryHandler>();
+        services.AddScoped<GetEventsByCustomerIdQueryHandler>();
 
         // Register Shift Command Handlers
         services.AddScoped<CreateShiftCommandHandler>();
