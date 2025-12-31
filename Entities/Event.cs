@@ -44,7 +44,29 @@ public class Event
 
     public DateTime? UpdatedAt { get; set; }
 
+    /// <summary>
+    /// Reference to the customer who created this event
+    /// </summary>
+    public int? CustomerId { get; set; }
+
+    /// <summary>
+    /// Indicates if a cancellation has been requested for this event
+    /// </summary>
+    public bool CancellationRequested { get; set; } = false;
+
+    /// <summary>
+    /// Date when cancellation was requested
+    /// </summary>
+    public DateTime? CancellationRequestedAt { get; set; }
+
+    /// <summary>
+    /// Reason for cancellation request
+    /// </summary>
+    [StringLength(500)]
+    public string? CancellationReason { get; set; }
+
     // Navigation properties
+    public Customer? Customer { get; set; }
     public List<Shift> Shifts { get; set; } = new();
 }
 

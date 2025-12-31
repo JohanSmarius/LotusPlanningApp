@@ -3,11 +3,13 @@ using Application.Commands.Events;
 using Application.Commands.Shifts;
 using Application.Commands.Staff;
 using Application.Commands.StaffAssignments;
+using Application.Commands.Customers;
 using Application.Queries.Events;
 using Application.Queries.Shifts;
 using Application.Queries.Staff;
 using Application.Queries.StaffAssignments;
 using Application.Queries.Calendar;
+using Application.Queries.Customers;
 
 namespace Application;
 
@@ -69,6 +71,17 @@ public static class DependencyInjection
 
         // Register Calendar Query Handlers
         services.AddScoped<GenerateShiftIcsQueryHandler>();
+
+        // Register Customer Command Handlers
+        services.AddScoped<CreateCustomerCommandHandler>();
+        services.AddScoped<LinkCustomerToEventCommandHandler>();
+        services.AddScoped<RequestEventCancellationCommandHandler>();
+
+        // Register Customer Query Handlers
+        services.AddScoped<GetAllCustomersQueryHandler>();
+        services.AddScoped<GetCustomerByIdQueryHandler>();
+        services.AddScoped<GetCustomerByUserIdQueryHandler>();
+        services.AddScoped<SearchCustomersQueryHandler>();
 
         // Register legacy wrappers for backward compatibility
         services.AddScoped<IEventService, EventService>();
