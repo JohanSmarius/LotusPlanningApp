@@ -75,6 +75,7 @@ builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<IStaffAssignmentRepository, StaffAssignmentRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 // Register CQRS command handlers for staff assignments (using factory pattern to avoid contravariance issues)
 builder.Services.AddScoped(typeof(ICommandHandler<LinkUserToStaffByEmailCommand, bool>), typeof(LinkUserToStaffByEmailCommandHandler));
@@ -163,7 +164,7 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
     var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
     // Create roles if they don't exist
-    string[] roles = { "Admin", "Lotus" };
+    string[] roles = { "Admin", "Lotus", "Customer" };
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))

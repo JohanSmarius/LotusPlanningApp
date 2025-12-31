@@ -41,6 +41,11 @@ namespace LotusPlanningApp.Data
         public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
+        /// Reference to the customer profile associated with this user (for customer portal users)
+        /// </summary>
+        public int? CustomerId { get; set; }
+
+        /// <summary>
         /// Full name property
         /// </summary>
         public string FullName => $"{FirstName} {LastName}".Trim();

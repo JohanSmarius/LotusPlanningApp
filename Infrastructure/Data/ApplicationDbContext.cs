@@ -10,6 +10,7 @@ namespace LotusPlanningApp.Data
         public DbSet<Shift> Shifts { get; set; } = null!;
         public DbSet<Staff> Staff { get; set; } = null!;
         public DbSet<StaffAssignment> StaffAssignments { get; set; } = null!;
+        public DbSet<Customer> Customers { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -45,6 +46,18 @@ namespace LotusPlanningApp.Data
 
             builder.Entity<Staff>()
                 .HasIndex(s => s.Email)
+                .IsUnique();
+
+            // Configure Customer entity
+            builder.Entity<Customer>()
+                .HasMany(c => c.Events)
+                .WithOne(e => e.Customer)
+                .HasForeignKey(e => e.CustomerId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Configure index for Customer email
+            builder.Entity<Customer>()
+                .HasIndex(c => c.Email)
                 .IsUnique();
         }
     }

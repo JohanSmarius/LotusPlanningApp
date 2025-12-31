@@ -39,6 +39,10 @@ public class EventDTO
     public string? ContactEmail { get; set; }
 
     public bool NotificationSent { get; set; } = false;
+
+    public int? CustomerId { get; set; }
+
+    public bool CancellationRequested { get; set; } = false;
         
     // Navigation properties
     public List<ShiftDTO> Shifts { get; set; } = new();
