@@ -17,6 +17,6 @@ public class GetAllStaffQueryHandler : IQueryHandler<GetAllStaffQuery, List<Enti
 
     public async Task<List<Entities.Staff>> Handle(GetAllStaffQuery query, CancellationToken cancellationToken = default)
     {
-        return await _repository.GetAllStaffAsync();
+        return await _repository.GetAllStaffExcludingAdminsAsync();
     }
 }

@@ -22,6 +22,27 @@ public class StaffRepository : IStaffRepository
             .ToListAsync();
     }
 
+    public async Task<List<Entities.Staff>> GetAllStaffExcludingAdminsAsync()
+    {
+        // Get all staff members that are NOT linked to users with the "Admin" role
+        // Using a single query with joins for better performance
+        return await _context.Staff
+            .Where(staff => !_context.Users
+                .Join(_context.UserRoles,
+                    user => user.Id,
+                    userRole => userRole.UserId,
+                    (user, userRole) => new { user, userRole })
+                .Join(_context.Roles,
+                    ur => ur.userRole.RoleId,
+                    role => role.Id,
+                    (ur, role) => new { ur.user, role })
+                .Where(x => x.role.Name == "Admin" && x.user.StaffId == staff.Id)
+                .Any())
+            .OrderBy(s => s.LastName)
+            .ThenBy(s => s.FirstName)
+            .ToListAsync();
+    }
+
     public async Task<Entities.Staff?> GetStaffByIdAsync(int id)
     {
         return await _context.Staff
