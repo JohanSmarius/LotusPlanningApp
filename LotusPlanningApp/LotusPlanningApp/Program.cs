@@ -3,12 +3,15 @@ using LotusPlanningApp.Components;
 using LotusPlanningApp.Components.Account;
 using LotusPlanningApp.Configuration;
 using LotusPlanningApp.Data;
+using LotusPlanningApp.Services;
 using System.IO;
 using Application;
 using Application.Commands.StaffAssignments;
+using Application.Commands.Customers;
 using Application.Common;
 using Entities;
 using Infrastructure.Commands.StaffAssignments;
+using Infrastructure.Commands.Customers;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -85,8 +88,14 @@ builder.Services.AddScoped(typeof(ICommandHandler<LinkUserToStaffByEmailCommand,
 builder.Services.AddScoped(typeof(ICommandHandler<LinkUserToStaffByIdCommand, bool>), typeof(LinkUserToStaffByIdCommandHandler));
 builder.Services.AddScoped(typeof(ICommandHandler<UnlinkUserFromStaffCommand, bool>), typeof(UnlinkUserFromStaffCommandHandler));
 
+// Register CQRS command handlers for customer assignments
+builder.Services.AddScoped(typeof(ICommandHandler<LinkUserToCustomerByEmailCommand, bool>), typeof(LinkUserToCustomerByEmailCommandHandler));
+
 // Register command dispatcher
 builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
+
+// Register UI services
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 // Register Blazor Bootstrap
 builder.Services.AddBlazorBootstrap();
