@@ -527,23 +527,24 @@
         {
             // Find user by email
             var user = await UserManager.FindByEmailAsync(selectedCustomer.Email);
-            if (user == null)
+            if (user != null)
             {
-                errorMessage = $"Geen gebruiker gevonden met e-mail {selectedCustomer.Email}";
-                return;
-            }
+                var command = new LinkUserToCustomerByEmailCommand(user.Id, selectedCustomer.Email);
+                var result = await CommandDispatcher.DispatchAsync<LinkUserToCustomerByEmailCommand, bool>(command);
 
-            var command = new LinkUserToCustomerByEmailCommand(user.Id, selectedCustomer.Email);
-            var result = await CommandDispatcher.DispatchAsync<LinkUserToCustomerByEmailCommand, bool>(command);
-
-            if (result)
-            {
-                await LoadCustomers();
-                CloseLinkUserDialog();
+                if (result)
+                {
+                    await LoadCustomers();
+                    CloseLinkUserDialog();
+                }
+                else
+                {
+                    errorMessage = "Kon gebruiker niet koppelen aan klant.";
+                }
             }
             else
             {
-                errorMessage = "Kon gebruiker niet koppelen aan klant.";
+                errorMessage = $"Geen gebruiker gevonden met e-mail {selectedCustomer.Email}";
             }
         }
         catch (ApplicationLayerException ex)
