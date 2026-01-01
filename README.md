@@ -122,7 +122,7 @@ LotusPlanningApp/
 
 ### Contributing
 
-We welcome contributions! Please see our [contribution guidelines](.github/copilot-instructions.md#contribution-guidelines) for details.
+We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 #### Code Standards
 
