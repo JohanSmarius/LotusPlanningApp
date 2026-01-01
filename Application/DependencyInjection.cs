@@ -26,8 +26,10 @@ public static class DependencyInjection
     /// </summary>
     public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
     {
-        // Register Event Command Handlers
+        // Register Event Command Handlers (both interface and concrete types for backward compatibility)
+        services.AddScoped<CreateEventCommandHandler>();
         services.AddScoped(typeof(ICommandHandler<CreateEventCommand, EventDTO>), typeof(CreateEventCommandHandler));
+        services.AddScoped<UpdateEventCommandHandler>();
         services.AddScoped(typeof(ICommandHandler<UpdateEventCommand, Event>), typeof(UpdateEventCommandHandler));
         services.AddScoped(typeof(ICommandHandler<DeleteEventCommand, bool>), typeof(DeleteEventCommandHandler));
 
