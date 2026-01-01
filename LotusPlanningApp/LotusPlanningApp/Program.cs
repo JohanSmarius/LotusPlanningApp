@@ -3,6 +3,7 @@ using LotusPlanningApp.Components;
 using LotusPlanningApp.Components.Account;
 using LotusPlanningApp.Configuration;
 using LotusPlanningApp.Data;
+using LotusPlanningApp.Services;
 using System.IO;
 using Application;
 using Application.Commands.StaffAssignments;
@@ -92,6 +93,9 @@ builder.Services.AddScoped(typeof(ICommandHandler<LinkUserToCustomerByEmailComma
 
 // Register command dispatcher
 builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
+
+// Register UI services
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 // Register Blazor Bootstrap
 builder.Services.AddBlazorBootstrap();

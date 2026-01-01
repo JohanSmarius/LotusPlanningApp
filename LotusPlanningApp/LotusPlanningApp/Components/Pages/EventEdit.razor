@@ -3,11 +3,11 @@
 @using Application
 @using Application.DataAdapters
 @using Application.Queries.Events
-@using Application.Queries.Customers
 @using Application.Commands.Events
 @using Entities
+@using LotusPlanningApp.Services
 @inject GetEventByIdQueryHandler GetEventByIdHandler
-@inject GetAllCustomersQueryHandler GetAllCustomersHandler
+@inject ICustomerService CustomerService
 @inject UpdateEventCommandHandler UpdateEventHandler
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
@@ -463,16 +463,7 @@ else
 
     private async Task LoadCustomers()
     {
-        try
-        {
-            var query = new GetAllCustomersQuery();
-            customers = await GetAllCustomersHandler.Handle(query);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading customers: {ex}");
-            customers = new List<CustomerDTO>();
-        }
+        customers = await CustomerService.GetAllCustomersAsync();
     }
 
     private void OnCustomerSelected()

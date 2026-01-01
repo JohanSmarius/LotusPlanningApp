@@ -2,13 +2,13 @@
 @attribute [Authorize(Roles = "Admin")]
 @using Application
 @using Application.Commands.Customers
-@using Application.Queries.Customers
 @using Application.DataAdapters
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Identity
 @using LotusPlanningApp.Data
+@using LotusPlanningApp.Services
 @inject ICommandDispatcher CommandDispatcher
-@inject GetAllCustomersQueryHandler GetAllCustomersHandler
+@inject ICustomerService CustomerService
 @inject NavigationManager Navigation
 @inject UserManager<ApplicationUser> UserManager
 @rendermode InteractiveServer
@@ -82,7 +82,9 @@
                             <div class="d-flex align-items-center">
                                 <div class="me-3">
                                     <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                        <span class="fw-bold fs-5">@customer.FirstName.Substring(0, 1)@customer.LastName.Substring(0, 1)</span>
+                                        <span class="fw-bold fs-5">
+                                            @(string.IsNullOrEmpty(customer.FirstName) ? "?" : customer.FirstName.Substring(0, 1))@(string.IsNullOrEmpty(customer.LastName) ? "?" : customer.LastName.Substring(0, 1))
+                                        </span>
                                     </div>
                                 </div>
                                 <div>
@@ -370,8 +372,7 @@
     {
         try
         {
-            var query = new GetAllCustomersQuery();
-            customers = await GetAllCustomersHandler.Handle(query);
+            customers = await CustomerService.GetAllCustomersAsync();
             FilterCustomers();
         }
         catch (Exception ex)
