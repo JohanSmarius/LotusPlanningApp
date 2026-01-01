@@ -3,9 +3,11 @@
 @using Application
 @using Application.DataAdapters
 @using Application.Queries.Events
+@using Application.Queries.Customers
 @using Application.Commands.Events
 @using Entities
 @inject GetEventByIdQueryHandler GetEventByIdHandler
+@inject GetAllCustomersQueryHandler GetAllCustomersHandler
 @inject UpdateEventCommandHandler UpdateEventHandler
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
@@ -134,6 +136,24 @@ else
                                     </InputSelect>
                                     <ValidationMessage For="() => editForm.Status" class="text-danger" />
                                 </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Klant</label>
+                                <select class="form-select" @bind="selectedCustomerId" @bind:after="OnCustomerSelected">
+                                    <option value="0">-- Selecteer een klant (optioneel) --</option>
+                                    @foreach (var customer in customers)
+                                    {
+                                        <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
+                                    }
+                                </select>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Als je een klant selecteert, worden contactgegevens automatisch ingevuld
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Contactpersoon</label>
                                     <InputText @bind-Value="editForm.ContactPerson" class="form-control" placeholder="Naam contactpersoon" />
@@ -424,10 +444,13 @@ else
     private bool showCancelConfirm = false;
     private Event? eventToEdit;
     private Event editForm = new();
+    private List<CustomerDTO> customers = new();
+    private int selectedCustomerId = 0;
     private string validationError = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadCustomers();
         await LoadEventDetails();
         isLoading = false;
     }
@@ -436,6 +459,36 @@ else
     {
         if (isLoading) return;
         await LoadEventDetails();
+    }
+
+    private async Task LoadCustomers()
+    {
+        try
+        {
+            var query = new GetAllCustomersQuery();
+            customers = await GetAllCustomersHandler.Handle(query);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading customers: {ex}");
+            customers = new List<CustomerDTO>();
+        }
+    }
+
+    private void OnCustomerSelected()
+    {
+        if (selectedCustomerId > 0)
+        {
+            var customer = customers.FirstOrDefault(c => c.Id == selectedCustomerId);
+            if (customer != null)
+            {
+                editForm.ContactPerson = customer.FullName;
+                editForm.ContactEmail = customer.Email;
+                editForm.ContactPhone = customer.PhoneNumber;
+                editForm.CustomerId = customer.Id;
+            }
+        }
+        StateHasChanged();
     }
 
     private async Task LoadEventDetails()
@@ -457,9 +510,11 @@ else
                 ContactPerson = eventToEdit.ContactPerson,
                 ContactPhone = eventToEdit.ContactPhone,
                 ContactEmail = eventToEdit.ContactEmail,
+                CustomerId = eventToEdit.CustomerId,
                 CreatedAt = eventToEdit.CreatedAt,
                 UpdatedAt = eventToEdit.UpdatedAt
             };
+            selectedCustomerId = eventToEdit.CustomerId ?? 0;
         }
     }
 
