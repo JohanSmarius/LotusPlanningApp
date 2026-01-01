@@ -1,6 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Add SQL Server with persistent storage and default port (1433)
+// Note: In development, the SQL Server container is isolated within Docker's network.
+// In production deployments, ensure proper network policies and firewall rules are in place.
 var sqlServer = builder.AddSqlServer("sqlserver")
     .WithDataVolume() // Persistent storage
     .WithLifetime(ContainerLifetime.Persistent)
