@@ -65,6 +65,9 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+// Add HttpContextAccessor for accessing HTTP context in Blazor components
+builder.Services.AddHttpContextAccessor();
+
 // Register CQRS handlers and application layer services
 builder.Services.AddApplicationLayer();
 
@@ -151,7 +154,11 @@ app.MapControllers();
 
 app.Use(async (context, next) =>
 {
-    context.Response.Headers["Cache-control"] = "no-cache, max-age=0, must-revalidate";
+    // Only set cache headers if the response hasn't started yet
+    if (!context.Response.HasStarted)
+    {
+        context.Response.Headers["Cache-control"] = "no-cache, max-age=0, must-revalidate";
+    }
 
     await next();
 });

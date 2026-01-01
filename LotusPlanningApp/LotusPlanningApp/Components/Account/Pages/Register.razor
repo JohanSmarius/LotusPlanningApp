@@ -20,6 +20,8 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
+@rendermode InteractiveServer
+
 <PageTitle>Register</PageTitle>
 
 <div class="row justify-content-center">
@@ -115,7 +117,7 @@
     private bool isLotusUser = false;
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = default!;
+    private InputModel Input { get; set; } = new();
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
@@ -134,6 +136,7 @@
         
         // Reset form input
         Input = new InputModel { IsLotusUser = isLotus };
+        StateHasChanged();
     }
 
     public async Task RegisterUser(EditContext editContext)
@@ -202,11 +205,9 @@
 
             Logger.LogInformation("Customer user created a new account with password and Customer profile.");
 
-            // Sign in the user immediately (customers don't need approval)
-            await SignInManager.SignInAsync(user, isPersistent: false);
-
-            // Redirect to home page or dashboard
-            RedirectManager.RedirectTo(ReturnUrl ?? "/");
+            // Redirect to login page - customer will log in normally
+            // This avoids issues with response headers in InteractiveServer components
+            RedirectManager.RedirectTo("Account/Login");
         }
     }
 
