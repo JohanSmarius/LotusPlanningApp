@@ -1,0 +1,608 @@
+@page "/customers"
+@attribute [Authorize(Roles = "Admin")]
+@using Application
+@using Application.Commands.Customers
+@using Application.Queries.Customers
+@using Application.DataAdapters
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Identity
+@using LotusPlanningApp.Data
+@inject ICommandDispatcher CommandDispatcher
+@inject GetAllCustomersQueryHandler GetAllCustomersHandler
+@inject NavigationManager Navigation
+@inject UserManager<ApplicationUser> UserManager
+@rendermode InteractiveServer
+
+<PageTitle>Klanten - LOTUS Planning App</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-primary">
+                        <i class="fas fa-building me-2"></i>Klanten Beheer
+                    </h1>
+                    <p class="text-muted">Beheer klanten en koppel ze aan login accounts</p>
+                </div>
+                <button class="btn btn-primary" @onclick="OpenCreateCustomerDialog">
+                    <i class="fas fa-plus me-2"></i>Klant toevoegen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (!customers.Any())
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-building fa-4x text-muted mb-4"></i>
+            <h4 class="text-muted">Geen klanten gevonden</h4>
+            <p class="text-muted mb-4">Begin met het toevoegen van je eerste klant.</p>
+            <button class="btn btn-primary btn-lg" @onclick="OpenCreateCustomerDialog">
+                <i class="fas fa-plus me-2"></i>Eerste klant toevoegen
+            </button>
+        </div>
+    }
+    else
+    {
+        <!-- Filter and Search -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" class="form-control" placeholder="Zoek klanten op naam, bedrijf of e-mail..." @bind="searchTerm" @oninput="OnSearchChanged" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" @bind="linkedFilter" @bind:after="OnFilterChanged">
+                    <option value="">Alle klanten</option>
+                    <option value="linked">Gekoppeld aan account</option>
+                    <option value="notlinked">Niet gekoppeld</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Customer Cards Grid -->
+        <div class="row">
+            @foreach (var customer in filteredCustomers)
+            {
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                        <span class="fw-bold fs-5">@customer.FirstName.Substring(0, 1)@customer.LastName.Substring(0, 1)</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-1">@customer.FullName</h5>
+                                    @if (customer.UserId != null)
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-link me-1"></i>Gekoppeld
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" 
+                                        @onclick="@((e) => ToggleDropdown(customer.Id))" 
+                                        @onclick:stopPropagation="true">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                @if (openDropdownId == customer.Id)
+                                {
+                                    <ul class="dropdown-menu show position-absolute" style="right: 0; left: auto; z-index: 1050;">
+                                        <li>
+                                            <button class="dropdown-item" @onclick="@((e) => OpenEditCustomerDialog(customer))" @onclick:stopPropagation="true">
+                                                <i class="fas fa-edit me-2"></i>Bewerk
+                                            </button>
+                                        </li>
+                                        @if (customer.UserId == null)
+                                        {
+                                            <li>
+                                                <button class="dropdown-item" @onclick="@((e) => OpenLinkUserDialog(customer))" @onclick:stopPropagation="true">
+                                                    <i class="fas fa-link me-2"></i>Koppel aan account
+                                                </button>
+                                            </li>
+                                        }
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <button class="dropdown-item text-danger" @onclick="@((e) => ConfirmDeleteCustomer(customer))" @onclick:stopPropagation="true">
+                                                <i class="fas fa-trash me-2"></i>Verwijderen
+                                            </button>
+                                        </li>
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="mb-2">
+                                <i class="fas fa-envelope text-muted me-2"></i>
+                                <a href="mailto:@customer.Email" class="text-decoration-none" @onclick:stopPropagation="true">@customer.Email</a>
+                            </div>
+                            @if (!string.IsNullOrEmpty(customer.PhoneNumber))
+                            {
+                                <div class="mb-2">
+                                    <i class="fas fa-phone text-muted me-2"></i>
+                                    <a href="tel:@customer.PhoneNumber" class="text-decoration-none" @onclick:stopPropagation="true">@customer.PhoneNumber</a>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(customer.Company))
+                            {
+                                <div class="mb-2">
+                                    <i class="fas fa-briefcase text-muted me-2"></i>
+                                    <span>@customer.Company</span>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(customer.City))
+                            {
+                                <div class="mb-2">
+                                    <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                    <span>@customer.City</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Create/Edit Customer Modal -->
+@if (showCustomerDialog)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @if (isEditMode)
+                        {
+                            <i class="fas fa-edit me-2"></i><text>Klant bewerken</text>
+                        }
+                        else
+                        {
+                            <i class="fas fa-plus me-2"></i><text>Nieuwe klant</text>
+                        }
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseCustomerDialog"></button>
+                </div>
+                <EditForm Model="customerForm" OnValidSubmit="SaveCustomer">
+                    <DataAnnotationsValidator />
+                    <div class="modal-body">
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>@errorMessage
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Voornaam *</label>
+                                <InputText @bind-Value="customerForm.FirstName" class="form-control" placeholder="Voornaam" />
+                                <ValidationMessage For="() => customerForm.FirstName" class="text-danger" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Achternaam *</label>
+                                <InputText @bind-Value="customerForm.LastName" class="form-control" placeholder="Achternaam" />
+                                <ValidationMessage For="() => customerForm.LastName" class="text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">E-mail *</label>
+                                <InputText @bind-Value="customerForm.Email" class="form-control" type="email" placeholder="email@example.com" />
+                                <ValidationMessage For="() => customerForm.Email" class="text-danger" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Telefoon</label>
+                                <InputText @bind-Value="customerForm.PhoneNumber" class="form-control" placeholder="Telefoonnummer" />
+                                <ValidationMessage For="() => customerForm.PhoneNumber" class="text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Bedrijf</label>
+                            <InputText @bind-Value="customerForm.Company" class="form-control" placeholder="Bedrijfsnaam" />
+                            <ValidationMessage For="() => customerForm.Company" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Adres</label>
+                            <InputText @bind-Value="customerForm.Address" class="form-control" placeholder="Straat en huisnummer" />
+                            <ValidationMessage For="() => customerForm.Address" class="text-danger" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Postcode</label>
+                                <InputText @bind-Value="customerForm.PostalCode" class="form-control" placeholder="Postcode" />
+                                <ValidationMessage For="() => customerForm.PostalCode" class="text-danger" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Stad</label>
+                                <InputText @bind-Value="customerForm.City" class="form-control" placeholder="Stad" />
+                                <ValidationMessage For="() => customerForm.City" class="text-danger" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Land</label>
+                                <InputText @bind-Value="customerForm.Country" class="form-control" placeholder="Land" />
+                                <ValidationMessage For="() => customerForm.Country" class="text-danger" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseCustomerDialog">
+                            Annuleren
+                        </button>
+                        <button type="submit" class="btn btn-primary" disabled="@isSaving">
+                            @if (isSaving)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            <i class="fas fa-save me-2"></i>Opslaan
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Link User to Customer Modal -->
+@if (showLinkUserDialog)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-link me-2"></i>Koppel aan login account
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseLinkUserDialog"></button>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>@errorMessage
+                        </div>
+                    }
+                    <p>Deze functie koppelt klant <strong>@selectedCustomer?.FullName</strong> aan een bestaand login account op basis van e-mailadres.</p>
+                    <p class="text-muted">De klant wordt automatisch gekoppeld aan het account met e-mail: <strong>@selectedCustomer?.Email</strong></p>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Als er geen account bestaat met dit e-mailadres, wordt de koppeling niet gemaakt.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseLinkUserDialog">
+                        Annuleren
+                    </button>
+                    <button type="button" class="btn btn-primary" @onclick="LinkUserToCustomer" disabled="@isSaving">
+                        @if (isSaving)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                        }
+                        <i class="fas fa-link me-2"></i>Koppelen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteConfirm)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Klant verwijderen</h5>
+                    <button type="button" class="btn-close" @onclick="CancelDelete"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Weet je zeker dat je klant <strong>@customerToDelete?.FullName</strong> wilt verwijderen?</p>
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>@errorMessage
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CancelDelete">
+                        Annuleren
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="DeleteCustomer" disabled="@isSaving">
+                        @if (isSaving)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                        }
+                        <i class="fas fa-trash me-2"></i>Verwijderen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<CustomerDTO> customers = new();
+    private List<CustomerDTO> filteredCustomers = new();
+    private bool isLoading = true;
+    private bool isSaving = false;
+    private bool showCustomerDialog = false;
+    private bool showLinkUserDialog = false;
+    private bool showDeleteConfirm = false;
+    private bool isEditMode = false;
+    private string searchTerm = string.Empty;
+    private string linkedFilter = string.Empty;
+    private string errorMessage = string.Empty;
+    private int? openDropdownId = null;
+    private CustomerDTO customerForm = new();
+    private CustomerDTO? selectedCustomer = null;
+    private CustomerDTO? customerToDelete = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCustomers();
+        isLoading = false;
+    }
+
+    private async Task LoadCustomers()
+    {
+        try
+        {
+            var query = new GetAllCustomersQuery();
+            customers = await GetAllCustomersHandler.Handle(query);
+            FilterCustomers();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij het laden van klanten: {ex.Message}";
+        }
+    }
+
+    private void FilterCustomers()
+    {
+        filteredCustomers = customers;
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            var lowerSearch = searchTerm.ToLower();
+            filteredCustomers = filteredCustomers.Where(c =>
+                c.FirstName.ToLower().Contains(lowerSearch) ||
+                c.LastName.ToLower().Contains(lowerSearch) ||
+                c.Email.ToLower().Contains(lowerSearch) ||
+                (c.Company != null && c.Company.ToLower().Contains(lowerSearch))
+            ).ToList();
+        }
+
+        if (linkedFilter == "linked")
+        {
+            filteredCustomers = filteredCustomers.Where(c => c.UserId != null).ToList();
+        }
+        else if (linkedFilter == "notlinked")
+        {
+            filteredCustomers = filteredCustomers.Where(c => c.UserId == null).ToList();
+        }
+
+        StateHasChanged();
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString() ?? string.Empty;
+        FilterCustomers();
+    }
+
+    private void OnFilterChanged()
+    {
+        FilterCustomers();
+    }
+
+    private void ToggleDropdown(int customerId)
+    {
+        openDropdownId = openDropdownId == customerId ? null : customerId;
+        StateHasChanged();
+    }
+
+    private void OpenCreateCustomerDialog()
+    {
+        isEditMode = false;
+        customerForm = new CustomerDTO();
+        errorMessage = string.Empty;
+        showCustomerDialog = true;
+        openDropdownId = null;
+        StateHasChanged();
+    }
+
+    private void OpenEditCustomerDialog(CustomerDTO customer)
+    {
+        isEditMode = true;
+        customerForm = new CustomerDTO
+        {
+            Id = customer.Id,
+            FirstName = customer.FirstName,
+            LastName = customer.LastName,
+            Email = customer.Email,
+            PhoneNumber = customer.PhoneNumber,
+            Company = customer.Company,
+            Address = customer.Address,
+            City = customer.City,
+            PostalCode = customer.PostalCode,
+            Country = customer.Country,
+            UserId = customer.UserId
+        };
+        errorMessage = string.Empty;
+        showCustomerDialog = true;
+        openDropdownId = null;
+        StateHasChanged();
+    }
+
+    private void CloseCustomerDialog()
+    {
+        showCustomerDialog = false;
+        errorMessage = string.Empty;
+        StateHasChanged();
+    }
+
+    private async Task SaveCustomer()
+    {
+        isSaving = true;
+        errorMessage = string.Empty;
+        try
+        {
+            if (isEditMode)
+            {
+                var command = new UpdateCustomerCommand(customerForm);
+                await CommandDispatcher.DispatchAsync<UpdateCustomerCommand, CustomerDTO>(command);
+            }
+            else
+            {
+                var command = new CreateCustomerCommand(customerForm);
+                await CommandDispatcher.DispatchAsync<CreateCustomerCommand, CustomerDTO>(command);
+            }
+
+            await LoadCustomers();
+            CloseCustomerDialog();
+        }
+        catch (ApplicationLayerException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij het opslaan: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    private void OpenLinkUserDialog(CustomerDTO customer)
+    {
+        selectedCustomer = customer;
+        errorMessage = string.Empty;
+        showLinkUserDialog = true;
+        openDropdownId = null;
+        StateHasChanged();
+    }
+
+    private void CloseLinkUserDialog()
+    {
+        showLinkUserDialog = false;
+        selectedCustomer = null;
+        errorMessage = string.Empty;
+        StateHasChanged();
+    }
+
+    private async Task LinkUserToCustomer()
+    {
+        if (selectedCustomer == null) return;
+
+        isSaving = true;
+        errorMessage = string.Empty;
+        try
+        {
+            // Find user by email
+            var user = await UserManager.FindByEmailAsync(selectedCustomer.Email);
+            if (user == null)
+            {
+                errorMessage = $"Geen gebruiker gevonden met e-mail {selectedCustomer.Email}";
+                return;
+            }
+
+            var command = new LinkUserToCustomerByEmailCommand(user.Id, selectedCustomer.Email);
+            var result = await CommandDispatcher.DispatchAsync<LinkUserToCustomerByEmailCommand, bool>(command);
+
+            if (result)
+            {
+                await LoadCustomers();
+                CloseLinkUserDialog();
+            }
+            else
+            {
+                errorMessage = "Kon gebruiker niet koppelen aan klant.";
+            }
+        }
+        catch (ApplicationLayerException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij het koppelen: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ConfirmDeleteCustomer(CustomerDTO customer)
+    {
+        customerToDelete = customer;
+        errorMessage = string.Empty;
+        showDeleteConfirm = true;
+        openDropdownId = null;
+        StateHasChanged();
+    }
+
+    private void CancelDelete()
+    {
+        showDeleteConfirm = false;
+        customerToDelete = null;
+        errorMessage = string.Empty;
+        StateHasChanged();
+    }
+
+    private async Task DeleteCustomer()
+    {
+        if (customerToDelete == null) return;
+
+        isSaving = true;
+        errorMessage = string.Empty;
+        try
+        {
+            var command = new DeleteCustomerCommand(customerToDelete.Id);
+            await CommandDispatcher.DispatchAsync<DeleteCustomerCommand, bool>(command);
+
+            await LoadCustomers();
+            CancelDelete();
+        }
+        catch (ApplicationLayerException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij het verwijderen: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+}

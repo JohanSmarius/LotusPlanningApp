@@ -106,6 +106,9 @@ public static class DependencyInjection
 
         // Register Customer Command Handlers
         services.AddScoped(typeof(ICommandHandler<CreateCustomerCommand, CustomerDTO>), typeof(CreateCustomerCommandHandler));
+        services.AddScoped(typeof(ICommandHandler<UpdateCustomerCommand, CustomerDTO>), typeof(UpdateCustomerCommandHandler));
+        services.AddScoped(typeof(ICommandHandler<DeleteCustomerCommand, bool>), typeof(DeleteCustomerCommandHandler));
+        services.AddScoped(typeof(ICommandHandler<LinkUserToCustomerByEmailCommand, bool>), typeof(LinkUserToCustomerByEmailCommandHandler));
         services.AddScoped(typeof(ICommandHandler<LinkCustomerToEventCommand, bool>), typeof(LinkCustomerToEventCommandHandler));
         services.AddScoped(typeof(ICommandHandler<RequestEventCancellationCommand, bool>), typeof(RequestEventCancellationCommandHandler));
 

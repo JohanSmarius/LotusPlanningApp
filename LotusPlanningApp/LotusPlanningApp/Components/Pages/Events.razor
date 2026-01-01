@@ -6,6 +6,7 @@
 @using Application.Commands.Shifts
 @using Application.Queries.Events
 @using Application.Queries.Shifts
+@using Application.Queries.Customers
 @using Entities
 @using Microsoft.AspNetCore.Components.Forms
 @inject GetAllEventsQueryHandler GetAllEventsHandler
@@ -15,6 +16,8 @@
 @inject DeleteEventCommandHandler DeleteEventHandler
 @inject CreateShiftCommandHandler CreateShiftHandler
 @inject DeleteShiftCommandHandler DeleteShiftHandler
+@inject GetAllCustomersQueryHandler GetAllCustomersHandler
+@inject ICommandDispatcher CommandDispatcher
 @inject NavigationManager Navigation
 
 @rendermode InteractiveServer
@@ -436,6 +439,21 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label">Klant</label>
+                            <select class="form-select" @bind="selectedCustomerId" @bind:after="OnCustomerSelected">
+                                <option value="0">-- Selecteer een klant (optioneel) --</option>
+                                @foreach (var customer in customers)
+                                {
+                                    <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
+                                }
+                            </select>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Als je een klant selecteert, worden contactgegevens automatisch ingevuld
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Contactpersoon</label>
@@ -530,6 +548,21 @@
                                 <label class="form-label">Einddatum & tijd *</label>
                                 <input type="datetime-local" @bind="editEvent.EndDate" class="form-control" />
                                 <ValidationMessage For="() => editEvent.EndDate" class="text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Klant</label>
+                            <select class="form-select" @bind="selectedCustomerIdForEdit" @bind:after="OnCustomerSelectedForEdit">
+                                <option value="0">-- Selecteer een klant (optioneel) --</option>
+                                @foreach (var customer in customers)
+                                {
+                                    <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
+                                }
+                            </select>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Als je een klant selecteert, worden contactgegevens automatisch ingevuld
                             </div>
                         </div>
 
@@ -735,12 +768,15 @@
     
     private List<Event> events = new();
     private List<Event> filteredEvents = new();
+    private List<CustomerDTO> customers = new();
     private Event? eventToDelete;
     private EventDTO newEvent = new();
     private Event editEvent = new();
     private Shift newShift = new();
     private Event? selectedEventForShift;
     private int? openDropdownId = null;
+    private int selectedCustomerId = 0;
+    private int selectedCustomerIdForEdit = 0;
     
     private string searchTerm = string.Empty;
     private string statusFilter = string.Empty;
@@ -749,6 +785,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadCustomers();
         await LoadEventsWithErrorHandling();
         isLoading = false;
     }
@@ -797,6 +834,51 @@
     {
         var query = new GetAllEventsQuery();
         events = await GetAllEventsHandler.Handle(query);
+    }
+
+    private async Task LoadCustomers()
+    {
+        try
+        {
+            var query = new GetAllCustomersQuery();
+            customers = await GetAllCustomersHandler.Handle(query);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading customers: {ex}");
+            customers = new List<CustomerDTO>();
+        }
+    }
+
+    private void OnCustomerSelected()
+    {
+        if (selectedCustomerId > 0)
+        {
+            var customer = customers.FirstOrDefault(c => c.Id == selectedCustomerId);
+            if (customer != null)
+            {
+                newEvent.ContactPerson = customer.FullName;
+                newEvent.ContactEmail = customer.Email;
+                newEvent.ContactPhone = customer.PhoneNumber;
+            }
+        }
+        StateHasChanged();
+    }
+
+    private void OnCustomerSelectedForEdit()
+    {
+        if (selectedCustomerIdForEdit > 0)
+        {
+            var customer = customers.FirstOrDefault(c => c.Id == selectedCustomerIdForEdit);
+            if (customer != null)
+            {
+                editEvent.ContactPerson = customer.FullName;
+                editEvent.ContactEmail = customer.Email;
+                editEvent.ContactPhone = customer.PhoneNumber;
+                editEvent.CustomerId = customer.Id;
+            }
+        }
+        StateHasChanged();
     }
 
     private void OnSearchChanged(ChangeEventArgs e)
@@ -988,6 +1070,7 @@
             StartDate = DateTime.Today.AddHours(9), // Default to 9 AM today
             EndDate = DateTime.Today.AddHours(17)   // Default to 5 PM today
         };
+        selectedCustomerId = 0; // Reset customer selection
         showCreateDialog = true;
         StateHasChanged();
     }
@@ -996,6 +1079,7 @@
     {
         showCreateDialog = false;
         newEvent = new EventDTO();
+        selectedCustomerId = 0;
         StateHasChanged();
     }
 
@@ -1022,10 +1106,12 @@
                     ContactPerson = fullEvent.ContactPerson,
                     ContactPhone = fullEvent.ContactPhone,
                     ContactEmail = fullEvent.ContactEmail,
+                    CustomerId = fullEvent.CustomerId,
                     CreatedAt = fullEvent.CreatedAt,
                     UpdatedAt = fullEvent.UpdatedAt,
                     Shifts = fullEvent.Shifts ?? new List<Shift>()
                 };
+                selectedCustomerIdForEdit = fullEvent.CustomerId ?? 0; // Set selected customer for edit
                 showEditDialog = true;
                 StateHasChanged();
             }
@@ -1042,6 +1128,7 @@
     {
         showEditDialog = false;
         editEvent = new Event();
+        selectedCustomerIdForEdit = 0;
         StateHasChanged();
     }
 
@@ -1081,6 +1168,12 @@
         isCreating = true;
         try
         {
+            // Set customer ID if a customer was selected
+            if (selectedCustomerId > 0)
+            {
+                newEvent.CustomerId = selectedCustomerId;
+            }
+            
             var command = new CreateEventCommand(newEvent);
             var createdEvent = await CreateEventHandler.Handle(command);
             
