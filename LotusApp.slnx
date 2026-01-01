@@ -1,5 +1,8 @@
 <Solution>
+  <Folder Name="/LotusPlanningApp/" />
   <Project Path="Application/Application.csproj" Id="e8e970e2-179b-41de-a622-a61e7c869264" />
+  <Project Path="LotusPlanningApp.AppHost/LotusPlanningApp.AppHost.csproj" />
+  <Project Path="LotusPlanningApp.ServiceDefaults/LotusPlanningApp.ServiceDefaults.csproj" />
   <Project Path="LotusPlanningApp/LotusPlanningApp.Client/LotusPlanningApp.Client.csproj" />
   <Project Path="LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj" />
   <Project Path="CustomerPortal/CustomerPortal.csproj" />
