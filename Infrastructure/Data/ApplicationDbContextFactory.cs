@@ -15,8 +15,9 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
         
         // DESIGN-TIME ONLY: This connection string is only used by EF Core tools for generating migrations.
         // At runtime, the actual connection string is provided by Aspire orchestration.
-        // The password here is a placeholder and is not used in production.
-        optionsBuilder.UseSqlServer("Server=localhost;Database=lotusdb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True");
+        // The password is read from environment variable for security.
+        var password = Environment.GetEnvironmentVariable("SA_PASSWORD") ?? "YourStrong!Passw0rd";
+        optionsBuilder.UseSqlServer($"Server=localhost;Database=lotusdb;User Id=sa;Password={password};TrustServerCertificate=True");
 
         return new ApplicationDbContext(optionsBuilder.Options);
     }

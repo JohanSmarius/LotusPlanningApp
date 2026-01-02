@@ -32,20 +32,36 @@ If you need to run just the web app (e.g., for debugging):
 
 1. Start SQL Server manually:
 ```bash
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourStrong!Passw0rd" \
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YOUR_SECURE_PASSWORD" \
   -p 1433:1433 --name lotussql -d \
   mcr.microsoft.com/mssql/server:2022-latest
 ```
 
+**Important:** Replace `YOUR_SECURE_PASSWORD` with a strong password of your choice. The password must:
+- Be at least 8 characters long
+- Contain characters from at least 3 of: uppercase, lowercase, numbers, symbols
+
 2. Set the connection string:
 ```bash
-export ConnectionStrings__lotusdb="Server=localhost;Database=lotusdb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True"
+export ConnectionStrings__lotusdb="Server=localhost;Database=lotusdb;User Id=sa;Password=YOUR_SECURE_PASSWORD;TrustServerCertificate=True"
 ```
 
 3. Run the web app:
 ```bash
 cd LotusPlanningApp/LotusPlanningApp
 dotnet run
+```
+
+## Migrations
+
+Database migrations are applied automatically on application startup. To create new migrations:
+
+```bash
+# Set the SA_PASSWORD environment variable for design-time migrations
+export SA_PASSWORD="YOUR_SECURE_PASSWORD"
+
+cd Infrastructure
+dotnet ef migrations add YourMigrationName --startup-project ../LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj
 ```
 
 ## SQL Server Configuration
@@ -64,15 +80,6 @@ The ServiceDefaults project provides:
 - **Service Discovery**: Automatic service-to-service communication
 - **Resilience**: Retry policies and circuit breakers for HTTP clients
 
-## Migrations
-
-Database migrations are applied automatically on application startup. To create new migrations:
-
-```bash
-cd Infrastructure
-dotnet ef migrations add YourMigrationName --startup-project ../LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj
-```
-
 ## Troubleshooting
 
 ### Docker Issues
@@ -81,7 +88,7 @@ dotnet ef migrations add YourMigrationName --startup-project ../LotusPlanningApp
 - Remove existing container: `docker rm -f lotussql`
 
 ### Database Issues
-- Check if SQL Server is accessible: `docker exec lotussql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YourStrong!Passw0rd" -Q "SELECT @@VERSION"`
+- Check if SQL Server is accessible: `docker exec lotussql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YOUR_SECURE_PASSWORD" -Q "SELECT @@VERSION"`
 - View application logs for migration errors
 
 ### Aspire Dashboard
