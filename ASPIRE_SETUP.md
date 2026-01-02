@@ -56,6 +56,7 @@ dotnet run
 
 Database migrations are applied automatically on application startup. To create new migrations:
 
+### Option 1: Using Environment Variable
 ```bash
 # Set the SA_PASSWORD environment variable for design-time migrations
 export SA_PASSWORD="YOUR_SECURE_PASSWORD"
@@ -63,6 +64,18 @@ export SA_PASSWORD="YOUR_SECURE_PASSWORD"
 cd Infrastructure
 dotnet ef migrations add YourMigrationName --startup-project ../LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj
 ```
+
+### Option 2: Using Aspire Connection String Parameter
+```bash
+cd Infrastructure
+dotnet ef migrations add YourMigrationName \
+  --startup-project ../LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj \
+  -- --ConnectionStrings:lotusdb "Server=localhost;Database=lotusdb;User Id=sa;Password=YOUR_SECURE_PASSWORD;TrustServerCertificate=True"
+```
+
+The ApplicationDbContextFactory supports both methods:
+- Aspire connection string parameter (recommended for Aspire environments)
+- SA_PASSWORD environment variable (fallback for traditional environments)
 
 ## SQL Server Configuration
 
