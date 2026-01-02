@@ -11,12 +11,14 @@ namespace LotusPlanningApp.Data;
 /// </summary>
 public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
+    private static IConfiguration? _configuration;
+    
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         
-        // Build configuration to support Aspire parameters
-        var configuration = new ConfigurationBuilder()
+        // Build configuration to support Aspire parameters (cached for performance)
+        _configuration ??= new ConfigurationBuilder()
             .AddEnvironmentVariables()
             .AddCommandLine(args)
             .Build();
@@ -25,7 +27,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
         // At runtime, the actual connection string is provided by Aspire orchestration.
         
         // Try to get connection string from Aspire configuration first
-        var connectionString = configuration.GetConnectionString("lotusdb");
+        var connectionString = _configuration.GetConnectionString("lotusdb");
         
         if (string.IsNullOrEmpty(connectionString))
         {
@@ -35,7 +37,8 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
             {
                 throw new InvalidOperationException(
                     "Connection string 'lotusdb' not found and SA_PASSWORD environment variable is not set. " +
-                    "Either set ConnectionStrings__lotusdb or SA_PASSWORD environment variable. " +
+                    "Either set the connection string via command line (--ConnectionStrings:lotusdb \"...\") " +
+                    "or set the SA_PASSWORD environment variable. " +
                     "Example: export SA_PASSWORD=\"YourSecurePassword\"");
             }
             
