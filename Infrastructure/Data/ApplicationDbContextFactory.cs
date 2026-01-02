@@ -11,23 +11,33 @@ namespace LotusPlanningApp.Data;
 /// </summary>
 public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
-    private static IConfiguration? _configuration;
+    private static readonly Lazy<IConfiguration> _lazyConfiguration = new(() =>
+        new ConfigurationBuilder()
+            .AddEnvironmentVariables()
+            .Build());
     
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         
-        // Build configuration to support Aspire parameters (cached for performance)
-        _configuration ??= new ConfigurationBuilder()
-            .AddEnvironmentVariables()
-            .AddCommandLine(args)
-            .Build();
+        // Build configuration to support Aspire parameters
+        // Use lazy initialization for base config, then add command-line args
+        var configBuilder = new ConfigurationBuilder()
+            .AddConfiguration(_lazyConfiguration.Value);
+        
+        // Add command-line arguments if provided
+        if (args.Length > 0)
+        {
+            configBuilder.AddCommandLine(args);
+        }
+        
+        var configuration = configBuilder.Build();
         
         // DESIGN-TIME ONLY: This connection string is only used by EF Core tools for generating migrations.
         // At runtime, the actual connection string is provided by Aspire orchestration.
         
         // Try to get connection string from Aspire configuration first
-        var connectionString = _configuration.GetConnectionString("lotusdb");
+        var connectionString = configuration.GetConnectionString("lotusdb");
         
         if (string.IsNullOrEmpty(connectionString))
         {
