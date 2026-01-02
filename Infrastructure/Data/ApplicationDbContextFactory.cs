@@ -11,19 +11,13 @@ namespace LotusPlanningApp.Data;
 /// </summary>
 public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
-    private static readonly Lazy<IConfiguration> _lazyConfiguration = new(() =>
-        new ConfigurationBuilder()
-            .AddEnvironmentVariables()
-            .Build());
-    
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         
         // Build configuration to support Aspire parameters
-        // Use lazy initialization for base config, then add command-line args
         var configBuilder = new ConfigurationBuilder()
-            .AddConfiguration(_lazyConfiguration.Value);
+            .AddEnvironmentVariables();
         
         // Add command-line arguments if provided
         if (args.Length > 0)
