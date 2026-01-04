@@ -40,6 +40,9 @@ public class EventDTO
 
     public bool NotificationSent { get; set; } = false;
 
+    [Range(1, 50)]
+    public int RequiredStaffCount { get; set; } = 1;
+
     public int? CustomerId { get; set; }
 
     public bool CancellationRequested { get; set; } = false;

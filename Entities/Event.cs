@@ -40,6 +40,9 @@ public class Event
 
     public bool NotificationSent { get; set; } = false;
 
+    [Range(1, 50)]
+    public int RequiredStaffCount { get; set; } = 1;
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime? UpdatedAt { get; set; }

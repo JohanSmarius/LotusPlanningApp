@@ -439,18 +439,28 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Klant</label>
-                            <select class="form-select" @bind="selectedCustomerId" @bind:after="OnCustomerSelected">
-                                <option value="0">-- Selecteer een klant (optioneel) --</option>
-                                @foreach (var customer in customers)
-                                {
-                                    <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
-                                }
-                            </select>
-                            <div class="form-text">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Als je een klant selecteert, worden contactgegevens automatisch ingevuld
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Benodigde medewerkers *</label>
+                                <input type="number" @bind="newEvent.RequiredStaffCount" class="form-control" min="1" max="50" />
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Aantal medewerkers nodig voor deze opdracht
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Klant</label>
+                                <select class="form-select" @bind="selectedCustomerId" @bind:after="OnCustomerSelected">
+                                    <option value="0">-- Selecteer een klant (optioneel) --</option>
+                                    @foreach (var customer in customers)
+                                    {
+                                        <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
+                                    }
+                                </select>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Als je een klant selecteert, worden contactgegevens automatisch ingevuld
+                                </div>
                             </div>
                         </div>
 
@@ -551,18 +561,28 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Klant</label>
-                            <select class="form-select" @bind="selectedCustomerIdForEdit" @bind:after="OnCustomerSelectedForEdit">
-                                <option value="0">-- Selecteer een klant (optioneel) --</option>
-                                @foreach (var customer in customers)
-                                {
-                                    <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
-                                }
-                            </select>
-                            <div class="form-text">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Als je een klant selecteert, worden contactgegevens automatisch ingevuld
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Benodigde medewerkers *</label>
+                                <input type="number" @bind="editEvent.RequiredStaffCount" class="form-control" min="1" max="50" />
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Standaard aantal medewerkers voor nieuwe diensten
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Klant</label>
+                                <select class="form-select" @bind="selectedCustomerIdForEdit" @bind:after="OnCustomerSelectedForEdit">
+                                    <option value="0">-- Selecteer een klant (optioneel) --</option>
+                                    @foreach (var customer in customers)
+                                    {
+                                        <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
+                                    }
+                                </select>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Als je een klant selecteert, worden contactgegevens automatisch ingevuld
+                                </div>
                             </div>
                         </div>
 

@@ -47,7 +47,7 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
             Name = "Default Shift",
             StartTime = newEvent.StartDate,
             EndTime = newEvent.EndDate,
-            RequiredStaff = 1,
+            RequiredStaff = newEvent.RequiredStaffCount,
             Description = "Default shift covering the entire event duration",
             Status = ShiftStatus.Open,
             CreatedAt = DateTime.UtcNow,

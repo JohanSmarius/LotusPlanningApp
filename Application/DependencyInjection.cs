@@ -83,9 +83,13 @@ public static class DependencyInjection
         services.AddScoped(typeof(IQueryHandler<IsEmailUniqueQuery, bool>), typeof(IsEmailUniqueQueryHandler));
 
         // Register Staff Assignment Command Handlers
+        services.AddScoped<CreateStaffAssignmentCommandHandler>();
         services.AddScoped(typeof(ICommandHandler<CreateStaffAssignmentCommand, StaffAssignment>), typeof(CreateStaffAssignmentCommandHandler));
+        services.AddScoped<CheckInStaffCommandHandler>();
         services.AddScoped(typeof(ICommandHandler<CheckInStaffCommand, StaffAssignment?>), typeof(CheckInStaffCommandHandler));
+        services.AddScoped<CheckOutStaffCommandHandler>();
         services.AddScoped(typeof(ICommandHandler<CheckOutStaffCommand, StaffAssignment?>), typeof(CheckOutStaffCommandHandler));
+        services.AddScoped<DeleteStaffAssignmentCommandHandler>();
         services.AddScoped(typeof(ICommandHandler<DeleteStaffAssignmentCommand, bool>), typeof(DeleteStaffAssignmentCommandHandler));
 
         // Register Staff Assignment Query Handlers
@@ -97,6 +101,7 @@ public static class DependencyInjection
         services.AddScoped(typeof(IQueryHandler<GetAssignmentsByStaffIdQuery, List<StaffAssignment>>), typeof(GetAssignmentsByStaffIdQueryHandler));
         services.AddScoped<GetConfirmedAssignmentsByStaffIdQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<GetConfirmedAssignmentsByStaffIdQuery, List<StaffAssignment>>), typeof(GetConfirmedAssignmentsByStaffIdQueryHandler));
+        services.AddScoped<IsStaffAvailableQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<IsStaffAvailableQuery, bool>), typeof(IsStaffAvailableQueryHandler));
         services.AddScoped<GetStaffHoursPerYearQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<GetStaffHoursPerYearQuery, List<StaffHoursDTO>>), typeof(GetStaffHoursPerYearQueryHandler));

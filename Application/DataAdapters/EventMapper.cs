@@ -21,6 +21,7 @@ namespace Application.DataAdapters
                 ContactPhone = entityEvent.ContactPhone,
                 ContactEmail = entityEvent.ContactEmail,
                 NotificationSent = entityEvent.NotificationSent,
+                RequiredStaffCount = entityEvent.RequiredStaffCount,
                 CustomerId = entityEvent.CustomerId,
                 CancellationRequested = entityEvent.CancellationRequested,
                 Shifts = entityEvent.Shifts != null
@@ -45,6 +46,7 @@ namespace Application.DataAdapters
                 ContactPhone = dtoEvent.ContactPhone,
                 ContactEmail = dtoEvent.ContactEmail,
                 NotificationSent = dtoEvent.NotificationSent,
+                RequiredStaffCount = dtoEvent.RequiredStaffCount,
                 CustomerId = dtoEvent.CustomerId,
                 CancellationRequested = dtoEvent.CancellationRequested,
                 Shifts = dtoEvent.Shifts != null
