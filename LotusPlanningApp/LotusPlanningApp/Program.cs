@@ -19,9 +19,6 @@ using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add service defaults (Aspire)
-builder.AddServiceDefaults();
-
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
@@ -42,8 +39,22 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-// Add SQL Server database with Aspire
-builder.AddSqlServerDbContext<ApplicationDbContext>("lotusdb");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    var dataDirectory = Path.Combine(builder.Environment.ContentRootPath, "AppData");
+    Directory.CreateDirectory(dataDirectory);
+
+    // Ensure SQLite uses an absolute path so migrations and runtime share the same file
+    if (connectionString.Contains("AppData/lotus.db", StringComparison.OrdinalIgnoreCase) ||
+        connectionString.Contains("AppData\\lotus.db", StringComparison.OrdinalIgnoreCase))
+    {
+        connectionString = $"Data Source={Path.Combine(dataDirectory, "lotus.db")}";
+    }
+
+    options.UseSqlite(connectionString);
+});
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
@@ -151,9 +162,6 @@ app.MapAdditionalIdentityEndpoints();
 // Map API controllers
 app.MapControllers();
 
-// Map default endpoints (health checks)
-app.MapDefaultEndpoints();
-
 app.Use(async (context, next) =>
 {
     // Only set cache headers if the response hasn't started yet
@@ -193,8 +201,8 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
             Email = adminEmail,
             EmailConfirmed = true,
             IsApproved = true, // Admin is automatically approved
-            ApprovedAt = DateTime.UtcNow,
-            RegisteredAt = DateTime.UtcNow
+            ApprovedAt = new DateTime(2025,1,1),
+            RegisteredAt = new DateTime(2025,1,1)
         };
         var result = await userManager.CreateAsync(adminUser, "Test123!");
         if (result.Succeeded)
@@ -206,7 +214,7 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
     {
         // Ensure existing admin is approved
         adminUser.IsApproved = true;
-        adminUser.ApprovedAt = DateTime.UtcNow;
+        adminUser.ApprovedAt = new DateTime(2025,1,1);
         await userManager.UpdateAsync(adminUser);
     }
 }

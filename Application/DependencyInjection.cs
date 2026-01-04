@@ -112,9 +112,13 @@ public static class DependencyInjection
         services.AddScoped(typeof(ICommandHandler<RequestEventCancellationCommand, bool>), typeof(RequestEventCancellationCommandHandler));
 
         // Register Customer Query Handlers
+        services.AddScoped<GetAllCustomersQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<GetAllCustomersQuery, List<CustomerDTO>>), typeof(GetAllCustomersQueryHandler));
+        services.AddScoped<GetCustomerByIdQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<GetCustomerByIdQuery, CustomerDTO?>), typeof(GetCustomerByIdQueryHandler));
+        services.AddScoped<GetCustomerByUserIdQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<GetCustomerByUserIdQuery, CustomerDTO?>), typeof(GetCustomerByUserIdQueryHandler));
+        services.AddScoped<SearchCustomersQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<SearchCustomersQuery, List<CustomerDTO>>), typeof(SearchCustomersQueryHandler));
 
         // Register legacy wrappers for backward compatibility
