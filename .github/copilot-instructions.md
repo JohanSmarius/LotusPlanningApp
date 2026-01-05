@@ -1,7 +1,7 @@
-## Copilot Instructions for Medical First Aid Event & Shift Manager (Blazor)
+## Copilot Instructions for Lotus Planning App (Blazor)
 
 ### Project Overview
-This Blazor application manages events and shifts for a medical first aid team. Users can create, view, and manage events, assign staff to shifts, and track attendance. The app should be visually attractive, easy to use, and fully responsive for desktop and mobile devices.
+This Blazor application manages events and shifts for a LOTUS team. Users can create, view, and manage events, assign staff to shifts, and track attendance. The app should be visually attractive, easy to use, and fully responsive for desktop and mobile devices.
 
 **Technology Stack:**
 - .NET 10 (ASP.NET Core Blazor)
@@ -82,6 +82,7 @@ LotusPlanningApp/
 ---
 
 ### Coding Standards
+- Follow **C# coding conventions** (PascalCase for classes/methods, camelCase for variables).
 - Follow **SOLID principles** and clean architecture.
 - Use **Blazor components** for reusable UI parts.
 - Organize code into clear folders: `Components`, `Pages`, `Services`, `Models`.
@@ -249,19 +250,6 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, Event?>
         
         // Refresh list
         await OnInitializedAsync();
-    }
-}
-```
-
-**Using legacy service layer (backward compatible):**
-
-```csharp
-@inject IEventService EventService
-
-@code {
-    private async Task CreateEvent(EventDTO eventDto)
-    {
-        await EventService.CreateEventAsync(eventDto);
     }
 }
 ```
@@ -496,6 +484,7 @@ dotnet ef database update --project Infrastructure --startup-project LotusPlanni
 
 #### Code Review Checklist
 - [ ] Follows CQRS pattern
+- [ ] Properly applied naming conventions
 - [ ] Uses repositories instead of DbContext
 - [ ] Includes XML documentation
 - [ ] Properly registered in DI container
