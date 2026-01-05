@@ -32,14 +32,14 @@ private async Task LoadEvents()
 **Old Code:**
 ```csharp
 @page "/events"
-@inject IEventRepository EventService
+@inject IEventRepository EventRepository
 @inject ICreateEventUseCase CreateEventUseCase
 
 private List<Event> events = new();
 
 protected override async Task OnInitializedAsync()
 {
-    events = await EventService.GetAllEventsAsync();
+    events = await EventRepository.GetAllEventsAsync();
 }
 
 private async Task CreateEvent()

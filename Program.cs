@@ -53,7 +53,6 @@ builder.Services.Configure<EmailOptions>(
 
 // Register our application services
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IShiftService, ShiftService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<IStaffAssignmentService, StaffAssignmentService>();

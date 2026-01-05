@@ -167,7 +167,6 @@ Application/
 └── [Legacy files]                      # Maintained for compatibility
     ├── CreateEventUseCase.cs           # Now wraps CreateEventCommandHandler
     ├── UpdateEventUseCase.cs           # Now wraps UpdateEventCommandHandler
-    ├── EventService.cs                 # Now wraps UpdateEventCommandHandler
     └── ...
 ```
 

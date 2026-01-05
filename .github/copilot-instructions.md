@@ -226,19 +226,6 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, Event?>
 }
 ```
 
-**Using legacy service layer (backward compatible):**
-
-```csharp
-@inject IEventService EventService
-
-@code {
-    private async Task CreateEvent(EventDTO eventDto)
-    {
-        await EventService.CreateEventAsync(eventDto);
-    }
-}
-```
-
 #### Best Practices
 
 - **Commands** belong in `Application/Commands/<Domain>/` (e.g., `Application/Commands/Events/`)
@@ -374,7 +361,6 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
 
 #### Key Services
 - `IEmailService` - Email sending (configured in `appsettings.json`)
-- `IEventService` - Legacy event operations (use CQRS handlers instead)
 - `IShiftService` - Legacy shift operations (use CQRS handlers instead)
 - `IStaffService` - Legacy staff operations (use CQRS handlers instead)
 - `IStaffAssignmentService` - Legacy assignment operations (use CQRS handlers instead)
