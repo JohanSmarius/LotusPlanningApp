@@ -138,7 +138,7 @@ LotusPlanningApp/
 
 ### Prerequisites
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet)
 - A code editor (Visual Studio 2022, VS Code, or Rider)
 - SQLite (included with .NET)
 
@@ -146,7 +146,7 @@ LotusPlanningApp/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/JohanSmarius/LotusPlanningApp.git
+   git clone <repository-url>
    cd LotusPlanningApp
    ```
 
@@ -167,9 +167,8 @@ LotusPlanningApp/
 
 5. **Access the application**
    - Main App: `https://localhost:5001`
-   - Default admin credentials:
-     - Email: `admin@lotus-tilburg.nl`
-     - Password: `Test123!`
+   - Default admin credentials are seeded automatically on first run
+   - See [USER_APPROVAL_SYSTEM.md](USER_APPROVAL_SYSTEM.md#admin-user-seeding) for details
 
 ### Running CustomerPortal
 
