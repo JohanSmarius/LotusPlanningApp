@@ -285,7 +285,7 @@ Comprehensive documentation is available in the repository:
 
 ### Setup & Configuration
 - [ASPIRE_SETUP.md](ASPIRE_SETUP.md) - .NET Aspire configuration (if applicable)
-- [LotusPlanningApp/LotusPlanningApp/EMAIL_SETUP.md](LotusPlanningApp/LotusPlanningApp/EMAIL_SETUP.md) - Email service configuration
+- [LotusPlanningApp/EMAIL_SETUP.md](LotusPlanningApp/EMAIL_SETUP.md) - Email service configuration
 
 ## 🔨 Development
 
