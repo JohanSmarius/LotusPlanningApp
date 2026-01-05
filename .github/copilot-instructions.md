@@ -56,7 +56,6 @@ LotusPlanningApp/
 │   │   └── wwwroot/        # Static assets
 │   └── LotusPlanningApp.Client/ # WebAssembly client project
 ├── CustomerPortal/         # Customer-facing portal
-├── LotusPlanningApp.ServiceDefaults/ # Service defaults for Aspire
 └── UITests/                # UI test suite
 ```
 
