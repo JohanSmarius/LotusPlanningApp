@@ -16,25 +16,47 @@ This Blazor application manages events and shifts for a medical first aid team. 
 
 ```
 LotusPlanningApp/
+├── .github/                  # GitHub configuration
+│   └── copilot-instructions.md
 ├── Application/              # CQRS Commands and Queries
 │   ├── Commands/            # Write operations (state modifications)
+│   │   ├── Customers/
+│   │   ├── Events/
+│   │   ├── Shifts/
+│   │   ├── Staff/
+│   │   └── StaffAssignments/
 │   ├── Queries/             # Read operations (data retrieval)
+│   │   ├── Calendar/
+│   │   ├── Customers/
+│   │   ├── Events/
+│   │   ├── Shifts/
+│   │   ├── Staff/
+│   │   └── StaffAssignments/
 │   ├── Common/              # Base CQRS interfaces
 │   ├── DataAdapters/        # DTOs and mapping
+│   ├── ICommandDispatcher.cs # Command dispatcher interface and implementation
 │   └── DependencyInjection.cs
+├── Application.Tests/       # Application layer tests
 ├── Infrastructure/          # Data access and external services
 │   ├── Data/               # EF Core DbContext and migrations
-│   ├── Commands/           # Command handlers
-│   ├── Configuration/      # Configuration classes
-│   └── *Repository.cs      # Repository implementations
-├── Entities/               # Domain models (Event, Shift, Staff, etc.)
-├── LotusPlanningApp/       # Main Blazor web app
-│   ├── Components/         # Reusable Blazor components
-│   ├── Controllers/        # API controllers
-│   └── wwwroot/           # Static assets
+│   ├── Commands/           # Command handlers (Customers, StaffAssignments)
+│   ├── Configuration/      # Configuration classes (EmailOptions)
+│   ├── Migrations/         # EF Core migrations
+│   ├── *Repository.cs      # Repository implementations
+│   ├── CalendarService.cs  # ICS calendar generation
+│   └── EmailService.cs     # Email sending
+├── Infrastructure.Tests/   # Infrastructure layer tests
+├── Entities/               # Domain models (Event, Shift, Staff, Customer, etc.)
+├── LotusPlanningApp/       # Main Blazor web app folder
+│   ├── LotusPlanningApp/   # Actual Blazor web app
+│   │   ├── Components/     # Reusable Blazor components
+│   │   ├── Controllers/    # API controllers (CalendarController)
+│   │   ├── Services/       # UI-level services (CustomerService)
+│   │   ├── Program.cs      # Application entry point
+│   │   └── wwwroot/        # Static assets
+│   └── LotusPlanningApp.Client/ # WebAssembly client project
 ├── CustomerPortal/         # Customer-facing portal
-├── UITests/               # UI test suite
-└── Program.cs             # Application entry point
+└── UITests/                # UI test suite
 ```
 
 ---
@@ -63,7 +85,7 @@ LotusPlanningApp/
 - Follow **SOLID principles** and clean architecture.
 - Use **Blazor components** for reusable UI parts.
 - Organize code into clear folders: `Components`, `Pages`, `Services`, `Models`.
-- Use **dependency injection** for services (all services registered in `DependencyInjection.cs` or `Program.cs`).
+- Use **dependency injection** for services (all services registered in `Application/DependencyInjection.cs` or `LotusPlanningApp/LotusPlanningApp/Program.cs`).
 - Write **async code** for data access and UI updates.
 - Add **XML comments** for public methods/classes.
 - Use **meaningful variable and method names**.
@@ -115,11 +137,14 @@ The application uses CQRS to separate read operations (Queries) from write opera
 ```
 Application/
 ├── Commands/                    # Write operations (state modifications)
+│   ├── Customers/
 │   ├── Events/
 │   ├── Shifts/
 │   ├── Staff/
 │   └── StaffAssignments/
 ├── Queries/                     # Read operations (data retrieval)
+│   ├── Calendar/
+│   ├── Customers/
 │   ├── Events/
 │   ├── Shifts/
 │   ├── Staff/
@@ -129,7 +154,9 @@ Application/
 │   ├── ICommandHandler.cs
 │   ├── IQuery.cs
 │   └── IQueryHandler.cs
-└── ICommandDispatcher.cs        # Command dispatcher for Blazor components
+├── DataAdapters/                # DTOs and mapping
+├── ICommandDispatcher.cs        # Command dispatcher interface and implementation
+└── DependencyInjection.cs       # Registers all CQRS handlers
 ```
 
 #### Commands (Write Operations)
@@ -273,14 +300,16 @@ public static IServiceCollection AddApplicationLayer(this IServiceCollection ser
 }
 ```
 
+**Note:** The `ICommandDispatcher` is available in `Application/ICommandDispatcher.cs` and includes both the interface and implementation. It's registered automatically via `AddApplicationLayer()`.
+
 ---
 
 ### Database & Entity Framework Core
 
 #### Database Context
 - Main DbContext: `Infrastructure/Data/ApplicationDbContext.cs`
-- Uses SQL Server
-- Connection string in `appsettings.json` under `DefaultConnection`
+- Uses SQLite (configured for local development)
+- Connection string in `LotusPlanningApp/LotusPlanningApp/appsettings.json` under `DefaultConnection`
 
 #### Migrations
 **Creating migrations:**
@@ -299,7 +328,7 @@ dotnet ef database update <PreviousMigrationName> --project Infrastructure --sta
 ```
 
 #### Repository Pattern
-- All data access goes through repositories (e.g., `IEventRepository`, `IStaffRepository`)
+- All data access goes through repositories (e.g., `IEventRepository`, `IStaffRepository`, `ICustomerRepository`)
 - Repository implementations are in `Infrastructure/*Repository.cs`
 - Repository interfaces are in `Application/I*Repository.cs`
 - **Never use DbContext directly in handlers or components**
@@ -369,26 +398,32 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
 
 #### Service Registration
 - Application layer services: `Application/DependencyInjection.cs` using `AddApplicationLayer()`
-- Infrastructure services: registered in `Program.cs`
+- Infrastructure services: registered in `LotusPlanningApp/LotusPlanningApp/Program.cs`
 - All services use **scoped** lifetime for request-level state
 
 #### Key Services
-- `IEmailService` - Email sending (configured in `appsettings.json`)
-- `IEventService` - Legacy event operations (use CQRS handlers instead)
-- `IShiftService` - Legacy shift operations (use CQRS handlers instead)
-- `IStaffService` - Legacy staff operations (use CQRS handlers instead)
-- `IStaffAssignmentService` - Legacy assignment operations (use CQRS handlers instead)
+- `IEmailService` - Email sending (configured in `LotusPlanningApp/LotusPlanningApp/appsettings.json`)
 - `ICalendarService` - ICS calendar generation
+- `ICustomerService` - Customer data loading (UI-level service)
+- `IEventService` - Legacy event operations (use CQRS handlers instead when possible)
 
 #### Service Configuration
 ```csharp
-// In Program.cs
+// In LotusPlanningApp/LotusPlanningApp/Program.cs
 builder.Services.AddApplicationLayer(); // Registers all CQRS handlers
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ICalendarService, CalendarService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
-// Configure options
-builder.Services.Configure<EmailOptions>(
-    builder.Configuration.GetSection(EmailOptions.SectionName));
+// Register repositories
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
+builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+builder.Services.AddScoped<IStaffAssignmentRepository, StaffAssignmentRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+// Register command dispatcher
+builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 ```
 
 ---
@@ -579,12 +614,12 @@ services.AddScoped(typeof(ICommandHandler<CreateYourEntityCommand, YourEntity>),
 
 **"Handler not found" or "Cannot resolve service"**
 - Check that handler is registered in `Application/DependencyInjection.cs`
-- Verify `AddApplicationLayer()` is called in `Program.cs`
+- Verify `AddApplicationLayer()` is called in `LotusPlanningApp/LotusPlanningApp/Program.cs`
 
 **Database migration errors**
-- Ensure connection string is correct in `appsettings.json`
+- Ensure connection string is correct in `LotusPlanningApp/LotusPlanningApp/appsettings.json`
 - Check that Infrastructure is set as the migrations project
-- Verify startup project is LotusPlanningApp
+- Verify startup project is LotusPlanningApp/LotusPlanningApp
 
 **Authentication issues**
 - Verify user has `IsApproved = true` in database
