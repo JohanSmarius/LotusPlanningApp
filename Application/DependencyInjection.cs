@@ -127,7 +127,6 @@ public static class DependencyInjection
         services.AddScoped(typeof(IQueryHandler<SearchCustomersQuery, List<CustomerDTO>>), typeof(SearchCustomersQueryHandler));
 
         // Register legacy wrappers for backward compatibility
-        services.AddScoped<IEventService, EventService>();
         services.AddScoped<ICreateEventUseCase, CreateEventUseCase>();
         services.AddScoped<IUpdateEventUseCase, UpdateEventUseCase>();
 

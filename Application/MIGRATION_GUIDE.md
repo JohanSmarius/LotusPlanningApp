@@ -1,10 +1,10 @@
-# Migration Guide: Moving to CQRS
+# CQRS Pattern Usage Guide
 
-This guide helps you migrate existing code to use the new CQRS pattern.
+This guide shows how to use the CQRS pattern for all operations in the application.
 
 ## Quick Reference
 
-### Before (Legacy)
+### Repository Pattern (Legacy - Avoid)
 ```csharp
 @inject IEventRepository EventRepository
 
@@ -14,7 +14,7 @@ private async Task LoadEvents()
 }
 ```
 
-### After (CQRS)
+### CQRS Pattern (Recommended)
 ```csharp
 @inject GetAllEventsQueryHandler GetAllEventsHandler
 
@@ -25,30 +25,11 @@ private async Task LoadEvents()
 }
 ```
 
-## Step-by-Step Migration
+## Step-by-Step Examples
 
 ### 1. Events Page Example
 
-**Old Code:**
-```csharp
-@page "/events"
-@inject IEventRepository EventService
-@inject ICreateEventUseCase CreateEventUseCase
-
-private List<Event> events = new();
-
-protected override async Task OnInitializedAsync()
-{
-    events = await EventService.GetAllEventsAsync();
-}
-
-private async Task CreateEvent()
-{
-    var result = await CreateEventUseCase.Execute(newEventDto);
-}
-```
-
-**New Code (Recommended):**
+**Using CQRS Pattern:**
 ```csharp
 @page "/events"
 @inject GetAllEventsQueryHandler GetAllEventsHandler
@@ -71,17 +52,7 @@ private async Task CreateEvent()
 
 ### 2. Update Operations
 
-**Old:**
-```csharp
-@inject IUpdateEventUseCase UpdateEventUseCase
-
-private async Task UpdateEvent()
-{
-    await UpdateEventUseCase.Execute(updatedEvent);
-}
-```
-
-**New:**
+**Using CQRS Pattern:**
 ```csharp
 @inject UpdateEventCommandHandler UpdateEventHandler
 
@@ -94,17 +65,7 @@ private async Task UpdateEvent()
 
 ### 3. Delete Operations
 
-**Old:**
-```csharp
-@inject IEventRepository EventRepository
-
-private async Task DeleteEvent(int id)
-{
-    await EventRepository.DeleteEventAsync(id);
-}
-```
-
-**New:**
+**Using CQRS Pattern:**
 ```csharp
 @inject DeleteEventCommandHandler DeleteEventHandler
 

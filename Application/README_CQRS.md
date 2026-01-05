@@ -219,9 +219,11 @@ Commands represent business operations in domain language:
 
 The implementation maintains **full backward compatibility**:
 
-1. **Old code continues to work**: `ICreateEventUseCase`, `IEventService` still function
-2. **New code can use CQRS**: Directly inject and use handlers
+1. **Old code continues to work**: `ICreateEventUseCase` still functions (being phased out)
+2. **New code uses CQRS**: Directly inject and use handlers
 3. **Gradual migration**: Update components one at a time
+
+**Note**: `IEventService` has been removed. Use CQRS command and query handlers directly.
 
 ## Available Operations
 
