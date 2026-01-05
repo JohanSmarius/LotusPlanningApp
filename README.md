@@ -1,6 +1,6 @@
 # Lotus Planning App
 
-A comprehensive medical first aid event and shift management system built with .NET 10 and Blazor. This application enables efficient scheduling, staff management, and coordination of medical first aid teams for events.
+A comprehensive medical first aid event and shift management system built with .NET 10 and Blazor. This application enables efficient scheduling, staff management, and coordination of medical first aid teams for the Lotus Planning System.
 
 ## 📋 Table of Contents
 
@@ -19,12 +19,11 @@ A comprehensive medical first aid event and shift management system built with .
 
 ## 🎯 Overview
 
-Lotus Planning App is a modern web application designed for medical first aid teams to manage events, shifts, and staff assignments. The system provides both an administrative interface for team coordinators and a customer portal for event organizers.
+Lotus Planning App is a modern web application designed for medical first aid teams within Lotus organisations to manage events, shifts, and staff assignments. The system provides an administrative interface for team coordinators.
 
 ### Main Components
 
 - **LotusPlanningApp** - Main administrative application for staff management
-- **CustomerPortal** - Separate portal for customers to request and manage events
 - **Application** - CQRS-based business logic layer
 - **Infrastructure** - Data access and external service implementations
 - **Entities** - Domain models and business entities
@@ -123,10 +122,6 @@ LotusPlanningApp/
 │   │   └── wwwroot/            # Static assets
 │   └── LotusPlanningApp.Client/ # WebAssembly project
 │
-├── CustomerPortal/             # Customer-facing portal
-│   ├── Components/             # Portal components
-│   └── wwwroot/                # Portal assets
-│
 ├── Application.Tests/          # Application layer tests
 ├── Infrastructure.Tests/       # Infrastructure tests
 ├── UITests/                    # UI tests
@@ -139,7 +134,7 @@ LotusPlanningApp/
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet)
-- A code editor (Visual Studio 2022, VS Code, or Rider)
+- A code editor (Visual Studio 2026, VS Code, or Rider)
 - SQLite (included with .NET)
 
 ### Installation
@@ -170,34 +165,17 @@ LotusPlanningApp/
    - Default admin credentials are seeded automatically on first run
    - See [USER_APPROVAL_SYSTEM.md](USER_APPROVAL_SYSTEM.md#admin-user-seeding) for details
 
-### Running CustomerPortal
-
-```bash
-dotnet run --project CustomerPortal
-```
-
 ## ✨ Key Features
-
-### Main Application (LotusPlanningApp)
 
 - **Event Management** - Create, edit, and delete events
 - **Shift Scheduling** - Organize shifts within events
 - **Staff Management** - Maintain staff profiles with certifications
 - **Staff Assignment** - Assign staff to shifts with availability checking
-- **Check-in/Check-out** - Track staff attendance
 - **User Approval System** - Admin approval required for new accounts
 - **User-Staff Linking** - Automatic linking of user accounts to staff profiles
 - **ICS Calendar Export** - Download shifts as calendar files
 - **Dashboard** - Overview of upcoming events and active shifts
 - **Mobile Responsive** - Works on all device sizes
-
-### Customer Portal
-
-- **Event Requests** - Customers can request new events
-- **Event Management** - View and manage requested events
-- **Cancellation Requests** - Request event cancellations
-- **Customer Profiles** - Manage customer information
-- **Separate Authentication** - Independent login system
 
 ## 🗄️ Database
 
@@ -205,7 +183,6 @@ The application uses **SQLite** as its database engine with **Entity Framework C
 
 ### Database Location
 - Main App: `LotusPlanningApp/LotusPlanningApp/AppData/lotus.db`
-- Both apps share the same database
 
 ### Migrations
 
