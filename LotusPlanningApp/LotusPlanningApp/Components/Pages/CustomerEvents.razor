@@ -1,0 +1,504 @@
+@page "/customer/events"
+@attribute [Authorize(Roles = "Customer")]
+@using Application
+@using Application.DataAdapters
+@using Application.Commands.Events
+@using Application.Queries.Events
+@using Application.Queries.Customers
+@using Entities
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using LotusPlanningApp.Data
+@inject GetEventsByCustomerIdQueryHandler GetEventsByCustomerIdHandler
+@inject GetCustomerByUserIdQueryHandler GetCustomerByUserIdHandler
+@inject CreateEventCommandHandler CreateEventHandler
+@inject UpdateEventCommandHandler UpdateEventHandler
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager Navigation
+
+@rendermode InteractiveServer
+
+<PageTitle>Mijn Opdrachten - LOTUS Planning App</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-primary">
+                        <i class="fas fa-calendar-alt me-2"></i>Mijn Opdrachten
+                    </h1>
+                    <p class="text-muted">Beheer je LOTUS-opdrachten</p>
+                </div>
+                <button class="btn btn-primary" @onclick="OpenCreateEventDialog">
+                    <i class="fas fa-plus me-2"></i>Nieuwe Opdracht
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (hasError)
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Fout bij het laden van opdrachten</strong>
+            <p class="mb-2">@errorMessage</p>
+            <button class="btn btn-outline-danger btn-sm" @onclick="LoadEvents">
+                <i class="fas fa-redo me-1"></i>Opnieuw proberen
+            </button>
+        </div>
+    }
+    else if (isLoading)
+    {
+        <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Bezig met laden...</span>
+            </div>
+        </div>
+    }
+    else if (!events.Any())
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-calendar-times fa-4x text-muted mb-4"></i>
+            <h4 class="text-muted">Geen opdrachten gevonden</h4>
+            <p class="text-muted mb-4">Begin met het aanmaken van je eerste LOTUS-opdracht.</p>
+            <button class="btn btn-primary btn-lg" @onclick="OpenCreateEventDialog">
+                <i class="fas fa-plus me-2"></i>Eerste opdracht aanmaken
+            </button>
+        </div>
+    }
+    else
+    {
+        <!-- Filter and Search -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" class="form-control" placeholder="Zoek opdrachten..." @bind="searchTerm" @oninput="OnSearchChanged" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" @bind="statusFilter" @bind:after="OnFilterChanged">
+                    <option value="">Alle statussen</option>
+                    <option value="@EventStatusDTO.Requested">Aangevraagd</option>
+                    <option value="@EventStatusDTO.Planned">Gepland</option>
+                    <option value="@EventStatusDTO.Confirmed">Bevestigd</option>
+                    <option value="@EventStatusDTO.Active">Actief</option>
+                    <option value="@EventStatusDTO.Completed">Afgerond</option>
+                    <option value="@EventStatusDTO.Cancelled">Geannuleerd</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Event Cards Grid -->
+        <div class="row">
+            @foreach (var eventItem in filteredEvents)
+            {
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header @GetStatusHeaderClass(eventItem.Status)">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0 text-white">@eventItem.Name</h5>
+                                <span class="badge bg-light text-dark">
+                                    @eventItem.Status
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <i class="fas fa-calendar text-muted me-2"></i>
+                                <strong>Start:</strong> @eventItem.StartDate.ToString("dd MMM yyyy HH:mm")
+                            </div>
+                            <div class="mb-2">
+                                <i class="fas fa-calendar-check text-muted me-2"></i>
+                                <strong>Einde:</strong> @eventItem.EndDate.ToString("dd MMM yyyy HH:mm")
+                            </div>
+                            <div class="mb-2">
+                                <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                <strong>Locatie:</strong> @eventItem.Location
+                            </div>
+                            @if (!string.IsNullOrEmpty(eventItem.Description))
+                            {
+                                <div class="mb-2">
+                                    <i class="fas fa-info-circle text-muted me-2"></i>
+                                    <strong>Beschrijving:</strong>
+                                    <p class="mb-0 text-muted">@eventItem.Description</p>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(eventItem.ContactPerson))
+                            {
+                                <div class="mb-2">
+                                    <i class="fas fa-user text-muted me-2"></i>
+                                    <strong>Contactpersoon:</strong> @eventItem.ContactPerson
+                                </div>
+                            }
+                            @if (eventItem.CancellationRequested)
+                            {
+                                <div class="alert alert-warning mt-3 mb-0">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Annulering aangevraagd
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary flex-fill" @onclick="() => OpenEditEventDialog(eventItem)">
+                                    <i class="fas fa-edit me-1"></i>Bewerken
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Create/Edit Event Modal -->
+@if (showEventDialog)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @if (isEditMode)
+                        {
+                            <i class="fas fa-edit me-2"></i><text>Opdracht bewerken</text>
+                        }
+                        else
+                        {
+                            <i class="fas fa-plus me-2"></i><text>Nieuwe opdracht</text>
+                        }
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseEventDialog"></button>
+                </div>
+                <EditForm Model="eventForm" OnValidSubmit="SaveEvent">
+                    <DataAnnotationsValidator />
+                    <div class="modal-body">
+                        @if (!string.IsNullOrEmpty(dialogError))
+                        {
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>@dialogError
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label">Naam *</label>
+                            <InputText @bind-Value="eventForm.Name" class="form-control" placeholder="Naam van de opdracht" />
+                            <ValidationMessage For="() => eventForm.Name" class="text-danger" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Startdatum en tijd *</label>
+                                <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="eventForm.StartDate" class="form-control" />
+                                <ValidationMessage For="() => eventForm.StartDate" class="text-danger" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Einddatum en tijd *</label>
+                                <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="eventForm.EndDate" class="form-control" />
+                                <ValidationMessage For="() => eventForm.EndDate" class="text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Locatie *</label>
+                            <InputText @bind-Value="eventForm.Location" class="form-control" placeholder="Locatie van de opdracht" />
+                            <ValidationMessage For="() => eventForm.Location" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Beschrijving</label>
+                            <InputTextArea @bind-Value="eventForm.Description" class="form-control" rows="3" placeholder="Beschrijving van de opdracht" />
+                            <ValidationMessage For="() => eventForm.Description" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Contactpersoon</label>
+                            <InputText @bind-Value="eventForm.ContactPerson" class="form-control" placeholder="Naam contactpersoon" />
+                            <ValidationMessage For="() => eventForm.ContactPerson" class="text-danger" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Contacttelefoon</label>
+                                <InputText @bind-Value="eventForm.ContactPhone" class="form-control" placeholder="Telefoonnummer" />
+                                <ValidationMessage For="() => eventForm.ContactPhone" class="text-danger" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Contact e-mail</label>
+                                <InputText @bind-Value="eventForm.ContactEmail" class="form-control" type="email" placeholder="E-mailadres" />
+                                <ValidationMessage For="() => eventForm.ContactEmail" class="text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Aantal benodigde medewerkers *</label>
+                            <InputNumber @bind-Value="eventForm.RequiredStaffCount" class="form-control" min="1" max="50" />
+                            <ValidationMessage For="() => eventForm.RequiredStaffCount" class="text-danger" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseEventDialog">
+                            Annuleren
+                        </button>
+                        <button type="submit" class="btn btn-primary" disabled="@isSaving">
+                            @if (isSaving)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            <i class="fas fa-save me-2"></i>Opslaan
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<EventDTO> events = new();
+    private List<EventDTO> filteredEvents = new();
+    private bool isLoading = true;
+    private bool hasError = false;
+    private string errorMessage = string.Empty;
+    private bool showEventDialog = false;
+    private bool isEditMode = false;
+    private bool isSaving = false;
+    private string searchTerm = string.Empty;
+    private string statusFilter = string.Empty;
+    private string dialogError = string.Empty;
+    private EventDTO eventForm = new();
+    private int? currentCustomerId = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCustomerAndEvents();
+    }
+
+    private async Task LoadCustomerAndEvents()
+    {
+        isLoading = true;
+        hasError = false;
+        errorMessage = string.Empty;
+
+        try
+        {
+            // Get current user
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = UserManager.GetUserId(user);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                hasError = true;
+                errorMessage = "Kon gebruiker niet identificeren.";
+                return;
+            }
+
+            // Get customer profile
+            var customerQuery = new GetCustomerByUserIdQuery(userId);
+            var customer = await GetCustomerByUserIdHandler.Handle(customerQuery, CancellationToken.None);
+
+            if (customer == null)
+            {
+                hasError = true;
+                errorMessage = "Kon klantprofiel niet vinden. Neem contact op met de beheerder.";
+                return;
+            }
+
+            currentCustomerId = customer.Id;
+
+            // Load customer's events
+            await LoadEvents();
+        }
+        catch (Exception ex)
+        {
+            hasError = true;
+            errorMessage = $"Fout bij laden: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadEvents()
+    {
+        if (currentCustomerId == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var query = new GetEventsByCustomerIdQuery(currentCustomerId.Value);
+            events = await GetEventsByCustomerIdHandler.Handle(query, CancellationToken.None);
+            FilterEvents();
+        }
+        catch (Exception ex)
+        {
+            hasError = true;
+            errorMessage = $"Fout bij het laden van opdrachten: {ex.Message}";
+        }
+    }
+
+    private void FilterEvents()
+    {
+        filteredEvents = events;
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            var lowerSearch = searchTerm.ToLower();
+            filteredEvents = filteredEvents.Where(e =>
+                e.Name.ToLower().Contains(lowerSearch) ||
+                e.Location.ToLower().Contains(lowerSearch) ||
+                (e.Description != null && e.Description.ToLower().Contains(lowerSearch))
+            ).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(statusFilter))
+        {
+            if (Enum.TryParse<EventStatusDTO>(statusFilter, out var status))
+            {
+                filteredEvents = filteredEvents.Where(e => e.Status == status).ToList();
+            }
+        }
+
+        // Sort by start date descending (newest first)
+        filteredEvents = filteredEvents.OrderByDescending(e => e.StartDate).ToList();
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString() ?? string.Empty;
+        FilterEvents();
+    }
+
+    private void OnFilterChanged()
+    {
+        FilterEvents();
+    }
+
+    private void OpenCreateEventDialog()
+    {
+        isEditMode = false;
+        eventForm = new EventDTO
+        {
+            StartDate = DateTime.Now.AddDays(1),
+            EndDate = DateTime.Now.AddDays(1).AddHours(4),
+            Status = EventStatusDTO.Requested,
+            RequiredStaffCount = 1,
+            CustomerId = currentCustomerId
+        };
+        dialogError = string.Empty;
+        showEventDialog = true;
+    }
+
+    private void OpenEditEventDialog(EventDTO eventItem)
+    {
+        isEditMode = true;
+        eventForm = new EventDTO
+        {
+            Id = eventItem.Id,
+            Name = eventItem.Name,
+            StartDate = eventItem.StartDate,
+            EndDate = eventItem.EndDate,
+            Location = eventItem.Location,
+            Description = eventItem.Description,
+            Status = eventItem.Status,
+            ContactPerson = eventItem.ContactPerson,
+            ContactPhone = eventItem.ContactPhone,
+            ContactEmail = eventItem.ContactEmail,
+            RequiredStaffCount = eventItem.RequiredStaffCount,
+            CustomerId = currentCustomerId
+        };
+        dialogError = string.Empty;
+        showEventDialog = true;
+    }
+
+    private void CloseEventDialog()
+    {
+        showEventDialog = false;
+        dialogError = string.Empty;
+    }
+
+    private async Task SaveEvent()
+    {
+        isSaving = true;
+        dialogError = string.Empty;
+
+        try
+        {
+            // Validate dates
+            if (eventForm.EndDate <= eventForm.StartDate)
+            {
+                dialogError = "Einddatum moet na startdatum liggen.";
+                return;
+            }
+
+            if (isEditMode)
+            {
+                // Convert DTO to Entity for update
+                var eventEntity = new Event
+                {
+                    Id = eventForm.Id,
+                    Name = eventForm.Name,
+                    StartDate = eventForm.StartDate,
+                    EndDate = eventForm.EndDate,
+                    Location = eventForm.Location,
+                    Description = eventForm.Description,
+                    Status = (EventStatus)eventForm.Status,
+                    ContactPerson = eventForm.ContactPerson,
+                    ContactPhone = eventForm.ContactPhone,
+                    ContactEmail = eventForm.ContactEmail,
+                    RequiredStaffCount = eventForm.RequiredStaffCount,
+                    CustomerId = currentCustomerId,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                var command = new UpdateEventCommand(eventEntity);
+                await UpdateEventHandler.Handle(command, CancellationToken.None);
+            }
+            else
+            {
+                // Ensure customer ID is set
+                eventForm.CustomerId = currentCustomerId;
+                eventForm.Status = EventStatusDTO.Requested;
+
+                var command = new CreateEventCommand(eventForm);
+                await CreateEventHandler.Handle(command, CancellationToken.None);
+            }
+
+            await LoadEvents();
+            CloseEventDialog();
+        }
+        catch (Exception ex)
+        {
+            dialogError = $"Fout bij opslaan: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private string GetStatusHeaderClass(EventStatusDTO status)
+    {
+        return status switch
+        {
+            EventStatusDTO.Requested => "bg-warning",
+            EventStatusDTO.Planned => "bg-primary",
+            EventStatusDTO.Confirmed => "bg-info",
+            EventStatusDTO.Active => "bg-success",
+            EventStatusDTO.Completed => "bg-secondary",
+            EventStatusDTO.Cancelled => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}

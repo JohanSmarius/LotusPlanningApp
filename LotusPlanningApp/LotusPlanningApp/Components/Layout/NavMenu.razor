@@ -75,6 +75,16 @@
             </Authorized>
         </AuthorizeView>
 
+        <AuthorizeView Roles="Customer">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="customer/events">
+                        <span class="bi bi-calendar-event-nav-menu" aria-hidden="true"></span> Mijn Opdrachten
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
