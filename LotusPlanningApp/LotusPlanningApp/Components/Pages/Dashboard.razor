@@ -6,6 +6,7 @@
 @using Application.Queries.Shifts
 @using Application.Queries.Staff
 @using Application.Queries.StaffAssignments
+@using Application.Queries.Customers
 @using Entities
 @using Microsoft.AspNetCore.Identity
 @using LotusPlanningApp.Data
@@ -21,8 +22,11 @@
 @inject GetActiveStaffQueryHandler GetActiveStaffHandler
 @inject GetAllStaffQueryHandler GetAllStaffHandler
 @inject GetAssignmentsByStaffIdQueryHandler GetAssignmentsByStaffIdHandler
+@inject GetEventsByCustomerIdQueryHandler GetEventsByCustomerIdHandler
+@inject GetCustomerByUserIdQueryHandler GetCustomerByUserIdHandler
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Dashboard - LOTUS Planning App</PageTitle>
@@ -109,78 +113,147 @@
         else
         {
             <!-- User-specific content -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">
-                                <i class="fas fa-user-clock me-2"></i>Mijn toegewezen diensten
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            @if (myAssignments.Any())
-                            {
-                                <div class="row">
-                                    @foreach (var assignment in myAssignments.OrderBy(a => a.Shift.StartTime))
-                                    {
-                                        var shift = assignment.Shift;
-                                        var eventItem = shift.Event;
-                                        <div class="col-md-6 col-lg-4 mb-3">
-                                            <div class="card h-100 border-0 bg-light">
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                                        <h6 class="card-title mb-0">@shift.Name</h6>
-                                                        <span class="badge bg-@GetShiftStatusColor(shift.Status)">
-                                                            @shift.Status
-                                                        </span>
+            @if (isCustomer)
+            {
+                <!-- Customer Dashboard - Events Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-calendar-alt me-2"></i>Mijn Opdrachten
+                                </h5>
+                                <a href="/customer/events" class="btn btn-sm btn-light">
+                                    <i class="fas fa-eye me-1"></i>Alles bekijken
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                @if (customerEvents.Any())
+                                {
+                                    <div class="row">
+                                        @foreach (var eventItem in customerEvents.OrderByDescending(e => e.StartDate).Take(6))
+                                        {
+                                            <div class="col-md-6 col-lg-4 mb-3">
+                                                <div class="card h-100 border-0 bg-light">
+                                                    <div class="card-header @GetEventStatusHeaderClass(eventItem.Status) text-white py-2">
+                                                        <small class="fw-bold">@eventItem.Status</small>
                                                     </div>
-                                                    <p class="card-text small mb-2">
-                                                        <strong><i class="fas fa-calendar me-1"></i>Opdracht:</strong><br/>
-                                                        @eventItem.Name
-                                                    </p>
-                                                    <p class="card-text small mb-2">
-                                                        <strong><i class="fas fa-map-marker-alt me-1"></i>Locatie:</strong><br/>
-                                                        @eventItem.Location
-                                                    </p>
-                                                    <p class="card-text small mb-2">
-                                                        <strong><i class="fas fa-clock me-1"></i>Tijd:</strong><br/>
-                                                        @shift.StartTime.ToString("dd MMM yyyy HH:mm") - @shift.EndTime.ToString("HH:mm")
-                                                    </p>
-                                                    @if (shift.Description != null)
-                                                    {
+                                                    <div class="card-body">
+                                                        <h6 class="card-title mb-2">@eventItem.Name</h6>
                                                         <p class="card-text small mb-2">
-                                                            <strong><i class="fas fa-info-circle me-1"></i>Beschrijving:</strong><br/>
-                                                            @shift.Description
+                                                            <strong><i class="fas fa-map-marker-alt me-1"></i>Locatie:</strong><br/>
+                                                            @eventItem.Location
                                                         </p>
-                                                    }
-                                                    <div class="mt-3">
-                                                        <span class="badge bg-@GetRoleColor(assignment.Role) me-1">
-                                                            <i class="fas fa-user-tag me-1"></i>@assignment.Role
-                                                        </span>
-                                                        <span class="badge bg-@GetAssignmentStatusColor(assignment.Status) me-1">
-                                                            @assignment.Status
-                                                        </span>
-                                                        <a href="@($"/api/calendar/shift/{shift.Id}.ics")" class="btn btn-sm btn-success ms-2" title="Download calendar file">
-                                                            <i class="fas fa-download"></i>
-                                                        </a>
+                                                        <p class="card-text small mb-2">
+                                                            <strong><i class="fas fa-calendar me-1"></i>Start:</strong><br/>
+                                                            @eventItem.StartDate.ToString("dd MMM yyyy HH:mm")
+                                                        </p>
+                                                        <p class="card-text small mb-0">
+                                                            <strong><i class="fas fa-calendar-check me-1"></i>Einde:</strong><br/>
+                                                            @eventItem.EndDate.ToString("dd MMM yyyy HH:mm")
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    }
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="text-center py-5">
-                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">Je hebt momenteel geen toegewezen diensten</p>
-                                </div>
-                            }
+                                        }
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <a href="/customer/events" class="btn btn-primary">
+                                            <i class="fas fa-calendar-alt me-2"></i>Bekijk alle opdrachten
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-center py-5">
+                                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted mb-3">Je hebt nog geen opdrachten aangemaakt</p>
+                                        <a href="/customer/events" class="btn btn-primary">
+                                            <i class="fas fa-plus me-2"></i>Eerste opdracht aanmaken
+                                        </a>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <!-- Staff Dashboard - Assignments Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-user-clock me-2"></i>Mijn toegewezen diensten
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                @if (myAssignments.Any())
+                                {
+                                    <div class="row">
+                                        @foreach (var assignment in myAssignments.OrderBy(a => a.Shift.StartTime))
+                                        {
+                                            var shift = assignment.Shift;
+                                            var eventItem = shift.Event;
+                                            <div class="col-md-6 col-lg-4 mb-3">
+                                                <div class="card h-100 border-0 bg-light">
+                                                    <div class="card-body">
+                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                            <h6 class="card-title mb-0">@shift.Name</h6>
+                                                            <span class="badge bg-@GetShiftStatusColor(shift.Status)">
+                                                                @shift.Status
+                                                            </span>
+                                                        </div>
+                                                        <p class="card-text small mb-2">
+                                                            <strong><i class="fas fa-calendar me-1"></i>Opdracht:</strong><br/>
+                                                            @eventItem.Name
+                                                        </p>
+                                                        <p class="card-text small mb-2">
+                                                            <strong><i class="fas fa-map-marker-alt me-1"></i>Locatie:</strong><br/>
+                                                            @eventItem.Location
+                                                        </p>
+                                                        <p class="card-text small mb-2">
+                                                            <strong><i class="fas fa-clock me-1"></i>Tijd:</strong><br/>
+                                                            @shift.StartTime.ToString("dd MMM yyyy HH:mm") - @shift.EndTime.ToString("HH:mm")
+                                                        </p>
+                                                        @if (shift.Description != null)
+                                                        {
+                                                            <p class="card-text small mb-2">
+                                                                <strong><i class="fas fa-info-circle me-1"></i>Beschrijving:</strong><br/>
+                                                                @shift.Description
+                                                            </p>
+                                                        }
+                                                        <div class="mt-3">
+                                                            <span class="badge bg-@GetRoleColor(assignment.Role) me-1">
+                                                                <i class="fas fa-user-tag me-1"></i>@assignment.Role
+                                                            </span>
+                                                            <span class="badge bg-@GetAssignmentStatusColor(assignment.Status) me-1">
+                                                                @assignment.Status
+                                                            </span>
+                                                            <a href="@($"/api/calendar/shift/{shift.Id}.ics")" class="btn btn-sm btn-success ms-2" title="Download calendar file">
+                                                                <i class="fas fa-download"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-center py-5">
+                                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">Je hebt momenteel geen toegewezen diensten</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         }
 
         @if (isAdmin)
@@ -303,21 +376,24 @@
 @code {
     private bool isLoading = true;
     private bool isAdmin = false;
+    private bool isCustomer = false;
     private List<Entities.Event> upcomingEvents = new();
     private List<Entities.Shift> activeShifts = new();
     private List<Entities.Shift> todaysShifts = new();
     private List<Entities.Staff> activeStaff = new();
     private List<Entities.StaffAssignment> myAssignments = new();
+    private List<EventDTO> customerEvents = new();
     private Entities.Staff? currentUserStaff;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            // Check if user is admin
+            // Check if user is admin or customer
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
             isAdmin = user.IsInRole("Admin");
+            isCustomer = user.IsInRole("Customer");
 
             if (isAdmin)
             {
@@ -331,9 +407,14 @@
 
                 await Task.WhenAll(loadTasks);
             }
+            else if (isCustomer)
+            {
+                // Load customer's events
+                await LoadCustomerEventsAsync(user);
+            }
             else
             {
-                // Load user-specific assignments
+                // Load user-specific assignments (for staff)
                 await LoadMyAssignmentsAsync(user);
             }
         }
@@ -409,6 +490,31 @@
         }
     }
 
+    private async Task LoadCustomerEventsAsync(System.Security.Claims.ClaimsPrincipal user)
+    {
+        try
+        {
+            var userId = UserManager.GetUserId(user);
+            if (string.IsNullOrEmpty(userId))
+                return;
+
+            // Get customer profile
+            var customerQuery = new GetCustomerByUserIdQuery(userId);
+            var customer = await GetCustomerByUserIdHandler.Handle(customerQuery, CancellationToken.None);
+
+            if (customer != null)
+            {
+                // Load customer's events
+                var eventsQuery = new GetEventsByCustomerIdQuery(customer.Id);
+                customerEvents = await GetEventsByCustomerIdHandler.Handle(eventsQuery, CancellationToken.None);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading customer events: {ex.Message}");
+        }
+    }
+
     private string GetEventStatusColor(EventStatus status)
     {
         return status switch
@@ -419,6 +525,20 @@
             EventStatus.Completed => "secondary",
             EventStatus.Cancelled => "danger",
             _ => "secondary"
+        };
+    }
+
+    private string GetEventStatusHeaderClass(EventStatusDTO status)
+    {
+        return status switch
+        {
+            EventStatusDTO.Requested => "bg-warning",
+            EventStatusDTO.Planned => "bg-primary",
+            EventStatusDTO.Confirmed => "bg-info",
+            EventStatusDTO.Active => "bg-success",
+            EventStatusDTO.Completed => "bg-secondary",
+            EventStatusDTO.Cancelled => "bg-danger",
+            _ => "bg-secondary"
         };
     }
 
