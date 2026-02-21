@@ -9,9 +9,9 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Manage your passkeys</PageTitle>
+<PageTitle>Passkeys beheren</PageTitle>
 
-<h3>Manage your passkeys</h3>
+<h3>Passkeys beheren</h3>
 
 <StatusMessage />
 
@@ -22,7 +22,7 @@
             @foreach (var passkey in currentPasskeys)
             {
                 <tr>
-                    <td>@(passkey.Name ?? "Unnamed passkey")</td>
+                    <td>@(passkey.Name ?? "Naamloze passkey")</td>
                     <td>
                         @{
                             var credentialId = Base64Url.EncodeToString(passkey.CredentialId);
@@ -31,8 +31,8 @@
                             <AntiforgeryToken />
                             <div>
                                 <input type="hidden" name="CredentialId" value="@credentialId" />
-                                <button type="submit" name="Action" value="rename" class="btn btn-primary" title="Rename this passkey">Rename</button>
-                                <button type="submit" name="Action" value="delete" class="btn btn-danger" title="Remove this passkey from your account">Delete</button>
+                                <button type="submit" name="Action" value="rename" class="btn btn-primary" title="Deze passkey hernoemen">Hernoemen</button>
+                                <button type="submit" name="Action" value="delete" class="btn btn-danger" title="Deze passkey van je account verwijderen">Verwijderen</button>
                             </div>
                         </form>
                     </td>
@@ -43,12 +43,12 @@
 }
 else
 {
-    <p>No passkeys are registered.</p>
+    <p>Er zijn geen passkeys geregistreerd.</p>
 }
 
 <form @formname="add-passkey" @onsubmit="AddPasskey" method="post">
     <AntiforgeryToken />
-    <PasskeySubmit Operation="PasskeyOperation.Create" Name="Input" class="btn btn-primary">Add a new passkey</PasskeySubmit>
+    <PasskeySubmit Operation="PasskeyOperation.Create" Name="Input" class="btn btn-primary">Nieuwe passkey toevoegen</PasskeySubmit>
 </form>
 
 @code {
@@ -90,27 +90,27 @@ else
 
         if (!string.IsNullOrEmpty(Input.Error))
         {
-            RedirectManager.RedirectToCurrentPageWithStatus($"Error: {Input.Error}", HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus($"Fout: {Input.Error}", HttpContext);
             return;
         }
 
         if (string.IsNullOrEmpty(Input.CredentialJson))
         {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: The browser did not provide a passkey.", HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus("Fout: De browser heeft geen passkey geleverd.", HttpContext);
             return;
         }
 
         var attestationResult = await SignInManager.PerformPasskeyAttestationAsync(Input.CredentialJson);
         if (!attestationResult.Succeeded)
         {
-            RedirectManager.RedirectToCurrentPageWithStatus($"Error: Could not add the passkey: {attestationResult.Failure.Message}", HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus($"Fout: Passkey kon niet worden toegevoegd: {attestationResult.Failure.Message}", HttpContext);
             return;
         }
 
         var addPasskeyResult = await UserManager.AddOrUpdatePasskeyAsync(user, attestationResult.Passkey);
         if (!addPasskeyResult.Succeeded)
         {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: The passkey could not be added to your account.", HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus("Fout: De passkey kon niet aan je account worden toegevoegd.", HttpContext);
             return;
         }
 
@@ -130,7 +130,7 @@ else
                 await DeletePasskey();
                 break;
             default:
-                RedirectManager.RedirectToCurrentPageWithStatus($"Error: Unknown action '{Action}'.", HttpContext);
+                RedirectManager.RedirectToCurrentPageWithStatus($"Fout: Onbekende actie '{Action}'.", HttpContext);
                 break;
         }
     }
@@ -150,17 +150,17 @@ else
         }
         catch (FormatException)
         {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: The specified passkey ID had an invalid format.", HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus("Fout: De opgegeven passkey-ID heeft een ongeldig formaat.", HttpContext);
             return;
         }
 
         var result = await UserManager.RemovePasskeyAsync(user, credentialId);
         if (!result.Succeeded)
         {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: The passkey could not be deleted.", HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus("Fout: De passkey kon niet worden verwijderd.", HttpContext);
             return;
         }
 
-        RedirectManager.RedirectToCurrentPageWithStatus("Passkey deleted successfully.", HttpContext);
+        RedirectManager.RedirectToCurrentPageWithStatus("Passkey is verwijderd.", HttpContext);
     }
 }

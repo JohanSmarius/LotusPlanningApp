@@ -8,13 +8,13 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<PageTitle>Shift Details - LOTUS Planning App</PageTitle>
+<PageTitle>Dienstdetails - LOTUS Planning App</PageTitle>
 
 @if (isLoading)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Laden...</span>
         </div>
     </div>
 }
@@ -25,11 +25,11 @@ else if (shiftDetail == null)
             <div class="col">
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Shift Not Found</strong>
-                    <p class="mb-0">The requested shift could not be found.</p>
+                    <strong>Dienst niet gevonden</strong>
+                    <p class="mb-0">De gevraagde dienst is niet gevonden.</p>
                 </div>
                 <a href="/shifts" class="btn btn-primary">
-                    <i class="fas fa-arrow-left me-2"></i>Back to Shifts
+                    <i class="fas fa-arrow-left me-2"></i>Terug naar diensten
                 </a>
             </div>
         </div>
@@ -44,13 +44,13 @@ else
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="/events" class="text-decoration-none">Events</a>
+                            <a href="/events" class="text-decoration-none">Opdrachten</a>
                         </li>
                         <li class="breadcrumb-item">
                             <a href="/events/details/@shiftDetail.EventId" class="text-decoration-none">@shiftDetail.Event.Name</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="/shifts" class="text-decoration-none">Shifts</a>
+                            <a href="/shifts" class="text-decoration-none">Diensten</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">@shiftDetail.Name</li>
                     </ol>
@@ -66,13 +66,13 @@ else
                     </div>
                     <div class="btn-group" role="group">
                         <button class="btn btn-outline-secondary" @onclick="GoBack">
-                            <i class="fas fa-arrow-left me-2"></i>Back
+                            <i class="fas fa-arrow-left me-2"></i>Terug
                         </button>
-                        <a href="@($"/api/calendar/shift/{ShiftId}.ics")" class="btn btn-success" title="Download calendar file">
-                            <i class="fas fa-download me-2"></i>Download Calendar
+                        <a href="@($"/api/calendar/shift/{ShiftId}.ics")" class="btn btn-success" title="Kalenderbestand downloaden">
+                            <i class="fas fa-download me-2"></i>Kalender downloaden
                         </a>
                         <a href="/shifts/edit/@ShiftId" class="btn btn-primary">
-                            <i class="fas fa-edit me-2"></i>Edit Shift
+                            <i class="fas fa-edit me-2"></i>Dienst bewerken
                         </a>
                     </div>
                 </div>
@@ -85,12 +85,12 @@ else
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-info-circle me-2"></i>Shift Information
+                            <i class="fas fa-info-circle me-2"></i>Dienstinformatie
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label text-muted small">EVENT</label>
+                            <label class="form-label text-muted small">OPDRACHT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar-alt text-muted me-2"></i>
                                 <a href="/events/details/@shiftDetail.EventId" class="text-decoration-none">
@@ -103,10 +103,10 @@ else
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small">START DATE & TIME</label>
+                            <label class="form-label text-muted small">STARTDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @shiftDetail.StartTime.ToString("dddd, MMMM dd, yyyy")
+                                @shiftDetail.StartTime.ToString("dddd d MMMM yyyy")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
                                 @shiftDetail.StartTime.ToString("HH:mm")
@@ -114,10 +114,10 @@ else
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small">END DATE & TIME</label>
+                            <label class="form-label text-muted small">EINDDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @shiftDetail.EndTime.ToString("dddd, MMMM dd, yyyy")
+                                @shiftDetail.EndTime.ToString("dddd d MMMM yyyy")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
                                 @shiftDetail.EndTime.ToString("HH:mm")
@@ -125,7 +125,7 @@ else
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small">DURATION</label>
+                            <label class="form-label text-muted small">DUUR</label>
                             <div class="fw-medium">
                                 <i class="fas fa-hourglass-half text-muted me-2"></i>
                                 @CalculateShiftDuration()
@@ -133,32 +133,32 @@ else
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small">REQUIRED STAFF</label>
+                            <label class="form-label text-muted small">BENODIGDE LOTUS</label>
                             <div class="fw-medium">
                                 <i class="fas fa-users text-muted me-2"></i>
-                                @shiftDetail.RequiredStaff staff member(s)
+                                @shiftDetail.RequiredStaff LOTUS
                             </div>
                         </div>
 
                         @if (!string.IsNullOrEmpty(shiftDetail.Description))
                         {
                             <div class="mb-3">
-                                <label class="form-label text-muted small">DESCRIPTION</label>
+                                <label class="form-label text-muted small">BESCHRIJVING</label>
                                 <div class="fw-medium">@shiftDetail.Description</div>
                             </div>
                         }
 
                         <div class="mb-3">
-                            <label class="form-label text-muted small">CREATED</label>
+                            <label class="form-label text-muted small">AANGEMAAKT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @shiftDetail.CreatedAt.ToString("MMM dd, yyyy HH:mm")
+                                @shiftDetail.CreatedAt.ToString("d MMMM yyyy HH:mm")
                             </div>
                         </div>
 
                         <div class="d-grid gap-2 mt-4">
-                            <a href="@($"/api/calendar/shift/{ShiftId}.ics")" class="btn btn-success" title="Add this shift to your calendar">
-                                <i class="fas fa-calendar-plus me-2"></i>Add to Calendar
+                            <a href="@($"/api/calendar/shift/{ShiftId}.ics")" class="btn btn-success" title="Voeg deze dienst toe aan je kalender">
+                                <i class="fas fa-calendar-plus me-2"></i>Toevoegen aan kalender
                             </a>
                         </div>
                     </div>
@@ -168,7 +168,7 @@ else
                 <div class="card border-0 shadow-sm mt-4">
                     <div class="card-header bg-info text-white">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-chart-bar me-2"></i>Statistics
+                            <i class="fas fa-chart-bar me-2"></i>Statistieken
                         </h5>
                     </div>
                     <div class="card-body">
@@ -176,12 +176,12 @@ else
                             <div class="col-6">
                                 <div class="border-end">
                                     <h4 class="text-@GetStaffingLevelColor() mb-0">@shiftDetail.StaffAssignments.Count</h4>
-                                    <small class="text-muted">Assigned</small>
+                                    <small class="text-muted">Toegewezen</small>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <h4 class="text-primary mb-0">@shiftDetail.RequiredStaff</h4>
-                                <small class="text-muted">Required</small>
+                                <small class="text-muted">Benodigd</small>
                             </div>
                         </div>
                         <div class="mt-3">
@@ -195,30 +195,30 @@ else
                                 </div>
                             </div>
                             <small class="text-muted">
-                                @GetStaffingPercentage()% staffed
+                                @GetStaffingPercentage()% bezet
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Staff Assignments -->
+            <!-- LOTUS Toewijzing -->
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-users me-2"></i>Staff Assignments (@shiftDetail.StaffAssignments.Count / @shiftDetail.RequiredStaff)
+                            <i class="fas fa-users me-2"></i>LOTUS Toewijzing (@shiftDetail.StaffAssignments.Count / @shiftDetail.RequiredStaff)
                         </h5>
                         @if (shiftDetail.StaffAssignments.Count < shiftDetail.RequiredStaff)
                         {
                             <span class="badge bg-warning">
-                                @(shiftDetail.RequiredStaff - shiftDetail.StaffAssignments.Count) slots available
+                                @(shiftDetail.RequiredStaff - shiftDetail.StaffAssignments.Count) plaatsen beschikbaar
                             </span>
                         }
                         else if (shiftDetail.StaffAssignments.Count == shiftDetail.RequiredStaff)
                         {
                             <span class="badge bg-light text-dark">
-                                <i class="fas fa-check me-1"></i>Fully Staffed
+                                <i class="fas fa-check me-1"></i>Volledig bezet
                             </span>
                         }
                     </div>
@@ -227,16 +227,16 @@ else
                         {
                             <div class="text-center py-5">
                                 <i class="fas fa-users-slash fa-4x text-muted mb-4"></i>
-                                <h5 class="text-muted">No Staff Assigned</h5>
-                                <p class="text-muted mb-4">This shift doesn't have any staff assigned yet.</p>
+                                <h5 class="text-muted">Geen LOTUS toegewezen</h5>
+                                <p class="text-muted mb-4">Deze dienst heeft nog geen LOTUS toegewezen.</p>
                                 <a href="/shifts/edit/@ShiftId" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-plus me-2"></i>Assign Staff
+                                    <i class="fas fa-plus me-2"></i>LOTUS toewijzen
                                 </a>
                             </div>
                         }
                         else
                         {
-                            <!-- Assigned Staff Grid -->
+                            <!-- Toegewezen LOTUS overzicht -->
                             <div class="row">
                                 @foreach (var assignment in shiftDetail.StaffAssignments.OrderBy(a => a.Staff.LastName).ThenBy(a => a.Staff.FirstName))
                                 {
@@ -276,7 +276,7 @@ else
                                                         </div>
                                                         <div class="small text-muted mt-1">
                                                             <i class="fas fa-calendar-plus me-1"></i>
-                                                            Assigned: @assignment.AssignedAt.ToString("MMM dd, yyyy HH:mm")
+                                                            Toegewezen: @assignment.AssignedAt.ToString("d MMMM yyyy HH:mm")
                                                         </div>
                                                     </div>
                                                 </div>
@@ -290,11 +290,11 @@ else
                             {
                                 <div class="alert alert-warning mt-3 mb-0">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
-                                    <strong>Additional Staff Needed:</strong> 
-                                    This shift needs @(shiftDetail.RequiredStaff - shiftDetail.StaffAssignments.Count) more staff member(s).
+                                    <strong>Extra LOTUS nodig:</strong> 
+                                    Deze dienst heeft @(shiftDetail.RequiredStaff - shiftDetail.StaffAssignments.Count) LOTUS extra nodig.
                                     <div class="mt-2">
                                         <a href="/shifts/edit/@ShiftId" class="btn btn-warning btn-sm">
-                                            <i class="fas fa-plus me-1"></i>Add More Staff
+                                            <i class="fas fa-plus me-1"></i>Meer LOTUS toevoegen
                                         </a>
                                     </div>
                                 </div>
@@ -303,7 +303,7 @@ else
                             {
                                 <div class="alert alert-success mt-3 mb-0">
                                     <i class="fas fa-check-circle me-2"></i>
-                                    <strong>Shift is fully staffed!</strong> All required positions have been filled.
+                                    <strong>Dienst is volledig bezet!</strong> Alle benodigde posities zijn gevuld.
                                 </div>
                             }
                         }

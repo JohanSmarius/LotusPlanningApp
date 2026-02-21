@@ -5,6 +5,7 @@ using LotusPlanningApp.Configuration;
 using LotusPlanningApp.Data;
 using LotusPlanningApp.Services;
 using System.IO;
+using System.Globalization;
 using Application;
 using Application.Commands.StaffAssignments;
 using Application.Commands.Customers;
@@ -18,6 +19,10 @@ using Microsoft.EntityFrameworkCore;
 using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var dutchCulture = new CultureInfo("nl-NL");
+CultureInfo.DefaultThreadCurrentCulture = dutchCulture;
+CultureInfo.DefaultThreadCurrentUICulture = dutchCulture;
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

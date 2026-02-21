@@ -22,18 +22,18 @@
 
 @rendermode InteractiveServer
 
-<PageTitle>Register</PageTitle>
+<PageTitle>Registreren</PageTitle>
 
 <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8">
-        <h1 class="mb-4">Register</h1>
+        <h1 class="mb-4">Registreren</h1>
         <StatusMessage Message="@Message" />
         
         @if (!userTypeSelected)
         {
             <!-- User Type Selection -->
             <div class="text-center mb-4">
-                <h2 class="mb-4">Kies uw account type</h2>
+                <h2 class="mb-4">Kies uw accounttype</h2>
                 <p class="text-muted mb-4">Selecteer het type account dat u wilt aanmaken</p>
                 
                 <div class="row g-3">
@@ -62,7 +62,7 @@
             <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
                 <DataAnnotationsValidator />
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2>@(isLotusUser ? "Lotus EHBO" : "Aanvrager") Account</h2>
+                    <h2>@(isLotusUser ? "Lotus EHBO" : "Aanvrager") account</h2>
                     <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => userTypeSelected = false">
                         <i class="bi bi-arrow-left"></i> Terug
                     </button>
@@ -92,7 +92,7 @@
                 </div>
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="naam@voorbeeld.nl" />
-                    <label for="Input.Email">Email</label>
+                    <label for="Input.Email">E-mail</label>
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
@@ -102,7 +102,7 @@
                 </div>
                 <div class="form-floating mb-3">
                     <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="wachtwoord" />
-                    <label for="Input.ConfirmPassword">Bevestig Wachtwoord</label>
+                    <label for="Input.ConfirmPassword">Bevestig wachtwoord</label>
                     <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
                 </div>
                 <button type="submit" class="w-100 btn btn-lg @(isLotusUser ? "btn-success" : "btn-primary")">Registreren</button>
@@ -122,7 +122,7 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    private string? Message => identityErrors is null ? null : $"Fout: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     protected override void OnInitialized()
     {
@@ -238,33 +238,33 @@
         public bool IsLotusUser { get; set; }
 
         [Required]
-        [StringLength(50, ErrorMessage = "The {0} must be at most {1} characters long.")]
-        [Display(Name = "First Name")]
+        [StringLength(50, ErrorMessage = "{0} mag maximaal {1} tekens lang zijn.")]
+        [Display(Name = "Voornaam")]
         public string FirstName { get; set; } = "";
 
         [Required]
-        [StringLength(50, ErrorMessage = "The {0} must be at most {1} characters long.")]
-        [Display(Name = "Last Name")]
+        [StringLength(50, ErrorMessage = "{0} mag maximaal {1} tekens lang zijn.")]
+        [Display(Name = "Achternaam")]
         public string LastName { get; set; } = "";
 
-        [StringLength(200, ErrorMessage = "The {0} must be at most {1} characters long.")]
-        [Display(Name = "Company Name")]
+        [StringLength(200, ErrorMessage = "{0} mag maximaal {1} tekens lang zijn.")]
+        [Display(Name = "Bedrijfsnaam")]
         public string? CompanyName { get; set; }
 
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "E-mail")]
         public string Email { get; set; } = "";
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "{0} moet minimaal {2} en maximaal {1} tekens lang zijn.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Wachtwoord")]
         public string Password { get; set; } = "";
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Bevestig wachtwoord")]
+        [Compare("Password", ErrorMessage = "Het wachtwoord en de bevestiging komen niet overeen.")]
         public string ConfirmPassword { get; set; } = "";
     }
 }

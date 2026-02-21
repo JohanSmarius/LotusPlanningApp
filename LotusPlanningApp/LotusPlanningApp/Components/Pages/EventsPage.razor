@@ -161,11 +161,11 @@
                                 <div class="mb-3">
                                     <i class="fas fa-calendar text-muted me-2"></i>
                                     <span class="text-muted">
-                                        @eventItem.StartDate.ToString("MMM dd, yyyy")
+                                        @eventItem.StartDate.ToString("d MMMM yyyy")
                                     </span>
                                     @if (eventItem.StartDate.Date != eventItem.EndDate.Date)
                                     {
-                                        <span class="text-muted"> - @eventItem.EndDate.ToString("MMM dd, yyyy")</span>
+                                        <span class="text-muted"> - @eventItem.EndDate.ToString("d MMMM yyyy")</span>
                                     }
                                 </div>
                                 <div class="mb-3">
@@ -260,12 +260,12 @@
                                             }
                                         </td>
                                         <td>
-                                            <div class="fw-medium">@eventItem.StartDate.ToString("MMM dd, yyyy")</div>
+                                            <div class="fw-medium">@eventItem.StartDate.ToString("d MMMM yyyy")</div>
                                             <small class="text-muted">
                                                 @eventItem.StartDate.ToString("HH:mm") - @eventItem.EndDate.ToString("HH:mm")
                                                 @if (eventItem.StartDate.Date != eventItem.EndDate.Date)
                                                 {
-                                                    <text><br/>tot @eventItem.EndDate.ToString("MMM dd")</text>
+                                                    <text><br/>tot @eventItem.EndDate.ToString("d MMMM")</text>
                                                 }
                                             </small>
                                         </td>
@@ -318,20 +318,9 @@
                                                 }
                                                 else
                                                 {
-                                                    var totalRequired = eventItem.Shifts.Sum(s => s.RequiredStaff);
-                                                    var totalAssigned = eventItem.Shifts.Sum(s => s.StaffAssignments.Count);
-                                                    if (totalAssigned >= totalRequired)
-                                                    {
-                                                        <span class="badge bg-success">Volledig bezet</span>
-                                                    }
-                                                    else if (totalAssigned > 0)
-                                                    {
-                                                        <span class="badge bg-warning text-dark">Gedeeltelijk</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="badge bg-danger">Onbezet</span>
-                                                    }
+                                                    <span class="badge bg-@GetShiftCoverageBadgeClass(eventItem)">
+                                                        @GetShiftCoverageBadgeText(eventItem)
+                                                    </span>
                                                 }
                                             </div>
                                         </td>
@@ -441,11 +430,11 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Benodigde medewerkers *</label>
+                                <label class="form-label">Benodigde LOTUS *</label>
                                 <input type="number" @bind="newEvent.RequiredStaffCount" class="form-control" min="1" max="50" />
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Aantal medewerkers nodig voor deze opdracht
+                                    Aantal LOTUS nodig voor deze opdracht
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -563,11 +552,11 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Benodigde medewerkers *</label>
+                                <label class="form-label">Benodigde LOTUS *</label>
                                 <input type="number" @bind="editEvent.RequiredStaffCount" class="form-control" min="1" max="50" />
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Standaard aantal medewerkers voor nieuwe diensten
+                                    Standaard aantal LOTUS voor nieuwe diensten
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -676,7 +665,7 @@
                                 <strong>Dienst aanmaken voor:</strong> @selectedEventForShift.Name
                                 <br>
                                 <small class="text-muted">
-                                    <i class="fas fa-calendar me-1"></i>@selectedEventForShift.StartDate.ToString("MMM dd, yyyy HH:mm") - @selectedEventForShift.EndDate.ToString("MMM dd, yyyy HH:mm")
+                                    <i class="fas fa-calendar me-1"></i>@selectedEventForShift.StartDate.ToString("d MMMM yyyy HH:mm") - @selectedEventForShift.EndDate.ToString("d MMMM yyyy HH:mm")
                                     <br>
                                     <i class="fas fa-map-marker-alt me-1"></i>@selectedEventForShift.Location
                                 </small>
@@ -720,7 +709,7 @@
                                 <ValidationMessage For="() => newShift.Name" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Benodigde medewerkers *</label>
+                                <label class="form-label">Benodigde LOTUS *</label>
                                 <InputNumber @bind-Value="newShift.RequiredStaff" class="form-control" min="1" max="50" />
                                 <ValidationMessage For="() => newShift.RequiredStaff" class="text-danger" />
                             </div>
@@ -750,7 +739,7 @@
                             <strong>Slimme planningssuggestie:</strong> De voorgestelde tijden gebruiken de eerstvolgende beschikbare periode.
                             <br>
                             <small class="text-muted">
-                                Duur opdracht: @(selectedEventForShift?.StartDate.ToString("MMM dd HH:mm")) - @(selectedEventForShift?.EndDate.ToString("MMM dd HH:mm"))
+                                Duur opdracht: @(selectedEventForShift?.StartDate.ToString("d MMMM HH:mm")) - @(selectedEventForShift?.EndDate.ToString("d MMMM HH:mm"))
                                 @if (selectedEventForShift != null && selectedEventForShift.Shifts.Any())
                                 {
                                     <br />@($"Huidig: {selectedEventForShift.Shifts.Count}")
@@ -1044,7 +1033,7 @@
             Console.WriteLine($"Error deleting event: {ex.Message}");
             // In a real app, show a toast notification
             hasError = true;
-            errorMessage = $"Failed to delete event: {ex.Message}";
+            errorMessage = $"Opdracht verwijderen mislukt: {ex.Message}";
         }
         finally
         {
@@ -1066,6 +1055,42 @@
             EventStatus.Cancelled => "danger",
             _ => "secondary"
         };
+    }
+
+    private string GetShiftCoverageBadgeClass(Event eventItem)
+    {
+        var totalRequired = eventItem.Shifts.Sum(s => s.RequiredStaff);
+        var totalAssigned = eventItem.Shifts.Sum(s => s.StaffAssignments.Count);
+
+        if (totalAssigned >= totalRequired)
+        {
+            return "success";
+        }
+
+        if (totalAssigned > 0)
+        {
+            return "warning text-dark";
+        }
+
+        return "danger";
+    }
+
+    private string GetShiftCoverageBadgeText(Event eventItem)
+    {
+        var totalRequired = eventItem.Shifts.Sum(s => s.RequiredStaff);
+        var totalAssigned = eventItem.Shifts.Sum(s => s.StaffAssignments.Count);
+
+        if (totalAssigned >= totalRequired)
+        {
+            return "Volledig bezet";
+        }
+
+        if (totalAssigned > 0)
+        {
+            return "Gedeeltelijk";
+        }
+
+        return "Onbezet";
     }
 
     private bool HasUnplannedShifts(Event eventItem)
@@ -1132,7 +1157,7 @@
         {
             Console.WriteLine($"Error loading event for edit: {ex.Message}");
             hasError = true;
-            errorMessage = $"Failed to load event for editing: {ex.Message}";
+            errorMessage = $"Opdracht laden voor bewerken mislukt: {ex.Message}";
         }
     }
 
@@ -1166,7 +1191,7 @@
         {
             Console.WriteLine($"Error updating event: {ex.Message}");
             hasError = true;
-            errorMessage = $"Failed to update event: {ex.Message}";
+            errorMessage = $"Opdracht bijwerken mislukt: {ex.Message}";
         }
         finally
         {
@@ -1202,7 +1227,7 @@
         {
             Console.WriteLine($"Error creating event: {ex.Message}");
             hasError = true;
-            errorMessage = $"Failed to create event: {ex.Message}";
+            errorMessage = $"Opdracht aanmaken mislukt: {ex.Message}";
         }
         finally
         {
@@ -1218,11 +1243,11 @@
             var shift = new Shift
             {
                 EventId = eventItem.Id,
-                Name = $"Full Event Coverage - {eventItem.Name}",
+                Name = $"Volledige dekking - {eventItem.Name}",
                 StartTime = eventItem.StartDate,
                 EndTime = eventItem.EndDate,
                 RequiredStaff = 1,
-                Description = "Default shift covering the entire event duration",
+                Description = "Standaarddienst die de volledige opdrachtduur dekt",
                 Status = ShiftStatus.Open
             };
 
@@ -1255,7 +1280,7 @@
                 newShift = new Shift
                 {
                     EventId = fullEvent.Id,
-                    Name = $"Shift - {fullEvent.Name}",
+                    Name = $"Dienst - {fullEvent.Name}",
                     StartTime = availableTimeSlot.StartTime,
                     EndTime = availableTimeSlot.EndTime,
                     RequiredStaff = 1,
@@ -1270,7 +1295,7 @@
         {
             Console.WriteLine($"Error opening create shift dialog: {ex.Message}");
             hasError = true;
-            errorMessage = $"Failed to load event for shift creation: {ex.Message}";
+            errorMessage = $"Opdracht laden voor dienst aanmaken mislukt: {ex.Message}";
         }
     }
 
@@ -1280,7 +1305,8 @@
         newShift = new Shift();
         selectedEventForShift = null;
         StateHasChanged();
-    }
+        }
+
 
     private async Task CreateShift()
     {
@@ -1293,14 +1319,14 @@
             if (newShift.StartTime < selectedEventForShift.StartDate || newShift.EndTime > selectedEventForShift.EndDate)
             {
                 hasError = true;
-                errorMessage = "Shift times must be within the event duration";
+                errorMessage = "Diensttijden moeten binnen de opdrachtduur vallen";
                 return;
             }
 
             if (newShift.StartTime >= newShift.EndTime)
             {
                 hasError = true;
-                errorMessage = "End time must be after start time";
+                errorMessage = "Eindtijd moet na de starttijd liggen";
                 return;
             }
 
@@ -1324,7 +1350,7 @@
         {
             Console.WriteLine($"Error creating shift: {ex.Message}");
             hasError = true;
-            errorMessage = $"Failed to create shift: {ex.Message}";
+            errorMessage = $"Dienst aanmaken mislukt: {ex.Message}";
         }
         finally
         {
@@ -1339,11 +1365,12 @@
     private async Task HandleExistingShiftsAdjustment(Event eventDetail, Shift newShift)
     {
         // Find shifts that cover the entire event duration (likely default shifts)
-        var fullCoverageShifts = eventDetail.Shifts.Where(s => 
-            s.StartTime <= eventDetail.StartDate && 
+        var fullCoverageShifts = eventDetail.Shifts.Where(s =>
+            s.StartTime <= eventDetail.StartDate &&
             s.EndTime >= eventDetail.EndDate &&
             s.Description != null &&
-            s.Description.Contains("Default shift", StringComparison.OrdinalIgnoreCase))
+            (s.Description.Contains("Standaarddienst", StringComparison.OrdinalIgnoreCase) ||
+             s.Description.Contains("Default shift", StringComparison.OrdinalIgnoreCase)))
             .ToList();
 
         foreach (var existingShift in fullCoverageShifts)

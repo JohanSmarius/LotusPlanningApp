@@ -92,7 +92,7 @@ else
                             <label class="form-label text-muted small">STARTDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @eventDetail.StartDate.ToString("dddd, MMMM dd, yyyy")
+                                @eventDetail.StartDate.ToString("dddd d MMMM yyyy")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
                                 @eventDetail.StartDate.ToString("HH:mm")
@@ -103,7 +103,7 @@ else
                             <label class="form-label text-muted small">EINDDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @eventDetail.EndDate.ToString("dddd, MMMM dd, yyyy")
+                                @eventDetail.EndDate.ToString("dddd d MMMM yyyy")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
                                 @eventDetail.EndDate.ToString("HH:mm")
@@ -157,7 +157,7 @@ else
                             <label class="form-label text-muted small">AANGEMAAKT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @eventDetail.CreatedAt.ToString("MMM dd, yyyy HH:mm")
+                                @eventDetail.CreatedAt.ToString("d MMMM yyyy HH:mm")
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,7 @@ else
                             </div>
                             <div class="col-6">
                                 <h4 class="text-success mb-0">@TotalRequiredStaff</h4>
-                                <small class="text-muted">Benodigde medewerkers</small>
+                                <small class="text-muted">Benodigde LOTUS</small>
                             </div>
                         </div>
                     </div>
@@ -227,7 +227,7 @@ else
                                                 <i class="fas fa-clock me-1"></i>Tijd
                                             </th>
                                             <th scope="col">
-                                                <i class="fas fa-users me-1"></i>Medewerkers
+                                                <i class="fas fa-users me-1"></i>LOTUS
                                             </th>
                                             <th scope="col">
                                                 <i class="fas fa-hourglass-half me-1"></i>Duur
@@ -254,11 +254,11 @@ else
                                                     }
                                                 </td>
                                                 <td>
-                                                    <span class="fw-medium">@shift.StartTime.ToString("MMM dd, yyyy")</span>
+                                                    <span class="fw-medium">@shift.StartTime.ToString("d MMMM yyyy")</span>
                                                     @if (shift.StartTime.Date != shift.EndTime.Date)
                                                     {
                                                         <br>
-                                                        <small class="text-muted">tot @shift.EndTime.ToString("MMM dd")</small>
+                                                        <small class="text-muted">tot @shift.EndTime.ToString("d MMMM")</small>
                                                     }
                                                 </td>
                                                 <td>
@@ -359,7 +359,7 @@ else
                             <strong>Dienst aanmaken voor:</strong> @eventDetail.Name
                             <br>
                             <small class="text-muted">
-                                <i class="fas fa-calendar me-1"></i>@eventDetail.StartDate.ToString("MMM dd, yyyy HH:mm") - @eventDetail.EndDate.ToString("MMM dd, yyyy HH:mm")
+                                <i class="fas fa-calendar me-1"></i>@eventDetail.StartDate.ToString("d MMMM yyyy HH:mm") - @eventDetail.EndDate.ToString("d MMMM yyyy HH:mm")
                                 <br>
                                 <i class="fas fa-map-marker-alt me-1"></i>@eventDetail.Location
                             </small>
@@ -372,7 +372,7 @@ else
                                 <ValidationMessage For="() => newShift.Name" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Benodigde medewerkers *</label>
+                                <label class="form-label">Benodigde LOTUS *</label>
                                 <InputNumber @bind-Value="newShift.RequiredStaff" class="form-control" min="1" max="50" />
                                 <ValidationMessage For="() => newShift.RequiredStaff" class="text-danger" />
                             </div>
@@ -400,7 +400,7 @@ else
                         <div class="alert alert-warning">
                             <i class="fas fa-exclamation-triangle me-2"></i>
                             <strong>Let op:</strong> Zorg dat de diensttijden binnen de duur van de opdracht vallen 
-                            (@eventDetail.StartDate.ToString("MMM dd HH:mm") - @eventDetail.EndDate.ToString("MMM dd HH:mm")).
+                            (@eventDetail.StartDate.ToString("d MMMM HH:mm") - @eventDetail.EndDate.ToString("d MMMM HH:mm")).
                         </div>
                     </div>
                     <div class="modal-footer">

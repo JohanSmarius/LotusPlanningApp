@@ -1,25 +1,25 @@
 ﻿@page "/weather"
 @attribute [StreamRendering]
 
-<PageTitle>Weather</PageTitle>
+<PageTitle>Weer</PageTitle>
 
-<h1>Weather</h1>
+<h1>Weer</h1>
 
-<p>This component demonstrates showing data.</p>
+<p>Deze component toont voorbeelddata.</p>
 
 @if (forecasts == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Laden...</em></p>
 }
 else
 {
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th aria-label="Temperature in Celsius">Temp. (C)</th>
-                <th aria-label="Temperature in Fahrenheit">Temp. (F)</th>
-                <th>Summary</th>
+                <th>Datum</th>
+                <th aria-label="Temperatuur in Celsius">Temp. (C)</th>
+                <th aria-label="Temperatuur in Fahrenheit">Temp. (F)</th>
+                <th>Samenvatting</th>
             </tr>
         </thead>
         <tbody>
@@ -45,7 +45,7 @@ else
         await Task.Delay(500);
 
         var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        var summaries = new[] { "Vrieskoud", "Fris", "Koud", "Koel", "Mild", "Warm", "Zwoel", "Heet", "Benauwd", "Schroeiend" };
         forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = startDate.AddDays(index),

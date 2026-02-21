@@ -195,7 +195,7 @@ public class EmailService : IEmailService
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
         sb.AppendLine($"                <div class='detail-label'>Event Duration:</div>");
-        sb.AppendLine($"                <div>??? {@event.StartDate:MMM dd, yyyy HH:mm} - {@event.EndDate:MMM dd, yyyy HH:mm}</div>");
+        sb.AppendLine($"                <div>??? {@event.StartDate:d MMMM yyyy HH:mm} - {@event.EndDate:d MMMM yyyy HH:mm}</div>");
         sb.AppendLine("            </div>");
         
         if (!string.IsNullOrEmpty(@event.Description))
@@ -227,7 +227,7 @@ public class EmailService : IEmailService
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
         sb.AppendLine($"                <div class='detail-label'>Shift Time:</div>");
-        sb.AppendLine($"                <div>?? {shift.StartTime:MMM dd, yyyy HH:mm} - {shift.EndTime:MMM dd, yyyy HH:mm}</div>");
+        sb.AppendLine($"                <div>?? {shift.StartTime:d MMMM yyyy HH:mm} - {shift.EndTime:d MMMM yyyy HH:mm}</div>");
         sb.AppendLine("            </div>");
         
         var duration = shift.EndTime - shift.StartTime;
@@ -263,7 +263,7 @@ public class EmailService : IEmailService
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='footer'>");
         sb.AppendLine("            <p>This is an automated notification from the Medical First Aid Event Manager.</p>");
-        sb.AppendLine($"            <p>Email sent on {DateTime.UtcNow:MMM dd, yyyy HH:mm} UTC</p>");
+        sb.AppendLine($"            <p>Email sent on {DateTime.UtcNow:d MMMM yyyy HH:mm} UTC</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");
         sb.AppendLine("</body>");
@@ -333,7 +333,7 @@ public class EmailService : IEmailService
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
         sb.AppendLine($"                <div class='detail-label'>Event Duration:</div>");
-        sb.AppendLine($"                <div>??? {@event.StartDate:dddd, MMMM dd, yyyy HH:mm} - {@event.EndDate:dddd, MMMM dd, yyyy HH:mm}</div>");
+        sb.AppendLine($"                <div>??? {@event.StartDate:dddd d MMMM yyyy HH:mm} - {@event.EndDate:dddd d MMMM yyyy HH:mm}</div>");
         sb.AppendLine("            </div>");
         
         var duration = @event.EndDate - @event.StartDate;
@@ -393,7 +393,7 @@ public class EmailService : IEmailService
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='footer'>");
         sb.AppendLine("            <p>This is an automated confirmation from the Medical First Aid Event Manager.</p>");
-        sb.AppendLine($"            <p>Confirmation sent on {DateTime.UtcNow:MMMM dd, yyyy 'at' HH:mm} UTC</p>");
+        sb.AppendLine($"            <p>Confirmation sent on {DateTime.UtcNow:d MMMM yyyy HH:mm} UTC</p>");
         sb.AppendLine($"            <p>Reference ID: EVENT-{@event.Id:D6}</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");
@@ -470,7 +470,7 @@ public class EmailService : IEmailService
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
         sb.AppendLine($"                <div class='detail-label'>Event Duration:</div>");
-        sb.AppendLine($"                <div>?? {@event.StartDate:dddd, MMMM dd, yyyy HH:mm} - {@event.EndDate:dddd, MMMM dd, yyyy HH:mm}</div>");
+        sb.AppendLine($"                <div>?? {@event.StartDate:dddd d MMMM yyyy HH:mm} - {@event.EndDate:dddd d MMMM yyyy HH:mm}</div>");
         sb.AppendLine("            </div>");
         
         var duration = @event.EndDate - @event.StartDate;
@@ -539,7 +539,7 @@ public class EmailService : IEmailService
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='footer'>");
         sb.AppendLine("            <p>This is an automated notification from the Medical First Aid Event Manager.</p>");
-        sb.AppendLine($"            <p>Planning notification sent on {DateTime.UtcNow:MMMM dd, yyyy 'at' HH:mm} UTC</p>");
+        sb.AppendLine($"            <p>Planning notification sent on {DateTime.UtcNow:d MMMM yyyy HH:mm} UTC</p>");
         sb.AppendLine($"            <p>Reference ID: EVENT-{@event.Id:D6}</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");
@@ -612,7 +612,7 @@ public class EmailService : IEmailService
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
         sb.AppendLine($"                <div class='detail-label'>Event Date & Time:</div>");
-        sb.AppendLine($"                <div>??? {@event.StartDate:dddd, MMMM dd, yyyy HH:mm} - {@event.EndDate:dddd, MMMM dd, yyyy HH:mm}</div>");
+        sb.AppendLine($"                <div>??? {@event.StartDate:dddd d MMMM yyyy HH:mm} - {@event.EndDate:dddd d MMMM yyyy HH:mm}</div>");
         sb.AppendLine("            </div>");
         
         var duration = @event.EndDate - @event.StartDate;
@@ -648,11 +648,11 @@ public class EmailService : IEmailService
         sb.AppendLine("                </div>");
         sb.AppendLine($"                <div class='detail-row'>");
         sb.AppendLine($"                    <div class='detail-label'>Invoice Date:</div>");
-        sb.AppendLine($"                    <div>{DateTime.UtcNow:MMMM dd, yyyy}</div>");
+        sb.AppendLine($"                    <div>{DateTime.UtcNow:d MMMM yyyy}</div>");
         sb.AppendLine("                </div>");
         sb.AppendLine($"                <div class='detail-row'>");
         sb.AppendLine($"                    <div class='detail-label'>Service Period:</div>");
-        sb.AppendLine($"                    <div>{@event.StartDate:MMM dd, yyyy} - {@event.EndDate:MMM dd, yyyy}</div>");
+        sb.AppendLine($"                    <div>{@event.StartDate:d MMMM yyyy} - {@event.EndDate:d MMMM yyyy}</div>");
         sb.AppendLine("                </div>");
         sb.AppendLine("            </div>");
         
@@ -670,7 +670,7 @@ public class EmailService : IEmailService
         sb.AppendLine("            <h3>?? Payment Information</h3>");
         sb.AppendLine("            <div class='highlight'>");
         sb.AppendLine("                <p><strong>Payment Terms:</strong> Net 30 days from invoice date</p>");
-        sb.AppendLine("                <p><strong>Due Date:</strong> " + DateTime.UtcNow.AddDays(30).ToString("MMMM dd, yyyy") + "</p>");
+        sb.AppendLine("                <p><strong>Due Date:</strong> " + DateTime.UtcNow.AddDays(30).ToString("d MMMM yyyy") + "</p>");
         sb.AppendLine("            </div>");
         
         sb.AppendLine("            <div class='detail-row'>");
@@ -709,7 +709,7 @@ public class EmailService : IEmailService
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='footer'>");
         sb.AppendLine("            <p>This invoice was automatically generated by the Medical First Aid Event Manager.</p>");
-        sb.AppendLine($"            <p>Invoice sent on {DateTime.UtcNow:MMMM dd, yyyy 'at' HH:mm} UTC</p>");
+        sb.AppendLine($"            <p>Invoice sent on {DateTime.UtcNow:d MMMM yyyy HH:mm} UTC</p>");
         sb.AppendLine($"            <p>Reference ID: EVENT-{@event.Id:D6} | Invoice: INV-{@event.Id:D6}-{DateTime.UtcNow:yyyyMM}</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");

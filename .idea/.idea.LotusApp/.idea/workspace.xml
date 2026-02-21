@@ -16,125 +16,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6f7985e8-637f-463e-8cbb-e17a45e340ea" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/IdentityComponentsEndpointRouteBuilderExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/IdentityNoOpEmailSender.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/IdentityRedirectManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/IdentityRevalidatingAuthenticationStateProvider.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/AccessDenied.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/ConfirmEmail.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/ConfirmEmailChange.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/ExternalLogin.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/ForgotPassword.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/ForgotPasswordConfirmation.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/InvalidPasswordReset.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/InvalidUser.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Lockout.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Login.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/LoginWith2fa.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/LoginWithRecoveryCode.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/ChangePassword.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/DeletePersonalData.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/Disable2fa.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/Email.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/EnableAuthenticator.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/ExternalLogins.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/GenerateRecoveryCodes.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/Index.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/Passkeys.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/PersonalData.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/Profile.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/RenamePasskey.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/ResetAuthenticator.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/SetPassword.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/TwoFactorAuthentication.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Manage/_Imports.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/PendingApproval.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/Register.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/RegisterConfirmation.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/ResendEmailConfirmation.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/ResetPassword.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/ResetPasswordConfirmation.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Pages/_Imports.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/PasskeyInputModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/PasskeyOperation.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Shared/ExternalLoginPicker.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Shared/ManageLayout.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Shared/ManageNavMenu.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Shared/PasskeySubmit.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Shared/PasskeySubmit.razor.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Shared/RedirectToLogin.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Shared/ShowRecoveryCodes.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Account/Shared/StatusMessage.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/App.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Layout/MainLayout.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Layout/MainLayout.razor.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Layout/NavMenu.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Layout/NavMenu.razor.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Layout/ReconnectModal.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Layout/ReconnectModal.razor.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Layout/ReconnectModal.razor.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Pages/Auth.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Pages/Counter.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Pages/Dashboard.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Pages/Error.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Pages/Home.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Pages/NotFound.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Pages/Weather.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/Routes.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Components/_Imports.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/CustomerPortal.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/Properties/launchSettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/appsettings.Development.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/app.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/favicon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomerPortal/wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp.ServiceDefaults/Extensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp.ServiceDefaults/LotusPlanningApp.ServiceDefaults.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/DomainException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/DomainException.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Properties/launchSettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,6 +47,9 @@
     &quot;accountId&quot;: &quot;9da32cb4-4c8a-4fee-b147-dbdaa6b18cd6&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f7f191c8854e477a38a9c05043038ab48f9fee4ed0ba8d4a48b3f572a3a3/AddressBinder.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -176,36 +63,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Aspire Host.LotusApp.AppHost: http.executor&quot;: &quot;Debug&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;settings.editor.splitter.proportion&quot;: &quot;0.09773124&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.LotusPlanningApp: http.executor": "Debug",
+    "Aspire Host.LotusApp.AppHost: http.executor": "Debug",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.web.browsers",
+    "settings.editor.splitter.proportion": "0.24451666",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1767981642384" />
     <option name="spentUsd" value="0.28403232" />
   </component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="4" />
+    <option name="suspendCountdown" value="3" />
   </component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.LotusPlanningApp: https">
+  <component name="RunManager" selected=".NET Launch Settings Profile.LotusPlanningApp: http">
     <configuration name="LotusApp.AppHost: http" type="AspireHostConfiguration" factoryName="Aspire Host" activateToolWindowBeforeRun="false">
       <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/LotusApp.AppHost/LotusApp.AppHost.csproj" />
       <option name="PROJECT_TFM" value="net10.0" />
@@ -396,6 +284,9 @@
       <workItem from="1713619661181" duration="316000" />
       <workItem from="1767471249464" duration="5103000" />
       <workItem from="1767557551620" duration="2502000" />
+      <workItem from="1771681186602" duration="458000" />
+      <workItem from="1771686675986" duration="234000" />
+      <workItem from="1771687007442" duration="2117000" />
     </task>
     <servers />
   </component>
@@ -424,6 +315,10 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

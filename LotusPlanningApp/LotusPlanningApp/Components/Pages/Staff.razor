@@ -12,7 +12,7 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<PageTitle>Staff - LOTUS Planning App</PageTitle>
+<PageTitle>LOTUS beheer - LOTUS Planning App</PageTitle>
 
 <div class="container-fluid">
     <div class="row mb-4">
@@ -20,7 +20,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h1 class="h3 mb-0 text-primary">
-                        <i class="fas fa-users me-2"></i>Staff Management
+                        <i class="fas fa-users me-2"></i>LOTUS beheer
                     </h1>
                     <p class="text-muted">LOTUS leden</p>
                 </div>
@@ -35,7 +35,7 @@
     {
         <div class="d-flex justify-content-center py-5">
             <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">Laden...</span>
             </div>
         </div>
     }
@@ -95,7 +95,7 @@
                                     <h5 class="card-title mb-1">@staffMember.FullName</h5>
                                     @if (!staffMember.IsActive)
                                     {
-                                        <span class="badge bg-secondary ms-1">Inactive</span>
+                                        <span class="badge bg-secondary ms-1">Inactief</span>
                                     }
                                 </div>
                             </div>
@@ -160,14 +160,14 @@
                                     @if (staffMember.CertificationExpiry.HasValue)
                                     {
                                         <small class="text-muted ms-2">
-                                            Expires: @staffMember.CertificationExpiry.Value.ToString("MMM yyyy")
+                                            Vervalt: @staffMember.CertificationExpiry.Value.ToString("d MMMM yyyy")
                                         </small>
                                     }
                                 </div>
                             }
                             <div class="small text-muted">
                                 <i class="fas fa-calendar-plus me-1"></i>
-                                Joined: @staffMember.CreatedAt.ToString("MMM dd, yyyy")
+                                Lid sinds: @staffMember.CreatedAt.ToString("d MMMM yyyy")
                             </div>
                         </div>
                     </div>
@@ -180,14 +180,14 @@
             <div class="col-md-6">
                 <div class="small text-muted">
                     <i class="fas fa-info-circle me-1"></i>
-                    Showing @filteredStaff.Count of @staff.Count staff member(s)
+                    Toont @filteredStaff.Count van @staff.Count LOTUS-leden
                 </div>
             </div>
             <div class="col-md-6 text-md-end">
                 <div class="small text-muted">
                     <i class="fas fa-users me-1"></i>
-                    Active: @staff.Count(s => s.IsActive) | 
-                    Inactive: @staff.Count(s => !s.IsActive)
+                    Actief: @staff.Count(s => s.IsActive) | 
+                    Inactief: @staff.Count(s => !s.IsActive)
                 </div>
             </div>
         </div>
@@ -209,7 +209,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <i class="fas fa-@(isEditMode ? "edit" : "user-plus") me-2"></i>
-                        @(isEditMode ? "Bewerk medewerker" : "Nieuwe medewerker toevoegen")
+                        @(isEditMode ? "Bewerk LOTUS" : "Nieuwe LOTUS toevoegen")
                     </h5>
                     <button type="button" class="btn-close" @onclick="CloseStaffDialog"></button>
                 </div>
@@ -218,12 +218,12 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">First Name *</label>
+                                <label class="form-label">Voornaam *</label>
                                 <InputText @bind-Value="staffForm.FirstName" class="form-control" placeholder="Voornaam" />
                                 <ValidationMessage For="() => staffForm.FirstName" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Last Name *</label>
+                                <label class="form-label">Achternaam *</label>
                                 <InputText @bind-Value="staffForm.LastName" class="form-control" placeholder="Achternaam" />
                                 <ValidationMessage For="() => staffForm.LastName" class="text-danger" />
                             </div>
@@ -231,12 +231,12 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Email Address *</label>
+                                <label class="form-label">E-mailadres *</label>
                                 <InputText @bind-Value="staffForm.Email" class="form-control" placeholder="E-mailadres" type="email" />
                                 <ValidationMessage For="() => staffForm.Email" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Phone Number</label>
+                                <label class="form-label">Telefoonnummer</label>
                                 <InputText @bind-Value="staffForm.Phone" class="form-control" placeholder="Telefoonnummer" />
                                 <ValidationMessage For="() => staffForm.Phone" class="text-danger" />
                             </div>
@@ -244,8 +244,8 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Certification Level</label>
-                                <InputText @bind-Value="staffForm.CertificationLevel" class="form-control" placeholder="Bijv., Niveau 1, Geavanceerd, etc." />
+                                <label class="form-label">Certificatieniveau</label>
+                                <InputText @bind-Value="staffForm.CertificationLevel" class="form-control" placeholder="Bijv. niveau 1, gevorderd, etc." />
                                 <ValidationMessage For="() => staffForm.CertificationLevel" class="text-danger" />
                             </div>
                         </div>
@@ -285,7 +285,7 @@
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            <i class="fas fa-save me-2"></i>@(isEditMode ? "Update Personeel" : "Personeel Toevoegen")
+                            <i class="fas fa-save me-2"></i>@(isEditMode ? "LOTUS bijwerken" : "LOTUS toevoegen")
                         </button>
                     </div>
                 </EditForm>
@@ -301,25 +301,25 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm Deactivation</h5>
+                    <h5 class="modal-title">Deactivatie bevestigen</h5>
                     <button type="button" class="btn-close" @onclick="CancelDeactivateStaff"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to deactivate <strong>@staffToDeactivate.FullName</strong>?</p>
+                    <p>Weet je zeker dat je <strong>@staffToDeactivate.FullName</strong> wilt deactiveren?</p>
                     <p class="text-warning small">
                         <i class="fas fa-exclamation-triangle me-1"></i>
-                        This will remove them from active duty but preserve all their records and assignment history.
-                        They can be reactivated later if needed.
+                        Dit verwijdert de LOTUS uit actieve dienst, maar bewaart alle gegevens en toewijzingsgeschiedenis.
+                        Je kunt deze later opnieuw activeren als dat nodig is.
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CancelDeactivateStaff">Cancel</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CancelDeactivateStaff">Annuleren</button>
                     <button type="button" class="btn btn-warning" @onclick="DeactivateStaff" disabled="@isDeactivating">
                         @if (isDeactivating)
                         {
                             <span class="spinner-border spinner-border-sm me-2"></span>
                         }
-                        Deactivate Staff
+                        LOTUS deactiveren
                     </button>
                 </div>
             </div>
@@ -475,7 +475,7 @@
             var isEmailUnique = await IsEmailUniqueHandler.Handle(uniqueQuery);
             if (!isEmailUnique)
             {
-                emailError = "This email address is already in use by another staff member.";
+                emailError = "Dit e-mailadres is al in gebruik door een ander LOTUS-lid.";
                 return;
             }
 
@@ -503,7 +503,7 @@
         }
         catch (Exception ex)
         {
-            emailError = $"Error saving staff member: {ex.Message}";
+            emailError = $"Fout bij opslaan van LOTUS-lid: {ex.Message}";
         }
         finally
         {

@@ -124,7 +124,7 @@ else
                                         <i class="fas fa-map-marker-alt me-1"></i>@eventGroup.Key.Location
                                     </small>
                                     <small class="text-muted">
-                                        <i class="fas fa-calendar me-1"></i>@eventGroup.Key.StartDate.ToString("MMM dd") - @eventGroup.Key.EndDate.ToString("MMM dd, yyyy")
+                                        <i class="fas fa-calendar me-1"></i>@eventGroup.Key.StartDate.ToString("d MMMM") - @eventGroup.Key.EndDate.ToString("d MMMM yyyy")
                                     </small>
                                     <span class="badge bg-@GetEventStatusColor(eventGroup.Key.Status)">
                                         @eventGroup.Key.Status
@@ -172,7 +172,7 @@ else
                                             <div class="small text-muted mb-2">
                                                 <div>
                                                     <i class="fas fa-calendar me-1"></i>
-                                                    @shift.StartTime.ToString("MMM dd, yyyy")
+                                                    @shift.StartTime.ToString("d MMMM yyyy")
                                                 </div>
                                                 <div>
                                                     <i class="fas fa-clock me-1"></i>
@@ -257,7 +257,7 @@ else
                                 </div>
                                 <div class="col-md-2 col-6 mb-3">
                                     <h4 class="text-info mb-0">@totalStaffRequired</h4>
-                                    <small class="text-muted">Benodigde medewerkers</small>
+                                    <small class="text-muted">Benodigde LOTUS</small>
                                 </div>
                                 <div class="col-md-2 col-6 mb-3">
                                     <h4 class="text-@GetStaffingColor() mb-0">@totalStaffAssigned</h4>

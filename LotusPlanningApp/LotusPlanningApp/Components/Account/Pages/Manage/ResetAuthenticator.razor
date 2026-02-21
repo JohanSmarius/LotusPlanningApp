@@ -8,24 +8,24 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ResetAuthenticator> Logger
 
-<PageTitle>Reset authenticator key</PageTitle>
+<PageTitle>Authenticatorsleutel opnieuw instellen</PageTitle>
 
 <StatusMessage />
-<h3>Reset authenticator key</h3>
+<h3>Authenticatorsleutel opnieuw instellen</h3>
 <div class="alert alert-warning" role="alert">
     <p>
         <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>If you reset your authenticator key your authenticator app will not work until you reconfigure it.</strong>
+        <strong>Als je je authenticatorsleutel reset, werkt je authenticator-app niet totdat je deze opnieuw configureert.</strong>
     </p>
     <p>
-        This process disables 2FA until you verify your authenticator app.
-        If you do not complete your authenticator app configuration you may lose access to your account.
+        Dit proces schakelt 2FA uit totdat je je authenticator-app verifieert.
+        Als je de configuratie van je authenticator-app niet afrondt, kun je de toegang tot je account verliezen.
     </p>
 </div>
 <div>
     <form @formname="reset-authenticator" @onsubmit="OnSubmitAsync" method="post">
         <AntiforgeryToken />
-        <button class="btn btn-danger" type="submit">Reset authenticator key</button>
+        <button class="btn btn-danger" type="submit">Authenticatorsleutel opnieuw instellen</button>
     </form>
 </div>
 
@@ -51,7 +51,7 @@
 
         RedirectManager.RedirectToWithStatus(
             "Account/Manage/EnableAuthenticator",
-            "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.",
+            "Je authenticatorsleutel is gereset. Je moet je authenticator-app configureren met de nieuwe sleutel.",
             HttpContext);
     }
 }

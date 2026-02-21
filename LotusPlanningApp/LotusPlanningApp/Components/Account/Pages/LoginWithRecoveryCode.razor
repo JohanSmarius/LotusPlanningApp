@@ -9,14 +9,14 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<LoginWithRecoveryCode> Logger
 
-<PageTitle>Recovery code verification</PageTitle>
+<PageTitle>Herstelcodeverificatie</PageTitle>
 
-<h1>Recovery code verification</h1>
+<h1>Herstelcodeverificatie</h1>
 <hr />
 <StatusMessage Message="@message" />
 <p>
-    You have requested to log in with a recovery code. This login will not be remembered until you provide
-    an authenticator app code at log in or disable 2FA and log in again.
+    Je hebt gevraagd om in te loggen met een herstelcode. Deze aanmelding wordt niet onthouden totdat je
+    een authenticatorcode invult of 2FA uitschakelt en opnieuw inlogt.
 </p>
 <div class="row">
     <div class="col-md-4">
@@ -25,10 +25,10 @@
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.RecoveryCode" id="Input.RecoveryCode" class="form-control" autocomplete="off" placeholder="RecoveryCode" />
-                <label for="Input.RecoveryCode" class="form-label">Recovery Code</label>
+                <label for="Input.RecoveryCode" class="form-label">Herstelcode</label>
                 <ValidationMessage For="() => Input.RecoveryCode" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Inloggen</button>
         </EditForm>
     </div>
 </div>
@@ -49,7 +49,7 @@
 
         // Ensure the user has gone through the username & password screen first
         user = await SignInManager.GetTwoFactorAuthenticationUserAsync() ??
-            throw new InvalidOperationException("Unable to load two-factor authentication user.");
+            throw new InvalidOperationException("Kan tweefactorauthenticatiegebruiker niet laden.");
     }
 
     private async Task OnValidSubmitAsync()
@@ -73,7 +73,7 @@
         else
         {
             Logger.LogWarning("Invalid recovery code entered for user with ID '{UserId}' ", userId);
-            message = "Error: Invalid recovery code entered.";
+            message = "Fout: Ongeldige herstelcode ingevuld.";
         }
     }
 
@@ -81,7 +81,7 @@
     {
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "Recovery Code")]
+        [Display(Name = "Herstelcode")]
         public string RecoveryCode { get; set; } = "";
     }
 }

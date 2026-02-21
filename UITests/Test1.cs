@@ -27,21 +27,21 @@
         [TestMethod]
         public async Task HomepageHasTitleAndButtonToViewDashboard()
         {
-            await Page.GotoAsync("https://localhost:7096");
+            await Page.GotoAsync("http://localhost:5087");
 
             // Expect a title "to contain" a substring.
             await Expect(Page).ToHaveTitleAsync(new Regex("LOTUS Planning App"));
 
-            // create a locator
-            var viewDashboard = Page.Locator("text=View Dashboard");
+            // create a locator for the dashboard button
+            var viewDashboard = Page.Locator("text=Bekijk dashboard");
 
             // Expect an attribute "to be strictly equal" to the value.
             await Expect(viewDashboard).ToHaveAttributeAsync("href", "/dashboard");
 
-            // Click the get started link.
+            // Click the dashboard link.
             await viewDashboard.ClickAsync();
 
-            // Expects the URL to contain intro.
+            // Expects the URL to contain dashboard.
             await Expect(Page).ToHaveURLAsync(new Regex(".*dashboard"));
         }
     }

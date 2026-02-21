@@ -7,16 +7,16 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Profile</PageTitle>
+<PageTitle>Profiel</PageTitle>
 
-<h3>Profile</h3>
+<h3>Profiel</h3>
 <StatusMessage Message="@statusMessage" />
 
 <div class="row">
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title mb-0">Personal Information</h5>
+                <h5 class="card-title mb-0">Persoonlijke informatie</h5>
             </div>
             <div class="card-body">
                 <EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmitAsync" FormName="profile">
@@ -24,24 +24,24 @@
                     <ValidationSummary class="text-danger" role="alert" />
 
                     <div class="mb-3">
-                        <label for="firstname" class="form-label">First Name</label>
+                        <label for="firstname" class="form-label">Voornaam</label>
                         <InputText @bind-Value="Input.FirstName" class="form-control" id="firstname" />
                         <ValidationMessage For="() => Input.FirstName" class="text-danger" />
                     </div>
 
                     <div class="mb-3">
-                        <label for="lastname" class="form-label">Last Name</label>
+                        <label for="lastname" class="form-label">Achternaam</label>
                         <InputText @bind-Value="Input.LastName" class="form-control" id="lastname" />
                         <ValidationMessage For="() => Input.LastName" class="text-danger" />
                     </div>
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label">E-mail</label>
                         <InputText @bind-Value="Input.Email" class="form-control" id="email" disabled />
                     </div>
 
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
+                        <label for="username" class="form-label">Gebruikersnaam</label>
                         <InputText @bind-Value="username" class="form-control" id="username" disabled />
                     </div>
 
@@ -49,19 +49,19 @@
                     {
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle me-2"></i>
-                            <strong>Linked Staff Member:</strong> Staff ID #@user.StaffId
+                            <strong>Gekoppelde LOTUS:</strong> LOTUS-ID #@user.StaffId
                         </div>
                     }
                     else
                     {
                         <div class="alert alert-warning">
                             <i class="bi bi-exclamation-circle me-2"></i>
-                            <strong>Not yet linked:</strong> Your account is not yet linked to a staff member.
+                            <strong>Nog niet gekoppeld:</strong> Je account is nog niet gekoppeld aan een LOTUS.
                         </div>
                     }
 
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-circle me-2"></i>Update Profile
+                        <i class="bi bi-check-circle me-2"></i>Profiel bijwerken
                     </button>
                 </EditForm>
             </div>
@@ -111,21 +111,21 @@
 
         if (!result.Succeeded)
         {
-            statusMessage = "Error: Unable to update profile.";
+            statusMessage = "Fout: Profiel bijwerken mislukt.";
             return;
         }
 
         await SignInManager.RefreshSignInAsync(user!);
-        statusMessage = "Your profile has been updated successfully.";
+        statusMessage = "Je profiel is succesvol bijgewerkt.";
     }
 
     private sealed class InputModel
     {
-        [Display(Name = "First name")]
+        [Display(Name = "Voornaam")]
         [StringLength(50)]
         public string FirstName { get; set; } = "";
 
-        [Display(Name = "Last name")]
+        [Display(Name = "Achternaam")]
         [StringLength(50)]
         public string LastName { get; set; } = "";
 

@@ -18,7 +18,7 @@
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Laden...</span>
         </div>
     </div>
 }
@@ -188,8 +188,8 @@ else
                             {
                                 <div class="alert alert-warning">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
-                                    <strong>Note:</strong> This event has @eventToEdit.Shifts.Count shift(s) assigned. 
-                                    Changing dates and times may affect existing shifts and staff assignments.
+                                    <strong>Let op:</strong> Deze opdracht heeft @eventToEdit.Shifts.Count dienst(en) toegewezen.
+                                    Wijzigingen in datum en tijd kunnen invloed hebben op bestaande diensten en LOTUS toewijzingen.
                                 </div>
                             }
 
@@ -219,9 +219,9 @@ else
                             <label class="form-label text-muted small">ORIGINAL DATES</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @eventToEdit.StartDate.ToString("MMM dd, yyyy HH:mm")
+                                @eventToEdit.StartDate.ToString("d MMMM yyyy HH:mm")
                                 <br>
-                                <small class="text-muted">tot @eventToEdit.EndDate.ToString("MMM dd, yyyy HH:mm")</small>
+                                <small class="text-muted">tot @eventToEdit.EndDate.ToString("d MMMM yyyy HH:mm")</small>
                             </div>
                         </div>
 
@@ -246,7 +246,7 @@ else
                             <label class="form-label text-muted small">LAATST BIJGEWERKT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @(eventToEdit.UpdatedAt?.ToString("MMM dd, yyyy HH:mm") ?? eventToEdit.CreatedAt.ToString("MMM dd, yyyy HH:mm"))
+                                @(eventToEdit.UpdatedAt?.ToString("d MMMM yyyy HH:mm") ?? eventToEdit.CreatedAt.ToString("d MMMM yyyy HH:mm"))
                             </div>
                         </div>
                     </div>
@@ -269,14 +269,14 @@ else
                             </div>
                             <div class="col-6">
                                 <h4 class="text-success mb-0">@TotalRequiredStaff</h4>
-                                <small class="text-muted">Benodigde medewerkers</small>
+                                <small class="text-muted">Benodigde LOTUS</small>
                             </div>
                         </div>
                         <hr>
                         <div class="row text-center">
                             <div class="col-6">
                                 <h5 class="text-info mb-0">@TotalAssignedStaff</h5>
-                                <small class="text-muted">Toegewezen medewerkers</small>
+                                <small class="text-muted">Toegewezen LOTUS</small>
                             </div>
                             <div class="col-6">
                                 <h5 class="text-warning mb-0">@(TotalRequiredStaff - TotalAssignedStaff)</h5>
@@ -334,7 +334,7 @@ else
                                         <tr>
                                             <th scope="col">Dienstnaam</th>
                                             <th scope="col">Datum & tijd</th>
-                                            <th scope="col">Medewerkers</th>
+                                            <th scope="col">LOTUS</th>
                                             <th scope="col">Status</th>
                                             <th scope="col" class="text-center">Acties</th>
                                         </tr>
@@ -353,9 +353,9 @@ else
                                                     }
                                                 </td>
                                                 <td>
-                                                    <span class="fw-medium">@shift.StartTime.ToString("MMM dd, HH:mm")</span>
+                                                    <span class="fw-medium">@shift.StartTime.ToString("d MMMM HH:mm")</span>
                                                     <br>
-                                                    <small class="text-muted">tot @shift.EndTime.ToString("MMM dd, HH:mm")</small>
+                                                    <small class="text-muted">tot @shift.EndTime.ToString("d MMMM HH:mm")</small>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
@@ -417,7 +417,7 @@ else
                     <p class="text-warning small">
                         <i class="fas fa-exclamation-triangle me-1"></i>
                         Dit zet de status op "Geannuleerd" maar behoudt alle diensten en toewijzingen voor de administratie.
-                        Medewerkers moeten apart worden geïnformeerd.
+                        LOTUS moeten apart worden geïnformeerd.
                     </p>
                 </div>
                 <div class="modal-footer">

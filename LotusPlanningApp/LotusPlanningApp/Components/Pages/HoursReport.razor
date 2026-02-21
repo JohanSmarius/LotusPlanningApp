@@ -11,7 +11,7 @@
     <div class="row mb-4">
         <div class="col">
             <h1 class="h3 mb-0 text-primary">
-                <i class="fas fa-clock me-2"></i>Uren Overzicht per Medewerker
+                <i class="fas fa-clock me-2"></i>Uren Overzicht per LOTUS
             </h1>
             <p class="text-muted">Geaggregeerde gewerkte uren per jaar</p>
         </div>
@@ -53,7 +53,7 @@
                             <div class="col-md-3">
                                 <div class="p-3">
                                     <h4 class="text-primary">@staffHours.Count</h4>
-                                    <p class="text-muted mb-0">Medewerkers</p>
+                                    <p class="text-muted mb-0">LOTUS</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -71,7 +71,7 @@
                             <div class="col-md-3">
                                 <div class="p-3">
                                     <h4 class="text-warning">@(staffHours.Any() ? (staffHours.Sum(s => s.TotalHours) / staffHours.Count).ToString("N1") : "0")</h4>
-                                    <p class="text-muted mb-0">Gem. Uren per Medewerker</p>
+                                    <p class="text-muted mb-0">Gem. Uren per LOTUS</p>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-transparent border-0">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-table me-2 text-primary"></i>Uren per Medewerker
+                            <i class="fas fa-table me-2 text-primary"></i>Uren per LOTUS
                         </h5>
                     </div>
                     <div class="card-body">
@@ -94,7 +94,7 @@
                             <table class="table table-hover">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Medewerker</th>
+                                        <th>LOTUS</th>
                                         <th>Email</th>
                                         <th class="text-end">Diensten</th>
                                         <th class="text-end">Totaal Uren</th>
