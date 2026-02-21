@@ -175,7 +175,7 @@ else
                             <div class="col-6">
                                 <div class="border-end">
                                     <h4 class="text-primary mb-0">@eventDetail.Shifts.Count</h4>
-                                    <small class="text-muted">Aantal diensten</small>
+                                    <small class="text-muted">Aantal deelopdrachten</small>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -192,10 +192,10 @@ else
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-clock me-2"></i>Diensten bij opdracht
+                            <i class="fas fa-clock me-2"></i>Deelopdrachten bij opdracht
                         </h5>
                         <button class="btn btn-sm btn-success" @onclick="OpenCreateShiftDialog">
-                            <i class="fas fa-plus me-2"></i>Dienst toevoegen
+                            <i class="fas fa-plus me-2"></i>Deelopdracht toevoegen
                         </button>
                     </div>
                     <div class="card-body">
@@ -203,10 +203,10 @@ else
                         {
                             <div class="text-center py-5">
                                 <i class="fas fa-clock fa-4x text-muted mb-4"></i>
-                                <h5 class="text-muted">Geen diensten gepland</h5>
-                                <p class="text-muted mb-4">Deze opdracht heeft nog geen diensten. Voeg de eerste dienst toe om te starten.</p>
+                                <h5 class="text-muted">Geen deelopdrachten gepland</h5>
+                                <p class="text-muted mb-4">Deze opdracht heeft nog geen deelopdrachten. Voeg de eerste deelopdracht toe om te starten.</p>
                                 <button class="btn btn-success btn-lg" @onclick="OpenCreateShiftDialog">
-                                    <i class="fas fa-plus me-2"></i>Eerste dienst aanmaken
+                                    <i class="fas fa-plus me-2"></i>Eerste deelopdracht aanmaken
                                 </button>
                             </div>
                         }
@@ -218,7 +218,7 @@ else
                                     <thead class="table-light">
                                         <tr>
                                             <th scope="col">
-                                                <i class="fas fa-tag me-1"></i>Dienstnaam
+                                                <i class="fas fa-tag me-1"></i>Deelopdrachtnaam
                                             </th>
                                             <th scope="col">
                                                 <i class="fas fa-calendar-day me-1"></i>Datum
@@ -305,7 +305,7 @@ else
                                                         </button>
                                                         <button class="btn btn-outline-danger" 
                                                                 @onclick="() => ConfirmDeleteShift(shift)"
-                                                                title="Dienst verwijderen">
+                                                                title="Deelopdracht verwijderen">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </div>
@@ -321,7 +321,7 @@ else
                                 <div class="col-md-6">
                                     <div class="small text-muted">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        Toont @eventDetail.Shifts.Count dienst(en) voor deze opdracht
+                                        Toont @eventDetail.Shifts.Count deelopdracht(en) voor deze opdracht
                                     </div>
                                 </div>
                                 <div class="col-md-6 text-md-end">
@@ -347,7 +347,7 @@ else
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-clock me-2"></i>Nieuwe dienst
+                        <i class="fas fa-clock me-2"></i>Nieuwe deelopdracht
                     </h5>
                     <button type="button" class="btn-close" @onclick="CloseCreateShiftDialog"></button>
                 </div>
@@ -356,7 +356,7 @@ else
                     <div class="modal-body">
                         <div class="alert alert-info mb-4">
                             <i class="fas fa-info-circle me-2"></i>
-                            <strong>Dienst aanmaken voor:</strong> @eventDetail.Name
+                            <strong>Deelopdracht aanmaken voor:</strong> @eventDetail.Name
                             <br>
                             <small class="text-muted">
                                 <i class="fas fa-calendar me-1"></i>@eventDetail.StartDate.ToString("d MMMM yyyy HH:mm") - @eventDetail.EndDate.ToString("d MMMM yyyy HH:mm")
@@ -367,8 +367,8 @@ else
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Dienstnaam *</label>
-                                <InputText @bind-Value="newShift.Name" class="form-control" placeholder="Voer een dienstnaam in" />
+                                <label class="form-label">Deelopdrachtnaam *</label>
+                                <InputText @bind-Value="newShift.Name" class="form-control" placeholder="Voer een deelopdrachtnaam in" />
                                 <ValidationMessage For="() => newShift.Name" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
@@ -393,13 +393,13 @@ else
 
                         <div class="mb-3">
                             <label class="form-label">Beschrijving</label>
-                            <InputTextArea @bind-Value="newShift.Description" class="form-control" rows="3" placeholder="Omschrijving van de dienst (optioneel)" />
+                            <InputTextArea @bind-Value="newShift.Description" class="form-control" rows="3" placeholder="Omschrijving van de deelopdracht (optioneel)" />
                             <ValidationMessage For="() => newShift.Description" class="text-danger" />
                         </div>
 
                         <div class="alert alert-warning">
                             <i class="fas fa-exclamation-triangle me-2"></i>
-                            <strong>Let op:</strong> Zorg dat de diensttijden binnen de duur van de opdracht vallen 
+                            <strong>Let op:</strong> Zorg dat de deelopdrachttijden binnen de duur van de opdracht vallen 
                             (@eventDetail.StartDate.ToString("d MMMM HH:mm") - @eventDetail.EndDate.ToString("d MMMM HH:mm")).
                         </div>
                     </div>
@@ -410,7 +410,7 @@ else
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            <i class="fas fa-save me-2"></i>Dienst aanmaken
+                            <i class="fas fa-save me-2"></i>Deelopdracht aanmaken
                         </button>
                     </div>
                 </EditForm>
@@ -430,7 +430,7 @@ else
                     <button type="button" class="btn-close" @onclick="CancelDeleteShift"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Weet je zeker dat je de dienst "<strong>@shiftToDelete.Name</strong>" wilt verwijderen?</p>
+                    <p>Weet je zeker dat je de deelopdracht "<strong>@shiftToDelete.Name</strong>" wilt verwijderen?</p>
                     <p class="text-danger small">
                         <i class="fas fa-exclamation-triangle me-1"></i>
                         Deze actie kan niet ongedaan worden gemaakt en verwijdert ook alle gekoppelde personeelskoppelingen.
@@ -443,7 +443,7 @@ else
                         {
                             <span class="spinner-border spinner-border-sm me-2"></span>
                         }
-                        Dienst verwijderen
+                        Deelopdracht verwijderen
                     </button>
                 </div>
             </div>
@@ -554,7 +554,7 @@ else
         newShift = new Shift
         {
             EventId = eventDetail.Id,
-            Name = $"Dienst - {eventDetail.Name}",
+            Name = $"Deelopdracht - {eventDetail.Name}",
             StartTime = eventDetail.StartDate,
             EndTime = eventDetail.EndDate,
             RequiredStaff = 1,

@@ -17,7 +17,7 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<PageTitle>Dienst bewerken - LOTUS Planning App</PageTitle>
+<PageTitle>Deelopdracht bewerken - LOTUS Planning App</PageTitle>
 
 @if (isLoading)
 {
@@ -34,8 +34,8 @@ else if (shift == null)
             <div class="col">
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Dienst niet gevonden</strong>
-                    <p class="mb-0">De gevraagde dienst is niet gevonden.</p>
+                    <strong>Deelopdracht niet gevonden</strong>
+                    <p class="mb-0">De gevraagde deelopdracht is niet gevonden.</p>
                 </div>
                 <a href="/events" class="btn btn-primary">
                     <i class="fas fa-arrow-left me-2"></i>Terug naar opdrachten
@@ -58,13 +58,13 @@ else
                         <li class="breadcrumb-item">
                             <a href="/events/details/@shift.EventId" class="text-decoration-none">@shift.Event.Name</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Dienst bewerken</li>
+                        <li class="breadcrumb-item active" aria-current="page">Deelopdracht bewerken</li>
                     </ol>
                 </nav>
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h1 class="h3 mb-0 text-primary">
-                            <i class="fas fa-edit me-2"></i>Dienst bewerken
+                            <i class="fas fa-edit me-2"></i>Deelopdracht bewerken
                         </h1>
                         <p class="text-muted mb-0">@shift.Name</p>
                     </div>
@@ -111,8 +111,8 @@ else
 
                             <!-- Shift Name -->
                             <div class="mb-3">
-                                <label class="form-label">Dienstnaam *</label>
-                                <InputText @bind-Value="editShift.Name" class="form-control" placeholder="Voer een dienstnaam in" />
+                                <label class="form-label">Deelopdrachtnaam *</label>
+                                <InputText @bind-Value="editShift.Name" class="form-control" placeholder="Voer een deelopdrachtnaam in" />
                                 <ValidationMessage For="() => editShift.Name" class="text-danger" />
                             </div>
 
@@ -138,7 +138,7 @@ else
                                     <ValidationMessage For="() => editShift.RequiredStaff" class="text-danger" />
                                     <div class="form-text">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        Maximum aantal LOTUS dat aan deze dienst kan worden gekoppeld
+                                        Maximum aantal LOTUS dat aan deze deelopdracht kan worden gekoppeld
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -157,7 +157,7 @@ else
                             <!-- Description -->
                             <div class="mb-3">
                                 <label class="form-label">Beschrijving</label>
-                                <InputTextArea @bind-Value="editShift.Description" class="form-control" rows="3" placeholder="Omschrijving van de dienst (optioneel)" />
+                                <InputTextArea @bind-Value="editShift.Description" class="form-control" rows="3" placeholder="Omschrijving van de deelopdracht (optioneel)" />
                                 <ValidationMessage For="() => editShift.Description" class="text-danger" />
                             </div>
 
@@ -196,7 +196,7 @@ else
                             <div class="text-center py-4">
                                 <i class="fas fa-users-slash fa-3x text-muted mb-3"></i>
                                 <h6 class="text-muted">Geen LOTUS toegewezen</h6>
-                                <p class="text-muted mb-3">Deze dienst heeft nog geen LOTUS toegewezen.</p>
+                                <p class="text-muted mb-3">Deze deelopdracht heeft nog geen LOTUS toegewezen.</p>
                                 <button class="btn btn-success" @onclick="OpenAddStaffDialog">
                                     <i class="fas fa-plus me-2"></i>Eerste LOTUS toewijzen
                                 </button>
@@ -236,7 +236,7 @@ else
                                         <div class="btn-group btn-group-sm" role="group">
                                                 <button class="btn btn-outline-danger" 
                                                     @onclick="() => ConfirmRemoveStaff(assignment)"
-                                                    title="Verwijderen uit dienst">
+                                                    title="Verwijderen uit deelopdracht">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -257,7 +257,7 @@ else
                             {
                                 <div class="alert alert-success mt-3 mb-0">
                                     <i class="fas fa-check-circle me-2"></i>
-                                    <strong>Dienst is volledig bezet!</strong> Alle benodigde posities zijn gevuld.
+                                    <strong>Deelopdracht is volledig bezet!</strong> Alle benodigde posities zijn gevuld.
                                 </div>
                             }
                         }
@@ -276,7 +276,7 @@ else
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-user-plus me-2"></i>LOTUS toevoegen aan dienst
+                        <i class="fas fa-user-plus me-2"></i>LOTUS toevoegen aan deelopdracht
                     </h5>
                     <button type="button" class="btn-close" @onclick="CloseAddStaffDialog"></button>
                 </div>
@@ -367,7 +367,7 @@ else
                                                         @if (editShift.RequiredStaff > 2)
                                                         {
                                                             <div class="mt-2">
-                                                                <label class="form-label small mb-1">Rol voor deze dienst:</label>
+                                                                <label class="form-label small mb-1">Rol voor deze deelopdracht:</label>
                                                                 <select class="form-select form-select-sm" @bind="staffRoleSelections[staffMember.Id]">
                                                                     <option value="@StaffRole.LOTUS">LOTUS</option>
                                                                     <option value="@StaffRole.Coordinator">Coördinator</option>
@@ -408,10 +408,10 @@ else
                     <button type="button" class="btn-close" @onclick="CancelRemoveStaff"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Weet je zeker dat je <strong>@staffToRemove.Staff.FullName</strong> van deze dienst wilt verwijderen?</p>
-                    <p class="text-warning small">
+                    <p>Weet je zeker dat je <strong>@staffToRemove.Staff.FullName</strong> van deze deelopdracht wilt verwijderen?</p>
+                    <p class="text-danger small">
                         <i class="fas fa-exclamation-triangle me-1"></i>
-                        Deze actie verwijdert de LOTUS uit de dienst.
+                        Deze actie verwijdert de LOTUS uit de deelopdracht.
                     </p>
                 </div>
                 <div class="modal-footer">
@@ -722,7 +722,7 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Fout bij het opslaan van de dienst: {ex.Message}");
+            Console.WriteLine($"Fout bij het opslaan van de deelopdracht: {ex.Message}");
         }
         finally
         {

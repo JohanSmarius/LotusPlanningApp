@@ -25,11 +25,11 @@ else if (shiftDetail == null)
             <div class="col">
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Dienst niet gevonden</strong>
-                    <p class="mb-0">De gevraagde dienst is niet gevonden.</p>
+                    <strong>Deelopdracht niet gevonden</strong>
+                    <p class="mb-0">De gevraagde deelopdracht is niet gevonden.</p>
                 </div>
                 <a href="/shifts" class="btn btn-primary">
-                    <i class="fas fa-arrow-left me-2"></i>Terug naar diensten
+                    <i class="fas fa-arrow-left me-2"></i>Terug naar deelopdrachten
                 </a>
             </div>
         </div>
@@ -50,7 +50,7 @@ else
                             <a href="/events/details/@shiftDetail.EventId" class="text-decoration-none">@shiftDetail.Event.Name</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="/shifts" class="text-decoration-none">Diensten</a>
+                            <a href="/shifts" class="text-decoration-none">Deelopdrachten</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">@shiftDetail.Name</li>
                     </ol>
@@ -72,7 +72,7 @@ else
                             <i class="fas fa-download me-2"></i>Kalender downloaden
                         </a>
                         <a href="/shifts/edit/@ShiftId" class="btn btn-primary">
-                            <i class="fas fa-edit me-2"></i>Dienst bewerken
+                            <i class="fas fa-edit me-2"></i>Deelopdracht bewerken
                         </a>
                     </div>
                 </div>
@@ -228,7 +228,7 @@ else
                             <div class="text-center py-5">
                                 <i class="fas fa-users-slash fa-4x text-muted mb-4"></i>
                                 <h5 class="text-muted">Geen LOTUS toegewezen</h5>
-                                <p class="text-muted mb-4">Deze dienst heeft nog geen LOTUS toegewezen.</p>
+                                <p class="text-muted mb-4">Deze deelopdracht heeft nog geen LOTUS toegewezen.</p>
                                 <a href="/shifts/edit/@ShiftId" class="btn btn-primary btn-lg">
                                     <i class="fas fa-plus me-2"></i>LOTUS toewijzen
                                 </a>
@@ -291,7 +291,7 @@ else
                                 <div class="alert alert-warning mt-3 mb-0">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
                                     <strong>Extra LOTUS nodig:</strong> 
-                                    Deze dienst heeft @(shiftDetail.RequiredStaff - shiftDetail.StaffAssignments.Count) LOTUS extra nodig.
+                                    Deze deelopdracht heeft @(shiftDetail.RequiredStaff - shiftDetail.StaffAssignments.Count) LOTUS extra nodig.
                                     <div class="mt-2">
                                         <a href="/shifts/edit/@ShiftId" class="btn btn-warning btn-sm">
                                             <i class="fas fa-plus me-1"></i>Meer LOTUS toevoegen
@@ -303,7 +303,7 @@ else
                             {
                                 <div class="alert alert-success mt-3 mb-0">
                                     <i class="fas fa-check-circle me-2"></i>
-                                    <strong>Dienst is volledig bezet!</strong> Alle benodigde posities zijn gevuld.
+                                    <strong>Deelopdracht is volledig bezet!</strong> Alle benodigde posities zijn gevuld.
                                 </div>
                             }
                         }

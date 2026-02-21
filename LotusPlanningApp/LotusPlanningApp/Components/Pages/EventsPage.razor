@@ -203,7 +203,7 @@
                             <div class="card-footer bg-transparent border-0">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-muted">
-                                        <i class="fas fa-clock me-1"></i>@eventItem.Shifts.Count dienst(en)
+                                        <i class="fas fa-clock me-1"></i>@eventItem.Shifts.Count deelopdracht(en)
                                     </small>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-outline-primary" @onclick="@((e) => NavigateToDetails(eventItem.Id))" @onclick:stopPropagation="true">
@@ -242,7 +242,7 @@
                                     <th scope="col">Locatie</th>
                                     <th scope="col">Contact</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Diensten</th>
+                                    <th scope="col">Deelopdrachten</th>
                                     <th scope="col" class="text-center">Acties</th>
                                 </tr>
                             </thead>
@@ -314,7 +314,7 @@
                                                 <span class="fw-medium me-2">@eventItem.Shifts.Count</span>
                                                 @if (eventItem.Shifts.Count == 0)
                                                 {
-                                                    <span class="badge bg-warning text-dark">Geen diensten</span>
+                                                    <span class="badge bg-warning text-dark">Geen deelopdrachten</span>
                                                 }
                                                 else
                                                 {
@@ -365,7 +365,7 @@
                     <p>Weet je zeker dat je de opdracht "<strong>@eventToDelete.Name</strong>" wilt verwijderen?</p>
                     <p class="text-danger small">
                         <i class="fas fa-exclamation-triangle me-1"></i>
-                        Deze actie kan niet ongedaan worden gemaakt en verwijdert ook alle gekoppelde diensten en toewijzingen.
+                        Deze actie kan niet ongedaan worden gemaakt en verwijdert ook alle gekoppelde deelopdrachten en toewijzingen.
                     </p>
                 </div>
                 <div class="modal-footer">
@@ -486,7 +486,7 @@
 
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
-                            <strong>Let op:</strong> De opdracht wordt aangemaakt met de status "Aangevraagd" en er wordt automatisch één dienst toegevoegd die de volledige duur dekt.
+                            <strong>Let op:</strong> De opdracht wordt aangemaakt met de status "Aangevraagd" en er wordt automatisch één deelopdracht toegevoegd die de volledige duur dekt.
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -556,7 +556,7 @@
                                 <input type="number" @bind="editEvent.RequiredStaffCount" class="form-control" min="1" max="50" />
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Standaard aantal LOTUS voor nieuwe diensten
+                                    Standaard aantal LOTUS voor nieuwe deelopdrachten
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -623,7 +623,7 @@
                         {
                             <div class="alert alert-warning">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                <strong>Let op:</strong> Deze opdracht heeft @editEvent.Shifts.Count dienst(en) gekoppeld. Het aanpassen van datums of tijden kan bestaande diensten beïnvloeden.
+                                <strong>Let op:</strong> Deze opdracht heeft @editEvent.Shifts.Count deelopdracht(en) gekoppeld. Het aanpassen van datums of tijden kan bestaande deelopdrachten beïnvloeden.
                             </div>
                         }
                     </div>
@@ -651,7 +651,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-clock me-2"></i>Nieuwe dienst
+                        <i class="fas fa-clock me-2"></i>Nieuwe deelopdracht
                     </h5>
                     <button type="button" class="btn-close" @onclick="CloseCreateShiftDialog"></button>
                 </div>
@@ -662,7 +662,7 @@
                         {
                             <div class="alert alert-info mb-4">
                                 <i class="fas fa-info-circle me-2"></i>
-                                <strong>Dienst aanmaken voor:</strong> @selectedEventForShift.Name
+                                <strong>Deelopdracht aanmaken voor:</strong> @selectedEventForShift.Name
                                 <br>
                                 <small class="text-muted">
                                     <i class="fas fa-calendar me-1"></i>@selectedEventForShift.StartDate.ToString("d MMMM yyyy HH:mm") - @selectedEventForShift.EndDate.ToString("d MMMM yyyy HH:mm")
@@ -675,7 +675,7 @@
                             {
                                 <div class="alert alert-success mb-4">
                                     <i class="fas fa-clock me-2"></i>
-                                    <strong>Bestaande bezetting:</strong> Deze opdracht heeft @selectedEventForShift.Shifts.Count bestaande dienst(en).
+                                    <strong>Bestaande bezetting:</strong> Deze opdracht heeft @selectedEventForShift.Shifts.Count bestaande deelopdracht(en).
                                     <div class="mt-2">
                                         @foreach (var existingShift in selectedEventForShift.Shifts.OrderBy(s => s.StartTime))
                                         {
@@ -696,7 +696,7 @@
                             {
                                 <div class="alert alert-info mb-4">
                                     <i class="fas fa-plus-circle me-2"></i>
-                                    <strong>Eerste dienst:</strong> Dit wordt de eerste dienst voor deze opdracht.
+                                    <strong>Eerste deelopdracht:</strong> Dit wordt de eerste deelopdracht voor deze opdracht.
                                     De voorgestelde tijden dekken de volledige duur van de opdracht.
                                 </div>
                             }
@@ -704,8 +704,8 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Dienstnaam *</label>
-                                <InputText @bind-Value="newShift.Name" class="form-control" placeholder="Voer een dienstnaam in" />
+                                <label class="form-label">Deelopdrachtnaam *</label>
+                                <InputText @bind-Value="newShift.Name" class="form-control" placeholder="Voer een deelopdrachtnaam in" />
                                 <ValidationMessage For="() => newShift.Name" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
@@ -730,7 +730,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">Beschrijving</label>
-                            <InputTextArea @bind-Value="newShift.Description" class="form-control" rows="3" placeholder="Omschrijving van de dienst (optioneel)" />
+                            <InputTextArea @bind-Value="newShift.Description" class="form-control" rows="3" placeholder="Omschrijving van de deelopdracht (optioneel)" />
                             <ValidationMessage For="() => newShift.Description" class="text-danger" />
                         </div>
 
@@ -754,7 +754,7 @@
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            <i class="fas fa-save me-2"></i>Dienst aanmaken
+                            <i class="fas fa-save me-2"></i>Deelopdracht aanmaken
                         </button>
                     </div>
                 </EditForm>
@@ -1280,7 +1280,7 @@
                 newShift = new Shift
                 {
                     EventId = fullEvent.Id,
-                    Name = $"Dienst - {fullEvent.Name}",
+                    Name = $"Deelopdracht - {fullEvent.Name}",
                     StartTime = availableTimeSlot.StartTime,
                     EndTime = availableTimeSlot.EndTime,
                     RequiredStaff = 1,
@@ -1295,7 +1295,7 @@
         {
             Console.WriteLine($"Error opening create shift dialog: {ex.Message}");
             hasError = true;
-            errorMessage = $"Opdracht laden voor dienst aanmaken mislukt: {ex.Message}";
+            errorMessage = $"Opdracht laden voor deelopdracht aanmaken mislukt: {ex.Message}";
         }
     }
 
@@ -1350,7 +1350,7 @@
         {
             Console.WriteLine($"Error creating shift: {ex.Message}");
             hasError = true;
-            errorMessage = $"Dienst aanmaken mislukt: {ex.Message}";
+            errorMessage = $"Deelopdracht aanmaken mislukt: {ex.Message}";
         }
         finally
         {

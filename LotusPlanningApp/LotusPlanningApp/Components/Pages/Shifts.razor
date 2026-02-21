@@ -8,7 +8,7 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<PageTitle>Diensten - LOTUS Planning App</PageTitle>
+<PageTitle>Deelopdrachten - LOTUS Planning App</PageTitle>
 
 @if (isLoading)
 {
@@ -26,16 +26,16 @@ else
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h1 class="h3 mb-0 text-primary">
-                            <i class="fas fa-clock me-2"></i>Alle diensten
+                            <i class="fas fa-clock me-2"></i>Alle deelopdrachten
                         </h1>
-                        <p class="text-muted">Beheer diensten en planning voor opdrachten</p>
+                        <p class="text-muted">Beheer deelopdrachten en planning voor opdrachten</p>
                     </div>
                     <div class="btn-group" role="group">
                         <button class="btn btn-outline-secondary" @onclick="RefreshShifts">
                             <i class="fas fa-refresh me-2"></i>Verversen
                         </button>
                         <a href="/events" class="btn btn-success">
-                            <i class="fas fa-plus me-2"></i>Opdracht en diensten aanmaken
+                            <i class="fas fa-plus me-2"></i>Opdracht en deelopdrachten aanmaken
                         </a>
                     </div>
                 </div>
@@ -49,7 +49,7 @@ else
                     <span class="input-group-text">
                         <i class="fas fa-search"></i>
                     </span>
-                          <input type="text" class="form-control" placeholder="Zoek diensten..." 
+                          <input type="text" class="form-control" placeholder="Zoek deelopdrachten..." 
                            @bind="searchTerm" @oninput="OnSearchChanged" />
                 </div>
             </div>
@@ -76,7 +76,7 @@ else
             <div class="col-md-2 mb-3">
                 <div class="d-flex align-items-center justify-content-end">
                     <small class="text-muted">
-                        @filteredShifts.Count van @allShifts.Count diensten
+                        @filteredShifts.Count van @allShifts.Count deelopdrachten
                     </small>
                 </div>
             </div>
@@ -86,8 +86,8 @@ else
         {
             <div class="text-center py-5">
                 <i class="fas fa-clock fa-4x text-muted mb-4"></i>
-                <h4 class="text-muted">Geen diensten gevonden</h4>
-                <p class="text-muted mb-4">Er zijn nog geen diensten aangemaakt. Maak eerst een opdracht en voeg daarna diensten toe.</p>
+                <h4 class="text-muted">Geen deelopdrachten gevonden</h4>
+                <p class="text-muted mb-4">Er zijn nog geen deelopdrachten aangemaakt. Maak eerst een opdracht en voeg daarna deelopdrachten toe.</p>
                 <a href="/events" class="btn btn-primary btn-lg">
                     <i class="fas fa-plus me-2"></i>Maak je eerste opdracht
                 </a>
@@ -97,7 +97,7 @@ else
         {
             <div class="text-center py-4">
                 <i class="fas fa-filter fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">Geen diensten gevonden voor deze filters</h5>
+                <h5 class="text-muted">Geen deelopdrachten gevonden voor deze filters</h5>
                 <p class="text-muted mb-3">Pas je zoekopdracht of filters aan.</p>
                 <button class="btn btn-outline-primary" @onclick="ClearFilters">
                     <i class="fas fa-times me-2"></i>Filters wissen
@@ -130,7 +130,7 @@ else
                                         @eventGroup.Key.Status
                                     </span>
                                     <small class="text-muted">
-                                        @eventGroup.Count() dienst(en)
+                                        @eventGroup.Count() deelopdracht(en)
                                     </small>
                                 </div>
                             </div>
@@ -212,7 +212,7 @@ else
                                                     <a href="/shifts/details/@shift.Id" class="btn btn-outline-primary" title="Details bekijken">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="/shifts/edit/@shift.Id" class="btn btn-outline-secondary" title="Dienst bewerken">
+                                                    <a href="/shifts/edit/@shift.Id" class="btn btn-outline-secondary" title="Deelopdracht bewerken">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </div>
@@ -238,14 +238,14 @@ else
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-secondary text-white">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-chart-bar me-2"></i>Samenvatting diensten
+                                <i class="fas fa-chart-bar me-2"></i>Samenvatting deelopdrachten
                             </h5>
                         </div>
                         <div class="card-body">
                             <div class="row text-center">
                                 <div class="col-md-2 col-6 mb-3">
                                     <h4 class="text-primary mb-0">@allShifts.Count</h4>
-                                    <small class="text-muted">Aantal diensten</small>
+                                    <small class="text-muted">Aantal deelopdrachten</small>
                                 </div>
                                 <div class="col-md-2 col-6 mb-3">
                                     <h4 class="text-success mb-0">@upcomingShifts</h4>

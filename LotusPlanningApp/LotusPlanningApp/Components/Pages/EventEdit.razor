@@ -188,8 +188,8 @@ else
                             {
                                 <div class="alert alert-warning">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
-                                    <strong>Let op:</strong> Deze opdracht heeft @eventToEdit.Shifts.Count dienst(en) toegewezen.
-                                    Wijzigingen in datum en tijd kunnen invloed hebben op bestaande diensten en LOTUS toewijzingen.
+                                    <strong>Let op:</strong> Deze opdracht heeft @eventToEdit.Shifts.Count deelopdracht(en) toegewezen.
+                                    Wijzigingen in datum en tijd kunnen invloed hebben op bestaande deelopdrachten en LOTUS toewijzingen.
                                 </div>
                             }
 
@@ -264,7 +264,7 @@ else
                             <div class="col-6">
                                 <div class="border-end">
                                     <h4 class="text-primary mb-0">@eventToEdit.Shifts.Count</h4>
-                                    <small class="text-muted">Aantal diensten</small>
+                                    <small class="text-muted">Aantal deelopdrachten</small>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -324,7 +324,7 @@ else
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-transparent border-0">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-clock me-2"></i>Gekoppelde diensten (@eventToEdit.Shifts.Count)
+                                <i class="fas fa-clock me-2"></i>Gekoppelde deelopdrachten (@eventToEdit.Shifts.Count)
                             </h5>
                         </div>
                         <div class="card-body">
@@ -332,7 +332,7 @@ else
                                 <table class="table table-hover align-middle">
                                     <thead class="table-light">
                                         <tr>
-                                            <th scope="col">Dienstnaam</th>
+                                            <th scope="col">Deelopdrachtnaam</th>
                                             <th scope="col">Datum & tijd</th>
                                             <th scope="col">LOTUS</th>
                                             <th scope="col">Status</th>
@@ -381,7 +381,7 @@ else
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
-                                                        <a href="/shifts/edit/@shift.Id" class="btn btn-outline-primary" title="Dienst bewerken">
+                                                        <a href="/shifts/edit/@shift.Id" class="btn btn-outline-primary" title="Deelopdracht bewerken">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                         <a href="/shifts/details/@shift.Id" class="btn btn-outline-info" title="Details bekijken">
@@ -416,7 +416,7 @@ else
                     <p>Weet je zeker dat je de opdracht "<strong>@eventToEdit?.Name</strong>" wilt annuleren?</p>
                     <p class="text-warning small">
                         <i class="fas fa-exclamation-triangle me-1"></i>
-                        Dit zet de status op "Geannuleerd" maar behoudt alle diensten en toewijzingen voor de administratie.
+                        Dit zet de status op "Geannuleerd" maar behoudt alle deelopdrachten en toewijzingen voor de administratie.
                         LOTUS moeten apart worden geïnformeerd.
                     </p>
                 </div>
