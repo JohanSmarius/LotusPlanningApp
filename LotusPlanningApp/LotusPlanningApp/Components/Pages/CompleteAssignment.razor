@@ -1,0 +1,348 @@
+@page "/assignments/complete/{AssignmentId:int}"
+@attribute [Authorize(Roles = "Admin,Lotus")]
+@using Application.Commands.StaffAssignments
+@using Application.Queries.StaffAssignments
+@using Entities
+@inject GetAllAssignmentsQueryHandler GetAllAssignmentsHandler
+@inject RecordAssignmentCompletionCommandHandler RecordCompletionHandler
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Opdracht afronden - LOTUS Planning App</PageTitle>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Laden...</span>
+        </div>
+    </div>
+}
+else if (assignment == null)
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Toewijzing niet gevonden</strong>
+                    <p class="mb-0">De gevraagde toewijzing is niet gevonden.</p>
+                </div>
+                <a href="/shifts" class="btn btn-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Terug naar deelopdrachten
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else if (isSaved)
+{
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center py-5">
+                    <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
+                    <h3 class="text-success">Gegevens opgeslagen!</h3>
+                    <p class="text-muted mb-4">De afronding is succesvol geregistreerd.</p>
+                    <a href="/shifts/details/@assignment.ShiftId" class="btn btn-primary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Terug naar deelopdracht
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/shifts" class="text-decoration-none">Deelopdrachten</a>
+                        </li>
+                        @if (assignment.Shift != null)
+                        {
+                            <li class="breadcrumb-item">
+                                <a href="/shifts/details/@assignment.ShiftId" class="text-decoration-none">@assignment.Shift.Name</a>
+                            </li>
+                        }
+                        <li class="breadcrumb-item active" aria-current="page">Opdracht afronden</li>
+                    </ol>
+                </nav>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0 text-primary">
+                        <i class="fas fa-clipboard-check me-2"></i>Opdracht afronden
+                    </h1>
+                    <button class="btn btn-outline-secondary" @onclick="GoBack">
+                        <i class="fas fa-arrow-left me-2"></i>Terug
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>@errorMessage
+                <button type="button" class="btn-close" @onclick="() => errorMessage = null" aria-label="Sluiten"></button>
+            </div>
+        }
+
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <!-- Assignment info card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Toewijzingsgegevens
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4 text-muted small">LOTUS</dt>
+                            <dd class="col-sm-8 fw-medium">@assignment.Staff?.FullName</dd>
+
+                            @if (assignment.Shift != null)
+                            {
+                                <dt class="col-sm-4 text-muted small">DEELOPDRACHT</dt>
+                                <dd class="col-sm-8 fw-medium">@assignment.Shift.Name</dd>
+
+                                @if (assignment.Shift.Event != null)
+                                {
+                                    <dt class="col-sm-4 text-muted small">OPDRACHT</dt>
+                                    <dd class="col-sm-8 fw-medium">@assignment.Shift.Event.Name</dd>
+                                }
+
+                                <dt class="col-sm-4 text-muted small">DATUM</dt>
+                                <dd class="col-sm-8 fw-medium">
+                                    @assignment.Shift.StartTime.ToString("dddd d MMMM yyyy HH:mm") – @assignment.Shift.EndTime.ToString("HH:mm")
+                                </dd>
+                            }
+
+                            <dt class="col-sm-4 text-muted small">STATUS</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge bg-@GetStatusColor(assignment.Status)">@assignment.Status</span>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- Completion form -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-car me-2"></i>Gereden kilometers
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="kmDriven" class="form-label">
+                                Aantal kilometers gereden vanuit huis
+                                <span class="text-muted">(optioneel)</span>
+                            </label>
+                            <div class="input-group" style="max-width: 200px;">
+                                <input id="kmDriven"
+                                       type="number"
+                                       class="form-control form-control-lg"
+                                       min="0"
+                                       max="9999"
+                                       placeholder="0"
+                                       @bind="kmDriven" />
+                                <span class="input-group-text">km</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer signature card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-signature me-2"></i>Handtekening klant
+                            <span class="fw-normal small ms-2">(optioneel)</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="customerName" class="form-label">Naam klantvertegenwoordiger</label>
+                            <input id="customerName"
+                                   type="text"
+                                   class="form-control"
+                                   placeholder="Naam klant"
+                                   maxlength="100"
+                                   @bind="customerSignedName" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-block">
+                                Handtekening
+                                <span class="text-muted small">(teken hieronder met vinger of stylus)</span>
+                            </label>
+                            <div class="border rounded bg-white" style="touch-action: none; cursor: crosshair;">
+                                <canvas id="signatureCanvas"
+                                        width="600"
+                                        height="200"
+                                        style="width: 100%; height: 200px; display: block; touch-action: none;">
+                                </canvas>
+                            </div>
+                            <div class="mt-2 d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="ClearSignature">
+                                    <i class="fas fa-eraser me-1"></i>Wissen
+                                </button>
+                                @if (!string.IsNullOrEmpty(signatureDataUrl))
+                                {
+                                    <span class="text-success small align-self-center">
+                                        <i class="fas fa-check-circle me-1"></i>Handtekening opgenomen
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save button -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+                    <button type="button" class="btn btn-outline-secondary me-md-2" @onclick="GoBack">
+                        <i class="fas fa-times me-2"></i>Annuleren
+                    </button>
+                    <button type="button" class="btn btn-success btn-lg" @onclick="SaveCompletion" disabled="@isSaving">
+                        @if (isSaving)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        }
+                        else
+                        {
+                            <i class="fas fa-save me-2"></i>
+                        }
+                        Opslaan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int AssignmentId { get; set; }
+
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    private StaffAssignment? assignment;
+    private bool isLoading = true;
+    private bool isSaving = false;
+    private bool isSaved = false;
+
+    private int? kmDriven;
+    private string? customerSignedName;
+    private string? signatureDataUrl;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var allAssignments = await GetAllAssignmentsHandler.Handle(new GetAllAssignmentsQuery());
+        assignment = allAssignments.FirstOrDefault(a => a.Id == AssignmentId);
+
+        // Pre-populate fields if data already exists
+        if (assignment != null)
+        {
+            kmDriven = assignment.KmDriven;
+            customerSignedName = assignment.CustomerSignedName;
+            signatureDataUrl = assignment.CustomerSignature;
+        }
+
+        isLoading = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !isLoading && assignment != null)
+        {
+            await JS.InvokeVoidAsync("initSignatureCanvas", "signatureCanvas", signatureDataUrl);
+        }
+    }
+
+    private async Task SaveCompletion()
+    {
+        if (assignment == null) return;
+
+        isSaving = true;
+        errorMessage = null;
+
+        try
+        {
+            // Capture current canvas content as data URL
+            signatureDataUrl = await JS.InvokeAsync<string>("getSignatureDataUrl", "signatureCanvas");
+
+            // Treat a blank canvas as no signature
+            if (signatureDataUrl == "data:,")
+            {
+                signatureDataUrl = null;
+            }
+
+            // If a signature is present, a name is required
+            if (!string.IsNullOrWhiteSpace(signatureDataUrl) && string.IsNullOrWhiteSpace(customerSignedName))
+            {
+                errorMessage = "Vul de naam van de klantvertegenwoordiger in bij een handtekening.";
+                isSaving = false;
+                return;
+            }
+
+            var command = new RecordAssignmentCompletionCommand(
+                AssignmentId,
+                kmDriven,
+                signatureDataUrl,
+                string.IsNullOrWhiteSpace(customerSignedName) ? null : customerSignedName.Trim());
+
+            var result = await RecordCompletionHandler.Handle(command, CancellationToken.None);
+
+            if (result != null)
+            {
+                isSaved = true;
+            }
+            else
+            {
+                errorMessage = "Opslaan mislukt. Probeer het opnieuw.";
+            }
+        }
+        catch (Exception)
+        {
+            errorMessage = "Er is een fout opgetreden bij het opslaan.";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private async Task ClearSignature()
+    {
+        signatureDataUrl = null;
+        await JS.InvokeVoidAsync("clearSignatureCanvas", "signatureCanvas");
+    }
+
+    private void GoBack()
+    {
+        if (assignment != null)
+        {
+            Navigation.NavigateTo($"/shifts/details/{assignment.ShiftId}");
+        }
+        else
+        {
+            Navigation.NavigateTo("/shifts");
+        }
+    }
+
+    private static string GetStatusColor(AssignmentStatus status) => status switch
+    {
+        AssignmentStatus.Assigned => "primary",
+        AssignmentStatus.Confirmed => "info",
+        AssignmentStatus.CheckedIn => "success",
+        AssignmentStatus.CheckedOut => "secondary",
+        AssignmentStatus.NoShow => "danger",
+        AssignmentStatus.Cancelled => "dark",
+        _ => "secondary"
+    };
+}
