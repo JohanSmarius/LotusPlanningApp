@@ -278,6 +278,24 @@ else
                                                             <i class="fas fa-calendar-plus me-1"></i>
                                                             Toegewezen: @assignment.AssignedAt.ToString("d MMMM yyyy HH:mm")
                                                         </div>
+                                                        @if (assignment.KmDriven.HasValue || !string.IsNullOrEmpty(assignment.CustomerSignedName))
+                                                        {
+                                                            <div class="small text-muted mt-1">
+                                                                @if (assignment.KmDriven.HasValue)
+                                                                {
+                                                                    <span class="me-3"><i class="fas fa-car me-1"></i>@assignment.KmDriven km</span>
+                                                                }
+                                                                @if (!string.IsNullOrEmpty(assignment.CustomerSignedName))
+                                                                {
+                                                                    <span><i class="fas fa-signature me-1"></i>@assignment.CustomerSignedName</span>
+                                                                }
+                                                            </div>
+                                                        }
+                                                        <div class="mt-2">
+                                                            <a href="/assignments/complete/@assignment.Id" class="btn btn-sm btn-outline-success">
+                                                                <i class="fas fa-clipboard-check me-1"></i>Afronden
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
