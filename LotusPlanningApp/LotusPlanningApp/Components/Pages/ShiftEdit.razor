@@ -90,7 +90,7 @@ else
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-clock me-2"></i>Dienstdetails
+                            <i class="fas fa-clock me-2"></i>Opdrachtdetails
                         </h5>
                     </div>
                     <div class="card-body">
@@ -697,7 +697,7 @@ else
             // Validate that shift times are within event duration
             if (editShift.StartTime < shift.Event.StartDate || editShift.EndTime > shift.Event.EndDate)
             {
-                Console.WriteLine("Diensttijden moeten binnen de duur van de opdracht vallen");
+                Console.WriteLine("Opdrachttijden moeten binnen de duur van de overkoepelende opdracht vallen");
                 return;
             }
 

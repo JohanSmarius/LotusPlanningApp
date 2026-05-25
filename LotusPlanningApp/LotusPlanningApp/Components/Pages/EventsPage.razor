@@ -1247,7 +1247,7 @@
                 StartTime = eventItem.StartDate,
                 EndTime = eventItem.EndDate,
                 RequiredStaff = 1,
-                Description = "Standaarddienst die de volledige opdrachtduur dekt",
+                Description = "Standaardopdracht die de volledige opdrachtduur dekt",
                 Status = ShiftStatus.Open
             };
 
@@ -1319,7 +1319,7 @@
             if (newShift.StartTime < selectedEventForShift.StartDate || newShift.EndTime > selectedEventForShift.EndDate)
             {
                 hasError = true;
-                errorMessage = "Diensttijden moeten binnen de opdrachtduur vallen";
+                errorMessage = "Opdrachttijden moeten binnen de opdrachtduur vallen";
                 return;
             }
 

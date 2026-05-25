@@ -14,16 +14,33 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="6f7985e8-637f-463e-8cbb-e17a45e340ea" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Entities/DomainException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/DomainException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Commands/Events/CreateEventCommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Commands/Events/CreateEventCommandHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Layout/NavMenu.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Layout/NavMenu.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventDetails.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventDetails.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventEdit.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventEdit.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventsPage.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventsPage.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftDetails.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftDetails.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftEdit.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftEdit.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/StaffDetails.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/StaffDetails.razor" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/johansmarius/Projects/LotusApp/LotusApp" value="37lIUCKQjAyzrmF6htMpUchUAf8" />
+    </persistenceIdMap>
   </component>
   <component name="DpaMonitoringSettings">
     <option name="firstShow" value="false" />
@@ -47,9 +64,6 @@
     &quot;accountId&quot;: &quot;9da32cb4-4c8a-4fee-b147-dbdaa6b18cd6&quot;
   }
 }</component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f7f191c8854e477a38a9c05043038ab48f9fee4ed0ba8d4a48b3f572a3a3/AddressBinder.cs" root0="FORCE_HIGHLIGHTING" />
-  </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -70,8 +84,13 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
@@ -84,6 +103,11 @@
     "settings.editor.splitter.proportion": "0.24451666",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
+    ]
   }
 }]]></component>
   <component name="RecapSpentCounter">
@@ -287,6 +311,7 @@
       <workItem from="1771681186602" duration="458000" />
       <workItem from="1771686675986" duration="234000" />
       <workItem from="1771687007442" duration="2117000" />
+      <workItem from="1779724565608" duration="2720000" />
     </task>
     <servers />
   </component>
@@ -295,6 +320,17 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>

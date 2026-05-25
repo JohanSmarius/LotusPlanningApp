@@ -295,7 +295,7 @@ else
                                                     <div class="btn-group btn-group-sm" role="group">
                                                         <button class="btn btn-outline-primary" 
                                                                 @onclick="() => EditShift(shift.Id)"
-                                                                title="Dienst bewerken">
+                                                                title="Opdracht bewerken">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
                                                         <button class="btn btn-outline-info" 
@@ -583,7 +583,7 @@ else
             if (newShift.StartTime < eventDetail.StartDate || newShift.EndTime > eventDetail.EndDate)
             {
                 // In a real app, show a toast notification or validation error
-                Console.WriteLine("Diensttijden moeten binnen de duur van de opdracht vallen");
+                Console.WriteLine("Tijden van opdracht moeten binnen de duur van de overkoepelende opdracht vallen");
                 return;
             }
 

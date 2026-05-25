@@ -44,11 +44,11 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
         // Create a shift to cover the entire event duration by default
         entity.Shifts.Add(new Shift
         {
-            Name = "Default Shift",
+            Name = "Volledige opdrachtduur",
             StartTime = newEvent.StartDate,
             EndTime = newEvent.EndDate,
             RequiredStaff = newEvent.RequiredStaffCount,
-            Description = "Default shift covering the entire event duration",
+            Description = "Deelopdracht voor de hele duur van de opdracht",
             Status = ShiftStatus.Open,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
