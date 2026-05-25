@@ -124,7 +124,7 @@ else
                                         <i class="fas fa-map-marker-alt me-1"></i>@eventGroup.Key.Location
                                     </small>
                                     <small class="text-muted">
-                                        <i class="fas fa-calendar me-1"></i>@eventGroup.Key.StartDate.ToString("d MMMM") - @eventGroup.Key.EndDate.ToString("d MMMM yyyy")
+                                        <i class="fas fa-calendar me-1"></i>@eventGroup.Key.StartDate.ToString("M") - @eventGroup.Key.EndDate.ToString("d")
                                     </small>
                                     <span class="badge bg-@GetEventStatusColor(eventGroup.Key.Status)">
                                         @eventGroup.Key.Status
@@ -172,11 +172,11 @@ else
                                             <div class="small text-muted mb-2">
                                                 <div>
                                                     <i class="fas fa-calendar me-1"></i>
-                                                    @shift.StartTime.ToString("d MMMM yyyy")
+                                                    @shift.StartTime.ToString("d")
                                                 </div>
                                                 <div>
                                                     <i class="fas fa-clock me-1"></i>
-                                                    @shift.StartTime.ToString("HH:mm") - @shift.EndTime.ToString("HH:mm")
+                                                    @shift.StartTime.ToString("t") - @shift.EndTime.ToString("t")
                                                     <small class="text-muted">(@CalculateShiftDuration(shift))</small>
                                                 </div>
                                             </div>

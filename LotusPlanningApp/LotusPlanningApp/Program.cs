@@ -21,6 +21,11 @@ using Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 var dutchCulture = new CultureInfo("nl-NL");
+dutchCulture.DateTimeFormat.ShortDatePattern = "dd-MM-yyyy";
+dutchCulture.DateTimeFormat.LongDatePattern = "d";
+dutchCulture.DateTimeFormat.ShortTimePattern = "t";
+dutchCulture.DateTimeFormat.LongTimePattern = "HH:mm:ss";
+dutchCulture.DateTimeFormat.MonthDayPattern = "dd-MM";
 CultureInfo.DefaultThreadCurrentCulture = dutchCulture;
 CultureInfo.DefaultThreadCurrentUICulture = dutchCulture;
 

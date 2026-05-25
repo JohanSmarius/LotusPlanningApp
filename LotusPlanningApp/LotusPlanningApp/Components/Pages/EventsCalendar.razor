@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 text-center">
-                        <h4 class="mb-0">@currentMonth.ToString("d MMMM yyyy")</h4>
+                        <h4 class="mb-0">@currentMonth.ToString("Y")</h4>
                     </div>
                     <div class="col-md-4 text-end">
                         <div class="input-group" style="max-width: 250px; float: right;">
@@ -129,7 +129,7 @@
                                                          title="@evt.Name - @evt.Location"
                                                          @onclick="() => NavigateToDetails(evt.Id)"
                                                          @onclick:stopPropagation="true">
-                                                        <small class="event-time">@evt.StartDate.ToString("HH:mm")</small>
+                                                        <small class="event-time">@evt.StartDate.ToString("t")</small>
                                                         <small class="event-title">@evt.Name</small>
                                                         @if (HasUnplannedShifts(evt))
                                                         {
@@ -164,7 +164,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
                             <i class="fas fa-calendar-day me-2"></i>
-                            Opdrachten op @selectedDate.Value.ToString("dddd d MMMM yyyy")
+                            Opdrachten op @selectedDate.Value.ToString("d")
                         </h5>
                         <button class="btn btn-sm btn-light" @onclick="ClearDateSelection">
                             <i class="fas fa-times"></i>
@@ -195,7 +195,7 @@
                                             </div>
                                             <p class="card-text mb-2">
                                                 <i class="fas fa-clock text-muted me-2"></i>
-                                                <small>@eventItem.StartDate.ToString("HH:mm") - @eventItem.EndDate.ToString("HH:mm")</small>
+                                                <small>@eventItem.StartDate.ToString("t") - @eventItem.EndDate.ToString("t")</small>
                                             </p>
                                             <p class="card-text mb-2">
                                                 <i class="fas fa-map-marker-alt text-muted me-2"></i>
