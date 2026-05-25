@@ -438,9 +438,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Klant</label>
+                                <label class="form-label">Opdrachtgever</label>
                                 <select class="form-select" @bind="selectedCustomerId" @bind:after="OnCustomerSelected">
-                                    <option value="0">-- Selecteer een klant (optioneel) --</option>
+                                    <option value="0">-- Selecteer een opdrachtgever (optioneel) --</option>
                                     @foreach (var customer in customers)
                                     {
                                         <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
@@ -448,7 +448,7 @@
                                 </select>
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Als je een klant selecteert, worden contactgegevens automatisch ingevuld
+                                    Als je een opdrachtgever selecteert, worden contactgegevens automatisch ingevuld
                                 </div>
                             </div>
                         </div>
@@ -560,9 +560,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Klant</label>
+                                <label class="form-label">Opdrachtgever</label>
                                 <select class="form-select" @bind="selectedCustomerIdForEdit" @bind:after="OnCustomerSelectedForEdit">
-                                    <option value="0">-- Selecteer een klant (optioneel) --</option>
+                                    <option value="0">-- Selecteer een opdrachtgever (optioneel) --</option>
                                     @foreach (var customer in customers)
                                     {
                                         <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
@@ -570,7 +570,7 @@
                                 </select>
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Als je een klant selecteert, worden contactgegevens automatisch ingevuld
+                                    Als je een opdrachtgever selecteert, worden contactgegevens automatisch ingevuld
                                 </div>
                             </div>
                         </div>
