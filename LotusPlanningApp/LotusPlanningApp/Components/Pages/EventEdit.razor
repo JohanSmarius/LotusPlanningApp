@@ -219,9 +219,9 @@ else
                             <label class="form-label text-muted small">ORIGINAL DATES</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @eventToEdit.StartDate.ToString("d MMMM yyyy HH:mm")
+                                @eventToEdit.StartDate.ToString("g")
                                 <br>
-                                <small class="text-muted">tot @eventToEdit.EndDate.ToString("d MMMM yyyy HH:mm")</small>
+                                <small class="text-muted">tot @eventToEdit.EndDate.ToString("g")</small>
                             </div>
                         </div>
 
@@ -246,7 +246,7 @@ else
                             <label class="form-label text-muted small">LAATST BIJGEWERKT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @(eventToEdit.UpdatedAt?.ToString("d MMMM yyyy HH:mm") ?? eventToEdit.CreatedAt.ToString("d MMMM yyyy HH:mm"))
+                                @(eventToEdit.UpdatedAt?.ToString("g") ?? eventToEdit.CreatedAt.ToString("g"))
                             </div>
                         </div>
                     </div>
@@ -353,9 +353,9 @@ else
                                                     }
                                                 </td>
                                                 <td>
-                                                    <span class="fw-medium">@shift.StartTime.ToString("d MMMM HH:mm")</span>
+                                                    <span class="fw-medium">@shift.StartTime.ToString("g")</span>
                                                     <br>
-                                                    <small class="text-muted">tot @shift.EndTime.ToString("d MMMM HH:mm")</small>
+                                                    <small class="text-muted">tot @shift.EndTime.ToString("g")</small>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">

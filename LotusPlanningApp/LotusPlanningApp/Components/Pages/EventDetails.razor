@@ -92,10 +92,10 @@ else
                             <label class="form-label text-muted small">STARTDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @eventDetail.StartDate.ToString("dddd d MMMM yyyy")
+                                @eventDetail.StartDate.ToString("d")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @eventDetail.StartDate.ToString("HH:mm")
+                                @eventDetail.StartDate.ToString("t")
                             </div>
                         </div>
 
@@ -103,10 +103,10 @@ else
                             <label class="form-label text-muted small">EINDDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @eventDetail.EndDate.ToString("dddd d MMMM yyyy")
+                                @eventDetail.EndDate.ToString("d")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @eventDetail.EndDate.ToString("HH:mm")
+                                @eventDetail.EndDate.ToString("t")
                             </div>
                         </div>
 
@@ -157,7 +157,7 @@ else
                             <label class="form-label text-muted small">AANGEMAAKT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @eventDetail.CreatedAt.ToString("d MMMM yyyy HH:mm")
+                                @eventDetail.CreatedAt.ToString("g")
                             </div>
                         </div>
                     </div>
@@ -254,17 +254,17 @@ else
                                                     }
                                                 </td>
                                                 <td>
-                                                    <span class="fw-medium">@shift.StartTime.ToString("d MMMM yyyy")</span>
+                                                    <span class="fw-medium">@shift.StartTime.ToString("d")</span>
                                                     @if (shift.StartTime.Date != shift.EndTime.Date)
                                                     {
                                                         <br>
-                                                        <small class="text-muted">tot @shift.EndTime.ToString("d MMMM")</small>
+                                                        <small class="text-muted">tot @shift.EndTime.ToString("M")</small>
                                                     }
                                                 </td>
                                                 <td>
-                                                    <span class="fw-medium">@shift.StartTime.ToString("HH:mm")</span>
+                                                    <span class="fw-medium">@shift.StartTime.ToString("t")</span>
                                                     <br>
-                                                    <small class="text-muted">tot @shift.EndTime.ToString("HH:mm")</small>
+                                                    <small class="text-muted">tot @shift.EndTime.ToString("t")</small>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
@@ -359,7 +359,7 @@ else
                             <strong>Deelopdracht aanmaken voor:</strong> @eventDetail.Name
                             <br>
                             <small class="text-muted">
-                                <i class="fas fa-calendar me-1"></i>@eventDetail.StartDate.ToString("d MMMM yyyy HH:mm") - @eventDetail.EndDate.ToString("d MMMM yyyy HH:mm")
+                                <i class="fas fa-calendar me-1"></i>@eventDetail.StartDate.ToString("g") - @eventDetail.EndDate.ToString("g")
                                 <br>
                                 <i class="fas fa-map-marker-alt me-1"></i>@eventDetail.Location
                             </small>
@@ -400,7 +400,7 @@ else
                         <div class="alert alert-warning">
                             <i class="fas fa-exclamation-triangle me-2"></i>
                             <strong>Let op:</strong> Zorg dat de deelopdrachttijden binnen de duur van de opdracht vallen 
-                            (@eventDetail.StartDate.ToString("d MMMM HH:mm") - @eventDetail.EndDate.ToString("d MMMM HH:mm")).
+                            (@eventDetail.StartDate.ToString("g") - @eventDetail.EndDate.ToString("g")).
                         </div>
                     </div>
                     <div class="modal-footer">

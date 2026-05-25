@@ -160,14 +160,14 @@
                                     @if (staffMember.CertificationExpiry.HasValue)
                                     {
                                         <small class="text-muted ms-2">
-                                            Vervalt: @staffMember.CertificationExpiry.Value.ToString("d MMMM yyyy")
+                                            Vervalt: @staffMember.CertificationExpiry.Value.ToString("d")
                                         </small>
                                     }
                                 </div>
                             }
                             <div class="small text-muted">
                                 <i class="fas fa-calendar-plus me-1"></i>
-                                Lid sinds: @staffMember.CreatedAt.ToString("d MMMM yyyy")
+                                Lid sinds: @staffMember.CreatedAt.ToString("d")
                             </div>
                         </div>
                     </div>

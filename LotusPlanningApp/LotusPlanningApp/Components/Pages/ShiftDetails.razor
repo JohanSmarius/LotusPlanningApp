@@ -106,10 +106,10 @@ else
                             <label class="form-label text-muted small">STARTDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @shiftDetail.StartTime.ToString("dddd d MMMM yyyy")
+                                @shiftDetail.StartTime.ToString("d")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @shiftDetail.StartTime.ToString("HH:mm")
+                                @shiftDetail.StartTime.ToString("t")
                             </div>
                         </div>
 
@@ -117,10 +117,10 @@ else
                             <label class="form-label text-muted small">EINDDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @shiftDetail.EndTime.ToString("dddd d MMMM yyyy")
+                                @shiftDetail.EndTime.ToString("d")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @shiftDetail.EndTime.ToString("HH:mm")
+                                @shiftDetail.EndTime.ToString("t")
                             </div>
                         </div>
 
@@ -152,7 +152,7 @@ else
                             <label class="form-label text-muted small">AANGEMAAKT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @shiftDetail.CreatedAt.ToString("d MMMM yyyy HH:mm")
+                                @shiftDetail.CreatedAt.ToString("g")
                             </div>
                         </div>
 
@@ -276,7 +276,7 @@ else
                                                         </div>
                                                         <div class="small text-muted mt-1">
                                                             <i class="fas fa-calendar-plus me-1"></i>
-                                                            Toegewezen: @assignment.AssignedAt.ToString("d MMMM yyyy HH:mm")
+                                                            Toegewezen: @assignment.AssignedAt.ToString("g")
                                                         </div>
                                                     </div>
                                                 </div>

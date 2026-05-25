@@ -161,17 +161,17 @@
                                 <div class="mb-3">
                                     <i class="fas fa-calendar text-muted me-2"></i>
                                     <span class="text-muted">
-                                        @eventItem.StartDate.ToString("d MMMM yyyy")
+                                        @eventItem.StartDate.ToString("d")
                                     </span>
                                     @if (eventItem.StartDate.Date != eventItem.EndDate.Date)
                                     {
-                                        <span class="text-muted"> - @eventItem.EndDate.ToString("d MMMM yyyy")</span>
+                                        <span class="text-muted"> - @eventItem.EndDate.ToString("d")</span>
                                     }
                                 </div>
                                 <div class="mb-3">
                                     <i class="fas fa-clock text-muted me-2"></i>
                                     <span class="text-muted">
-                                        @eventItem.StartDate.ToString("HH:mm") - @eventItem.EndDate.ToString("HH:mm")
+                                        @eventItem.StartDate.ToString("t") - @eventItem.EndDate.ToString("t")
                                     </span>
                                 </div>
                                 @if (!string.IsNullOrEmpty(eventItem.Description))
@@ -260,12 +260,12 @@
                                             }
                                         </td>
                                         <td>
-                                            <div class="fw-medium">@eventItem.StartDate.ToString("d MMMM yyyy")</div>
+                                            <div class="fw-medium">@eventItem.StartDate.ToString("d")</div>
                                             <small class="text-muted">
-                                                @eventItem.StartDate.ToString("HH:mm") - @eventItem.EndDate.ToString("HH:mm")
+                                                @eventItem.StartDate.ToString("t") - @eventItem.EndDate.ToString("t")
                                                 @if (eventItem.StartDate.Date != eventItem.EndDate.Date)
                                                 {
-                                                    <text><br/>tot @eventItem.EndDate.ToString("d MMMM")</text>
+                                                    <text><br/>tot @eventItem.EndDate.ToString("M")</text>
                                                 }
                                             </small>
                                         </td>
@@ -665,7 +665,7 @@
                                 <strong>Deelopdracht aanmaken voor:</strong> @selectedEventForShift.Name
                                 <br>
                                 <small class="text-muted">
-                                    <i class="fas fa-calendar me-1"></i>@selectedEventForShift.StartDate.ToString("d MMMM yyyy HH:mm") - @selectedEventForShift.EndDate.ToString("d MMMM yyyy HH:mm")
+                                    <i class="fas fa-calendar me-1"></i>@selectedEventForShift.StartDate.ToString("g") - @selectedEventForShift.EndDate.ToString("g")
                                     <br>
                                     <i class="fas fa-map-marker-alt me-1"></i>@selectedEventForShift.Location
                                 </small>
@@ -681,7 +681,7 @@
                                         {
                                             <small class="d-block text-muted">
                                                 <i class="fas fa-arrow-right me-1"></i>
-                                                @existingShift.Name: @existingShift.StartTime.ToString("HH:mm") - @existingShift.EndTime.ToString("HH:mm")
+                                                @existingShift.Name: @existingShift.StartTime.ToString("t") - @existingShift.EndTime.ToString("t")
                                                 (@(Math.Round((existingShift.EndTime - existingShift.StartTime).TotalHours, 1))h)
                                             </small>
                                         }
@@ -739,7 +739,7 @@
                             <strong>Slimme planningssuggestie:</strong> De voorgestelde tijden gebruiken de eerstvolgende beschikbare periode.
                             <br>
                             <small class="text-muted">
-                                Duur opdracht: @(selectedEventForShift?.StartDate.ToString("d MMMM HH:mm")) - @(selectedEventForShift?.EndDate.ToString("d MMMM HH:mm"))
+                                Duur opdracht: @(selectedEventForShift?.StartDate.ToString("g")) - @(selectedEventForShift?.EndDate.ToString("g"))
                                 @if (selectedEventForShift != null && selectedEventForShift.Shifts.Any())
                                 {
                                     <br />@($"Huidig: {selectedEventForShift.Shifts.Count}")
