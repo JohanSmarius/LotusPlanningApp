@@ -23,6 +23,10 @@ public class StaffAssignment
     [StringLength(300)]
     public string? Notes { get; set; }
 
+    [EmailAddress]
+    [StringLength(255)]
+    public string? InvoiceEmail { get; set; }
+
     public DateTime AssignedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime? UpdatedAt { get; set; }

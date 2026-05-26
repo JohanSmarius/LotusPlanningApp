@@ -22,11 +22,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6f7985e8-637f-463e-8cbb-e17a45e340ea" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/dataSources/813c4a0f-f476-42df-a483-1014b0112fc4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/dataSources/813c4a0f-f476-42df-a483-1014b0112fc4.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Layout/NavMenu.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Layout/NavMenu.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application.Tests/Commands/Customers/UpdateCustomerCommandHandlerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application.Tests/Commands/Customers/UpdateCustomerCommandHandlerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/DataAdapters/CustomerDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/DataAdapters/CustomerDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/DataAdapters/CustomerMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/DataAdapters/CustomerMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/DataAdapters/EventDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/DataAdapters/EventDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/DataAdapters/EventMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/DataAdapters/EventMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/Customer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Customer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/Event.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Event.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/StaffAssignment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/StaffAssignment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Infrastructure.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Infrastructure.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Migrations/20260104203646_InitialSqlite.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Migrations/20260104203646_InitialSqlite.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Migrations/20260104205600_AddRequiredStaffCountToEvent.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Migrations/20260104205600_AddRequiredStaffCountToEvent.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Account/Pages/Register.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Account/Pages/Register.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/Customers.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/Customers.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventEdit.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventEdit.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventsPage.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventsPage.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftDetails.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftDetails.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftEdit.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftEdit.razor" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +57,11 @@
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -56,6 +77,9 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b797502679b4aa8376708777b4db8d11e31a798d7e6bead76c15bdfa30834892/RelationalLoggerExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f7f191c8854e477a38a9c05043038ab48f9fee4ed0ba8d4a48b3f572a3a3/AddressBinder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f9d2f95d72fa884d8b6ddefc717c56da3657fbb2d5fb683656c3589eb6587/Debugger.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
@@ -84,7 +108,7 @@
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "factuur-email",
     "junie.onboarding.icon.badge.shown": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -305,6 +329,15 @@
       <workItem from="1771686675986" duration="234000" />
       <workItem from="1771687007442" duration="2117000" />
     </task>
+    <task id="LOCAL-00001" summary="Refactor terminology from &quot;klanten&quot; to &quot;opdrachtgevers&quot; across UI components for improved clarity and consistency">
+      <option name="closed" value="true" />
+      <created>1779728020898</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1779728020898</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -326,7 +359,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Configure .idea workspace settings for the LotusApp project" />
-    <option name="LAST_COMMIT_MESSAGE" value="Configure .idea workspace settings for the LotusApp project" />
+    <MESSAGE value="Refactor terminology from &quot;klanten&quot; to &quot;opdrachtgevers&quot; across UI components for improved clarity and consistency" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor terminology from &quot;klanten&quot; to &quot;opdrachtgevers&quot; across UI components for improved clarity and consistency" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

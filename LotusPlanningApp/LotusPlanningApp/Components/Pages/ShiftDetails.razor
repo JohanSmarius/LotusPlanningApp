@@ -188,7 +188,7 @@ else
                             <div class="progress" style="height: 8px;">
                                 <div class="progress-bar bg-@GetStaffingLevelColor()" 
                                      role="progressbar" 
-                                     style="width: @GetStaffingPercentage()%" 
+                                     style="width:@(GetStaffingPercentage())%" 
                                      aria-valuenow="@shiftDetail.StaffAssignments.Count" 
                                      aria-valuemin="0" 
                                      aria-valuemax="@shiftDetail.RequiredStaff">
@@ -269,6 +269,10 @@ else
                                                         </div>
                                                         <div class="small text-muted">
                                                             <i class="fas fa-envelope me-1"></i>@assignment.Staff.Email
+                                                            @if (!string.IsNullOrWhiteSpace(assignment.InvoiceEmail))
+                                                            {
+                                                                <br><i class="fas fa-file-invoice me-1"></i><span>Factuur: @assignment.InvoiceEmail</span>
+                                                            }
                                                             @if (!string.IsNullOrEmpty(assignment.Staff.Phone))
                                                             {
                                                                 <br><i class="fas fa-phone me-1"></i>@assignment.Staff.Phone
@@ -419,4 +423,5 @@ else
         if (shiftDetail == null || shiftDetail.RequiredStaff == 0) return 0;
         return (int)((double)shiftDetail.StaffAssignments.Count / shiftDetail.RequiredStaff * 100);
     }
+
 }

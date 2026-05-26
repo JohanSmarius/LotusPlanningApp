@@ -476,6 +476,15 @@
                                     Vereist voor statusmeldingen (Gepland, Bevestigd)
                                 </div>
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">E-mail factuur</label>
+                                <InputText @bind-Value="newEvent.InvoiceEmail" class="form-control" placeholder="E-mailadres contactpersoon" type="email" />
+                                <ValidationMessage For="() => newEvent.InvoiceEmail" class="text-danger" />
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Vereist voor statusmeldingen (Gepland, Bevestigd)
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -875,6 +884,7 @@
             {
                 editEvent.ContactPerson = customer.FullName;
                 editEvent.ContactEmail = customer.Email;
+                editEvent.InvoiceEmail = customer.InvoiceEmail;
                 editEvent.ContactPhone = customer.PhoneNumber;
                 editEvent.CustomerId = customer.Id;
             }
@@ -1143,6 +1153,7 @@
                     ContactPerson = fullEvent.ContactPerson,
                     ContactPhone = fullEvent.ContactPhone,
                     ContactEmail = fullEvent.ContactEmail,
+                    InvoiceEmail = fullEvent.InvoiceEmail,
                     CustomerId = fullEvent.CustomerId,
                     CreatedAt = fullEvent.CreatedAt,
                     UpdatedAt = fullEvent.UpdatedAt,

@@ -38,6 +38,10 @@ public class Event
     [StringLength(255)]
     public string? ContactEmail { get; set; }
 
+    [EmailAddress]
+    [StringLength(255)]
+    public string? InvoiceEmail { get; set; }
+
     public bool NotificationSent { get; set; } = false;
 
     [Range(1, 50)]

@@ -212,6 +212,14 @@
                                 <ValidationMessage For="() => customerForm.Email" class="text-danger" />
                             </div>
                             <div class="col-md-6 mb-3">
+                                <label class="form-label">Factuur e-mail</label>
+                                <InputText @bind-Value="customerForm.InvoiceEmail" class="form-control" type="email" placeholder="factuur@example.com" />
+                                <ValidationMessage For="() => customerForm.InvoiceEmail" class="text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Telefoon</label>
                                 <InputText @bind-Value="customerForm.PhoneNumber" class="form-control" placeholder="Telefoonnummer" />
                                 <ValidationMessage For="() => customerForm.PhoneNumber" class="text-danger" />
@@ -444,6 +452,7 @@
             FirstName = customer.FirstName,
             LastName = customer.LastName,
             Email = customer.Email,
+            InvoiceEmail = customer.InvoiceEmail,
             PhoneNumber = customer.PhoneNumber,
             Company = customer.Company,
             Address = customer.Address,

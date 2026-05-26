@@ -230,6 +230,12 @@ else
                                                             <i class="fas fa-phone me-1"></i>@assignment.Staff.Phone
                                                         </small>
                                                     }
+                                                    @if (!string.IsNullOrWhiteSpace(assignment.InvoiceEmail))
+                                                    {
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-file-invoice me-1"></i>Factuur e-mail: @assignment.InvoiceEmail
+                                                        </small>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -374,6 +380,13 @@ else
                                                                 </select>
                                                             </div>
                                                         }
+                                                        <div class="mt-2">
+                                                            <label class="form-label small mb-1">Factuur e-mail voor deze toewijzing:</label>
+                                                            <InputText class="form-control form-control-sm"
+                                                                       @bind-Value="staffInvoiceEmailSelections[staffMember.Id]"
+                                                                       type="email"
+                                                                       placeholder="bijv. factuur@organisatie.nl" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -445,6 +458,7 @@ else
     private List<Entities.Staff> filteredAvailableStaff = new();
     private Entities.StaffAssignment? staffToRemove;
     private Dictionary<int, StaffRole> staffRoleSelections = new();
+    private Dictionary<int, string> staffInvoiceEmailSelections = new();
 
     private string staffSearchTerm = string.Empty;
     private string staffRoleFilter = string.Empty;
@@ -530,6 +544,7 @@ else
                     availableStaffList.Add(staffMember);
                     // Initialize role selection with default LOTUS role
                     staffRoleSelections[staffMember.Id] = StaffRole.LOTUS;
+                    staffInvoiceEmailSelections[staffMember.Id] = staffMember.Email;
                 }
             }
 
@@ -599,6 +614,7 @@ else
         availableStaff.Clear();
         filteredAvailableStaff.Clear();
         staffRoleSelections.Clear();
+        staffInvoiceEmailSelections.Clear();
         StateHasChanged();
     }
 
@@ -610,12 +626,19 @@ else
             var selectedRole = staffRoleSelections.TryGetValue(staffMember.Id, out var role) 
                 ? role 
                 : StaffRole.LOTUS;
+            var selectedInvoiceEmail = staffInvoiceEmailSelections.TryGetValue(staffMember.Id, out var invoiceEmail)
+                ? invoiceEmail
+                : staffMember.Email;
+            var normalizedInvoiceEmail = string.IsNullOrWhiteSpace(selectedInvoiceEmail)
+                ? null
+                : selectedInvoiceEmail.Trim();
 
             var assignment = new Entities.StaffAssignment
             {
                 ShiftId = ShiftId,
                 StaffId = staffMember.Id,
                 Role = selectedRole,
+                InvoiceEmail = normalizedInvoiceEmail,
                 Status = AssignmentStatus.Assigned
             };
 
@@ -629,6 +652,7 @@ else
             // Remove from available staff and role selection
             availableStaff.Remove(staffMember);
             staffRoleSelections.Remove(staffMember.Id);
+            staffInvoiceEmailSelections.Remove(staffMember.Id);
             ApplyStaffFilters();
             
             // Close dialog if shift is now full

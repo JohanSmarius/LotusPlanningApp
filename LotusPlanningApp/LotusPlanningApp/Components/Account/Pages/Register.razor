@@ -192,6 +192,7 @@
                 FirstName = user.FirstName ?? "",
                 LastName = user.LastName ?? "",
                 Email = user.Email ?? "",
+                InvoiceEmail = user.Email,
                 Company = Input.CompanyName ?? "", // Validated above, but use null-coalescing for safety
                 UserId = user.Id
             };

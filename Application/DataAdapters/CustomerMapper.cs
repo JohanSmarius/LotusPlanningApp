@@ -18,6 +18,7 @@ public static class CustomerMapper
             FirstName = customer.FirstName,
             LastName = customer.LastName,
             Email = customer.Email,
+            InvoiceEmail = customer.InvoiceEmail,
             PhoneNumber = customer.PhoneNumber,
             Company = customer.Company,
             Address = customer.Address,
@@ -39,6 +40,7 @@ public static class CustomerMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Email = dto.Email,
+            InvoiceEmail = dto.InvoiceEmail,
             PhoneNumber = dto.PhoneNumber,
             Company = dto.Company,
             Address = dto.Address,
@@ -57,6 +59,7 @@ public static class CustomerMapper
         customer.FirstName = dto.FirstName;
         customer.LastName = dto.LastName;
         customer.Email = dto.Email;
+        customer.InvoiceEmail = dto.InvoiceEmail;
         customer.PhoneNumber = dto.PhoneNumber;
         customer.Company = dto.Company;
         customer.Address = dto.Address;

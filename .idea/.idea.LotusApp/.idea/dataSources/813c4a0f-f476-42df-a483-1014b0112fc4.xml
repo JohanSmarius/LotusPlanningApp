@@ -568,7 +568,7 @@
     </routine>
     <schema id="214" parent="1" name="main">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2026-05-25.16:37:37</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2026-05-25.19:23:56</LastIntrospectionLocalTimestamp>
     </schema>
     <argument id="215" parent="14">
       <ArgumentDirection>R</ArgumentDirection>
@@ -2247,353 +2247,365 @@ Name</ColNames>
       <Position>13</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <index id="734" parent="635" name="IX_Customers_Email">
+    <column id="734" parent="635" name="InvoiceEmail">
+      <Position>14</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <index id="735" parent="635" name="IX_Customers_Email">
       <ColNames>Email</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="735" parent="635" name="PK_Customers">
+    <key id="736" parent="635" name="PK_Customers">
       <ColNames>Id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="736" parent="636" name="Id">
+    <column id="737" parent="636" name="Id">
       <AutoIncrement>1</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="737" parent="636" name="Name">
+    <column id="738" parent="636" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="738" parent="636" name="StartDate">
+    <column id="739" parent="636" name="StartDate">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="739" parent="636" name="EndDate">
+    <column id="740" parent="636" name="EndDate">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="740" parent="636" name="Location">
+    <column id="741" parent="636" name="Location">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="741" parent="636" name="Description">
+    <column id="742" parent="636" name="Description">
       <Position>6</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="742" parent="636" name="Status">
+    <column id="743" parent="636" name="Status">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="743" parent="636" name="ContactPerson">
+    <column id="744" parent="636" name="ContactPerson">
       <Position>8</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="744" parent="636" name="ContactPhone">
+    <column id="745" parent="636" name="ContactPhone">
       <Position>9</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="745" parent="636" name="ContactEmail">
+    <column id="746" parent="636" name="ContactEmail">
       <Position>10</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="746" parent="636" name="NotificationSent">
+    <column id="747" parent="636" name="NotificationSent">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="747" parent="636" name="CreatedAt">
+    <column id="748" parent="636" name="CreatedAt">
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="748" parent="636" name="UpdatedAt">
+    <column id="749" parent="636" name="UpdatedAt">
       <Position>13</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="749" parent="636" name="CustomerId">
+    <column id="750" parent="636" name="CustomerId">
       <Position>14</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="750" parent="636" name="CancellationRequested">
+    <column id="751" parent="636" name="CancellationRequested">
       <NotNull>1</NotNull>
       <Position>15</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="751" parent="636" name="CancellationRequestedAt">
+    <column id="752" parent="636" name="CancellationRequestedAt">
       <Position>16</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="752" parent="636" name="CancellationReason">
+    <column id="753" parent="636" name="CancellationReason">
       <Position>17</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="753" parent="636" name="RequiredStaffCount">
+    <column id="754" parent="636" name="RequiredStaffCount">
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <foreign-key id="754" parent="636" name="FK_Events_Customers_CustomerId">
+    <column id="755" parent="636" name="InvoiceEmail">
+      <Position>19</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <foreign-key id="756" parent="636" name="FK_Events_Customers_CustomerId">
       <ColNames>CustomerId</ColNames>
       <OnDelete>set-null</OnDelete>
       <RefColNames>Id</RefColNames>
       <RefTableName>Customers</RefTableName>
     </foreign-key>
-    <index id="755" parent="636" name="IX_Events_StartDate">
+    <index id="757" parent="636" name="IX_Events_StartDate">
       <ColNames>StartDate</ColNames>
     </index>
-    <index id="756" parent="636" name="IX_Events_CustomerId">
+    <index id="758" parent="636" name="IX_Events_CustomerId">
       <ColNames>CustomerId</ColNames>
     </index>
-    <key id="757" parent="636" name="PK_Events">
+    <key id="759" parent="636" name="PK_Events">
       <ColNames>Id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="758" parent="637" name="Id">
+    <column id="760" parent="637" name="Id">
       <AutoIncrement>1</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="759" parent="637" name="EventId">
+    <column id="761" parent="637" name="EventId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="760" parent="637" name="Name">
+    <column id="762" parent="637" name="Name">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="761" parent="637" name="StartTime">
+    <column id="763" parent="637" name="StartTime">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="762" parent="637" name="EndTime">
+    <column id="764" parent="637" name="EndTime">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="763" parent="637" name="RequiredStaff">
+    <column id="765" parent="637" name="RequiredStaff">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="764" parent="637" name="Description">
+    <column id="766" parent="637" name="Description">
       <Position>7</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="765" parent="637" name="Status">
+    <column id="767" parent="637" name="Status">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="766" parent="637" name="CreatedAt">
+    <column id="768" parent="637" name="CreatedAt">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="767" parent="637" name="UpdatedAt">
+    <column id="769" parent="637" name="UpdatedAt">
       <Position>10</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <foreign-key id="768" parent="637" name="FK_Shifts_Events_EventId">
+    <foreign-key id="770" parent="637" name="FK_Shifts_Events_EventId">
       <ColNames>EventId</ColNames>
       <OnDelete>cascade</OnDelete>
       <RefColNames>Id</RefColNames>
       <RefTableName>Events</RefTableName>
     </foreign-key>
-    <index id="769" parent="637" name="IX_Shifts_EventId">
+    <index id="771" parent="637" name="IX_Shifts_EventId">
       <ColNames>EventId</ColNames>
     </index>
-    <index id="770" parent="637" name="IX_Shifts_StartTime">
+    <index id="772" parent="637" name="IX_Shifts_StartTime">
       <ColNames>StartTime</ColNames>
     </index>
-    <key id="771" parent="637" name="PK_Shifts">
+    <key id="773" parent="637" name="PK_Shifts">
       <ColNames>Id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="772" parent="638" name="Id">
+    <column id="774" parent="638" name="Id">
       <AutoIncrement>1</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="773" parent="638" name="FirstName">
+    <column id="775" parent="638" name="FirstName">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="774" parent="638" name="LastName">
+    <column id="776" parent="638" name="LastName">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="775" parent="638" name="Email">
+    <column id="777" parent="638" name="Email">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="776" parent="638" name="Phone">
+    <column id="778" parent="638" name="Phone">
       <Position>5</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="777" parent="638" name="CertificationLevel">
+    <column id="779" parent="638" name="CertificationLevel">
       <Position>6</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="778" parent="638" name="CertificationExpiry">
+    <column id="780" parent="638" name="CertificationExpiry">
       <Position>7</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="779" parent="638" name="IsActive">
+    <column id="781" parent="638" name="IsActive">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="780" parent="638" name="CreatedAt">
+    <column id="782" parent="638" name="CreatedAt">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="781" parent="638" name="UpdatedAt">
+    <column id="783" parent="638" name="UpdatedAt">
       <Position>10</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <index id="782" parent="638" name="IX_Staff_Email">
+    <index id="784" parent="638" name="IX_Staff_Email">
       <ColNames>Email</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="783" parent="638" name="PK_Staff">
+    <key id="785" parent="638" name="PK_Staff">
       <ColNames>Id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="784" parent="639" name="Id">
+    <column id="786" parent="639" name="Id">
       <AutoIncrement>1</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="785" parent="639" name="ShiftId">
+    <column id="787" parent="639" name="ShiftId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="786" parent="639" name="StaffId">
+    <column id="788" parent="639" name="StaffId">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="787" parent="639" name="Role">
+    <column id="789" parent="639" name="Role">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="788" parent="639" name="Status">
+    <column id="790" parent="639" name="Status">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="789" parent="639" name="Notes">
+    <column id="791" parent="639" name="Notes">
       <Position>6</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="790" parent="639" name="AssignedAt">
+    <column id="792" parent="639" name="AssignedAt">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="791" parent="639" name="UpdatedAt">
+    <column id="793" parent="639" name="UpdatedAt">
       <Position>8</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <foreign-key id="792" parent="639" name="FK_StaffAssignments_Shifts_ShiftId">
+    <column id="794" parent="639" name="InvoiceEmail">
+      <Position>9</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <foreign-key id="795" parent="639" name="FK_StaffAssignments_Shifts_ShiftId">
       <ColNames>ShiftId</ColNames>
       <OnDelete>cascade</OnDelete>
       <RefColNames>Id</RefColNames>
       <RefTableName>Shifts</RefTableName>
     </foreign-key>
-    <foreign-key id="793" parent="639" name="FK_StaffAssignments_Staff_StaffId">
+    <foreign-key id="796" parent="639" name="FK_StaffAssignments_Staff_StaffId">
       <ColNames>StaffId</ColNames>
       <OnDelete>cascade</OnDelete>
       <RefColNames>Id</RefColNames>
       <RefTableName>Staff</RefTableName>
     </foreign-key>
-    <index id="794" parent="639" name="IX_StaffAssignments_ShiftId">
+    <index id="797" parent="639" name="IX_StaffAssignments_ShiftId">
       <ColNames>ShiftId</ColNames>
     </index>
-    <index id="795" parent="639" name="IX_StaffAssignments_StaffId">
+    <index id="798" parent="639" name="IX_StaffAssignments_StaffId">
       <ColNames>StaffId</ColNames>
     </index>
-    <key id="796" parent="639" name="PK_StaffAssignments">
+    <key id="799" parent="639" name="PK_StaffAssignments">
       <ColNames>Id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="797" parent="640" name="MigrationId">
+    <column id="800" parent="640" name="MigrationId">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="798" parent="640" name="ProductVersion">
+    <column id="801" parent="640" name="ProductVersion">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <index id="799" parent="640" name="sqlite_autoindex___EFMigrationsHistory_1">
+    <index id="802" parent="640" name="sqlite_autoindex___EFMigrationsHistory_1">
       <ColNames>MigrationId</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="800" parent="640" name="PK___EFMigrationsHistory">
+    <key id="803" parent="640" name="PK___EFMigrationsHistory">
       <ColNames>MigrationId</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex___EFMigrationsHistory_1</UnderlyingIndexName>
     </key>
-    <column id="801" parent="641" name="Id">
+    <column id="804" parent="641" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="802" parent="641" name="Timestamp">
+    <column id="805" parent="641" name="Timestamp">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <key id="803" parent="641" name="PK___EFMigrationsLock">
+    <key id="806" parent="641" name="PK___EFMigrationsLock">
       <ColNames>Id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="804" parent="642" name="type">
+    <column id="807" parent="642" name="type">
       <Position>1</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="805" parent="642" name="name">
+    <column id="808" parent="642" name="name">
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="806" parent="642" name="tbl_name">
+    <column id="809" parent="642" name="tbl_name">
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="807" parent="642" name="rootpage">
+    <column id="810" parent="642" name="rootpage">
       <Position>4</Position>
       <StoredType>INT|0s</StoredType>
     </column>
-    <column id="808" parent="642" name="sql">
+    <column id="811" parent="642" name="sql">
       <Position>5</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="809" parent="643" name="name">
+    <column id="812" parent="643" name="name">
       <Position>1</Position>
     </column>
-    <column id="810" parent="643" name="seq">
+    <column id="813" parent="643" name="seq">
       <Position>2</Position>
     </column>
   </database-model>

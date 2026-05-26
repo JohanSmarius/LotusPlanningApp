@@ -22,6 +22,10 @@ public class CustomerDTO
     [StringLength(255)]
     public string Email { get; set; } = string.Empty;
 
+    [EmailAddress]
+    [StringLength(255)]
+    public string? InvoiceEmail { get; set; }
+
     [StringLength(20)]
     public string? PhoneNumber { get; set; }
 
