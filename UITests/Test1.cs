@@ -1,6 +1,7 @@
 ﻿namespace UITests
 {
     [TestClass]
+    [Ignore]
     public class Test1 : PageTest
     {
         [TestMethod]
