@@ -153,6 +153,17 @@ app.UseStatusCodePagesWithReExecute("/not-found");
 
 app.UseHttpsRedirection();
 
+app.Use(async (context, next) =>
+{
+    // Only set cache headers if the response hasn't started yet
+    if (!context.Response.HasStarted)
+    {
+        context.Response.Headers["Cache-control"] = "no-cache, max-age=0, must-revalidate";
+    }
+
+    await next();
+});
+
 app.UseAntiforgery();
 
 app.MapStaticAssets();
@@ -166,17 +177,6 @@ app.MapAdditionalIdentityEndpoints();
 
 // Map API controllers
 app.MapControllers();
-
-app.Use(async (context, next) =>
-{
-    // Only set cache headers if the response hasn't started yet
-    if (!context.Response.HasStarted)
-    {
-        context.Response.Headers["Cache-control"] = "no-cache, max-age=0, must-revalidate";
-    }
-
-    await next();
-});
 
 app.Run();
 
