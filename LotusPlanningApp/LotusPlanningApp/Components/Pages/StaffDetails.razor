@@ -139,7 +139,7 @@ else
                                     {
                                         <br>
                                         <small class="text-muted">
-                                            Verloopt: @staffDetail.CertificationExpiry.Value.ToString("d MMMM yyyy")
+                                            Verloopt: @staffDetail.CertificationExpiry.Value.ToString("d")
                                             @if (staffDetail.CertificationExpiry.Value < DateTime.Today)
                                             {
                                                 <span class="badge bg-danger ms-1">VERLOPEN</span>
@@ -172,7 +172,7 @@ else
                             <label class="form-label text-muted small">AANGEMELD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar-plus text-muted me-2"></i>
-                                @staffDetail.CreatedAt.ToString("d MMMM yyyy")
+                                @staffDetail.CreatedAt.ToString("d")
                             </div>
                         </div>
                     </div>
@@ -317,9 +317,9 @@ else
                                                     }
                                                 </td>
                                                 <td>
-                                                    <span class="fw-medium">@assignment.Shift.StartTime.ToString("d MMMM yyyy")</span>
+                                                    <span class="fw-medium">@assignment.Shift.StartTime.ToString("d")</span>
                                                     <br>
-                                                    <small class="text-muted">@assignment.Shift.StartTime.ToString("HH:mm") - @assignment.Shift.EndTime.ToString("HH:mm")</small>
+                                                    <small class="text-muted">@assignment.Shift.StartTime.ToString("t") - @assignment.Shift.EndTime.ToString("t")</small>
                                                 </td>
                                                 <td>
                                                     <span class="fw-medium">@CalculateShiftDuration(assignment.Shift)</span>
@@ -330,7 +330,7 @@ else
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="text-muted">Diensturen: @CalculateShiftDuration(assignment.Shift)</span>
+                                                    <span class="text-muted">Opdrachturen: @CalculateShiftDuration(assignment.Shift)</span>
                                                 </td>
                                             </tr>
                                         }

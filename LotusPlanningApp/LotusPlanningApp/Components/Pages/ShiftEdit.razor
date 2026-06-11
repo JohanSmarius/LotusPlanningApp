@@ -90,7 +90,7 @@ else
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-clock me-2"></i>Dienstdetails
+                            <i class="fas fa-clock me-2"></i>Opdrachtdetails
                         </h5>
                     </div>
                     <div class="card-body">
@@ -104,7 +104,7 @@ else
                                     <div class="fw-medium">@shift.Event.Name</div>
                                     <small class="text-muted">
                                         <i class="fas fa-map-marker-alt me-1"></i>@shift.Event.Location<br>
-                                        <i class="fas fa-calendar me-1"></i>@shift.Event.StartDate.ToString("d MMMM yyyy HH:mm") - @shift.Event.EndDate.ToString("d MMMM yyyy HH:mm")
+                                        <i class="fas fa-calendar me-1"></i>@shift.Event.StartDate.ToString("g") - @shift.Event.EndDate.ToString("g")
                                     </small>
                                 </div>
                             </div>
@@ -165,7 +165,7 @@ else
                             <div class="alert alert-warning">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
                                 <strong>Let op:</strong> Zorg dat de diensttijden binnen de duur van de opdracht vallen 
-                                (@shift.Event.StartDate.ToString("d MMMM HH:mm") - @shift.Event.EndDate.ToString("d MMMM HH:mm")).
+                                (@shift.Event.StartDate.ToString("g") - @shift.Event.EndDate.ToString("g")).
                                 <br>
                                 <small class="text-muted mt-1">
                                     Huidig aantal toewijzingen: @currentAssignments.Count / @editShift.RequiredStaff
@@ -286,7 +286,7 @@ else
                         <i class="fas fa-info-circle me-2"></i>
                         <strong>Personeel toevoegen aan:</strong> @shift.Name<br>
                         <small class="text-muted">
-                            <i class="fas fa-calendar me-1"></i>@shift.StartTime.ToString("d MMMM yyyy HH:mm") - @shift.EndTime.ToString("d MMMM yyyy HH:mm")
+                            <i class="fas fa-calendar me-1"></i>@shift.StartTime.ToString("g") - @shift.EndTime.ToString("g")
                         </small>
                     </div>
 
@@ -697,7 +697,7 @@ else
             // Validate that shift times are within event duration
             if (editShift.StartTime < shift.Event.StartDate || editShift.EndTime > shift.Event.EndDate)
             {
-                Console.WriteLine("Diensttijden moeten binnen de duur van de opdracht vallen");
+                Console.WriteLine("Opdrachttijden moeten binnen de duur van de overkoepelende opdracht vallen");
                 return;
             }
 

@@ -81,7 +81,7 @@
                                                 </td>
                                                 <td>
                                                     <small class="text-muted">
-                                                        @user.RegisteredAt.ToString("d MMMM yyyy HH:mm")
+                                                        @user.RegisteredAt.ToString("g")
                                                     </small>
                                                 </td>
                                                 <td class="text-end">
@@ -155,13 +155,13 @@
                                                 </td>
                                                 <td>
                                                     <small class="text-muted">
-                                                        @user.RegisteredAt.ToString("d MMMM yyyy")
+                                                        @user.RegisteredAt.ToString("d")
                                                     </small>
                                                 </td>
                                                 <td>
                                                     <small class="text-success">
                                                         <i class="bi bi-check-circle me-1"></i>
-                                                        @user.ApprovedAt?.ToString("d MMMM yyyy")
+                                                        @user.ApprovedAt?.ToString("d")
                                                     </small>
                                                 </td>
                                                 <td class="text-end">

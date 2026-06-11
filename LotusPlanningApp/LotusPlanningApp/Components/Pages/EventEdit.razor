@@ -139,9 +139,9 @@ else
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Klant</label>
+                                <label class="form-label">Opdrachtgever</label>
                                 <select class="form-select" @bind="selectedCustomerId" @bind:after="OnCustomerSelected">
-                                    <option value="0">-- Selecteer een klant (optioneel) --</option>
+                                    <option value="0">-- Selecteer een opdrachtgever (optioneel) --</option>
                                     @foreach (var customer in customers)
                                     {
                                         <option value="@customer.Id">@customer.FullName @(!string.IsNullOrEmpty(customer.Company) ? $"({customer.Company})" : "")</option>
@@ -149,7 +149,7 @@ else
                                 </select>
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Als je een klant selecteert, worden contactgegevens automatisch ingevuld
+                                    Als je een opdrachtgever selecteert, worden contactgegevens automatisch ingevuld
                                 </div>
                             </div>
 
@@ -219,9 +219,9 @@ else
                             <label class="form-label text-muted small">ORIGINAL DATES</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @eventToEdit.StartDate.ToString("d MMMM yyyy HH:mm")
+                                @eventToEdit.StartDate.ToString("g")
                                 <br>
-                                <small class="text-muted">tot @eventToEdit.EndDate.ToString("d MMMM yyyy HH:mm")</small>
+                                <small class="text-muted">tot @eventToEdit.EndDate.ToString("g")</small>
                             </div>
                         </div>
 
@@ -246,7 +246,7 @@ else
                             <label class="form-label text-muted small">LAATST BIJGEWERKT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @(eventToEdit.UpdatedAt?.ToString("d MMMM yyyy HH:mm") ?? eventToEdit.CreatedAt.ToString("d MMMM yyyy HH:mm"))
+                                @(eventToEdit.UpdatedAt?.ToString("g") ?? eventToEdit.CreatedAt.ToString("g"))
                             </div>
                         </div>
                     </div>
@@ -299,10 +299,10 @@ else
                                 <i class="fas fa-eye me-2"></i>Details bekijken
                             </a>
                             <button class="btn btn-outline-success" @onclick="CreateShift">
-                                <i class="fas fa-plus me-2"></i>Dienst toevoegen
+                                <i class="fas fa-plus me-2"></i>Opdracht toevoegen
                             </button>
                             <button class="btn btn-outline-info" @onclick="ManageShifts">
-                                <i class="fas fa-cogs me-2"></i>Diensten beheren
+                                <i class="fas fa-cogs me-2"></i>Opdrachten beheren
                             </button>
                             @if (eventToEdit.Status != EventStatus.Cancelled)
                             {
@@ -353,9 +353,9 @@ else
                                                     }
                                                 </td>
                                                 <td>
-                                                    <span class="fw-medium">@shift.StartTime.ToString("d MMMM HH:mm")</span>
+                                                    <span class="fw-medium">@shift.StartTime.ToString("g")</span>
                                                     <br>
-                                                    <small class="text-muted">tot @shift.EndTime.ToString("d MMMM HH:mm")</small>
+                                                    <small class="text-muted">tot @shift.EndTime.ToString("g")</small>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">

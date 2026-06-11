@@ -8,7 +8,7 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<PageTitle>Dienstdetails - LOTUS Planning App</PageTitle>
+<PageTitle>Opdrachtdetails - LOTUS Planning App</PageTitle>
 
 @if (isLoading)
 {
@@ -85,7 +85,7 @@ else
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-info-circle me-2"></i>Dienstinformatie
+                            <i class="fas fa-info-circle me-2"></i>Informatie over de opdracht
                         </h5>
                     </div>
                     <div class="card-body">
@@ -106,10 +106,10 @@ else
                             <label class="form-label text-muted small">STARTDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @shiftDetail.StartTime.ToString("dddd d MMMM yyyy")
+                                @shiftDetail.StartTime.ToString("d")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @shiftDetail.StartTime.ToString("HH:mm")
+                                @shiftDetail.StartTime.ToString("t")
                             </div>
                         </div>
 
@@ -117,10 +117,10 @@ else
                             <label class="form-label text-muted small">EINDDATUM & TIJD</label>
                             <div class="fw-medium">
                                 <i class="fas fa-calendar text-muted me-2"></i>
-                                @shiftDetail.EndTime.ToString("dddd d MMMM yyyy")
+                                @shiftDetail.EndTime.ToString("d")
                                 <br>
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @shiftDetail.EndTime.ToString("HH:mm")
+                                @shiftDetail.EndTime.ToString("t")
                             </div>
                         </div>
 
@@ -152,12 +152,12 @@ else
                             <label class="form-label text-muted small">AANGEMAAKT</label>
                             <div class="fw-medium">
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                @shiftDetail.CreatedAt.ToString("d MMMM yyyy HH:mm")
+                                @shiftDetail.CreatedAt.ToString("g")
                             </div>
                         </div>
 
                         <div class="d-grid gap-2 mt-4">
-                            <a href="@($"/api/calendar/shift/{ShiftId}.ics")" class="btn btn-success" title="Voeg deze dienst toe aan je kalender">
+                            <a href="@($"/api/calendar/shift/{ShiftId}.ics")" class="btn btn-success" title="Voeg deze opdracht toe aan je kalender">
                                 <i class="fas fa-calendar-plus me-2"></i>Toevoegen aan kalender
                             </a>
                         </div>
@@ -276,7 +276,7 @@ else
                                                         </div>
                                                         <div class="small text-muted mt-1">
                                                             <i class="fas fa-calendar-plus me-1"></i>
-                                                            Toegewezen: @assignment.AssignedAt.ToString("d MMMM yyyy HH:mm")
+                                                            Toegewezen: @assignment.AssignedAt.ToString("g")
                                                         </div>
                                                     </div>
                                                 </div>
