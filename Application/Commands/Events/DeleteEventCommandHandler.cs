@@ -24,7 +24,19 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand, boo
         var eventId = command.EventId;
         
         var existingEvent = await _repository.GetEventByIdAsync(eventId);
-        if (existingEvent == null)
+        var allEvents = await _repository.GetAllEventsAsync();
+
+        var found = false;
+        foreach (var ev in allEvents)
+        {
+            if (ev.Id == eventId)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
         {
             _logger.LogWarning("Attempted to delete non-existent event {EventId}", eventId);
             return false;
