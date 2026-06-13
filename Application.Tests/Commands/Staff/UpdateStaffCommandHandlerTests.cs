@@ -192,4 +192,100 @@ public class UpdateStaffCommandHandlerTests
         // Assert
         _mockRepository.Verify(r => r.IsEmailUniqueAsync("unique@example.com", 42), Times.Once);
     }
+
+    [Fact]
+    public async Task Handle_WithPastCertificationExpiry_ThrowsApplicationLayerException()
+    {
+        // Arrange
+        var staff = new Entities.Staff
+        {
+            Id = 1,
+            FirstName = "Jane",
+            LastName = "Smith",
+            Email = "jane@example.com",
+            CertificationLevel = "Basic",
+            CertificationExpiry = DateTime.UtcNow.AddDays(-1) // yesterday — must be rejected
+        };
+        var command = new UpdateStaffCommand(staff);
+
+        _mockRepository.Setup(r => r.IsEmailUniqueAsync(staff.Email, staff.Id)).ReturnsAsync(true);
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ApplicationLayerException>(() => _handler.Handle(command));
+        Assert.Contains("future", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithTodayCertificationExpiry_ThrowsApplicationLayerException()
+    {
+        // Arrange — a date equal to "now" is not in the future either
+        var staff = new Entities.Staff
+        {
+            Id = 1,
+            FirstName = "Jane",
+            LastName = "Smith",
+            Email = "jane@example.com",
+            CertificationLevel = "Basic",
+            CertificationExpiry = DateTime.UtcNow
+        };
+        var command = new UpdateStaffCommand(staff);
+
+        _mockRepository.Setup(r => r.IsEmailUniqueAsync(staff.Email, staff.Id)).ReturnsAsync(true);
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ApplicationLayerException>(() => _handler.Handle(command));
+        Assert.Contains("future", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithFutureCertificationExpiry_UpdatesSuccessfully()
+    {
+        // Arrange
+        var staff = new Entities.Staff
+        {
+            Id = 1,
+            FirstName = "Jane",
+            LastName = "Smith",
+            Email = "jane@example.com",
+            CertificationLevel = "Advanced",
+            CertificationExpiry = DateTime.UtcNow.AddYears(1) // valid future date
+        };
+        var command = new UpdateStaffCommand(staff);
+
+        _mockRepository.Setup(r => r.IsEmailUniqueAsync(staff.Email, staff.Id)).ReturnsAsync(true);
+        _mockRepository.Setup(r => r.UpdateStaffAsync(staff)).ReturnsAsync(staff);
+
+        // Act
+        var result = await _handler.Handle(command);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(staff.Id, result.Id);
+        _mockRepository.Verify(r => r.UpdateStaffAsync(staff), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_WithNullCertificationExpiry_UpdatesSuccessfully()
+    {
+        // Arrange — no expiry date set is perfectly valid
+        var staff = new Entities.Staff
+        {
+            Id = 1,
+            FirstName = "Jane",
+            LastName = "Smith",
+            Email = "jane@example.com",
+            CertificationExpiry = null
+        };
+        var command = new UpdateStaffCommand(staff);
+
+        _mockRepository.Setup(r => r.IsEmailUniqueAsync(staff.Email, staff.Id)).ReturnsAsync(true);
+        _mockRepository.Setup(r => r.UpdateStaffAsync(staff)).ReturnsAsync(staff);
+
+        // Act
+        var result = await _handler.Handle(command);
+
+        // Assert
+        Assert.NotNull(result);
+        _mockRepository.Verify(r => r.UpdateStaffAsync(staff), Times.Once);
+    }
 }

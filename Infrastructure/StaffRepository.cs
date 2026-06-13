@@ -63,7 +63,23 @@ public class StaffRepository : IStaffRepository
     public async Task<Entities.Staff> UpdateStaffAsync(Staff staff)
     {
         staff.UpdatedAt = DateTime.UtcNow;
-        _context.Staff.Update(staff);
+
+        // If an instance with this Id is already tracked (e.g. loaded earlier in the
+        // same request/Blazor circuit), copy the new values into it instead of trying
+        // to attach a second instance — which would throw an InvalidOperationException.
+        var trackedEntry = _context.ChangeTracker
+            .Entries<Staff>()
+            .FirstOrDefault(e => e.Entity.Id == staff.Id);
+
+        if (trackedEntry != null)
+        {
+            trackedEntry.CurrentValues.SetValues(staff);
+        }
+        else
+        {
+            _context.Staff.Update(staff);
+        }
+
         await _context.SaveChangesAsync();
         return staff;
     }
