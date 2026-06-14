@@ -12,6 +12,45 @@ This Blazor application manages events and shifts for a LOTUS team. Users can cr
 
 ---
 
+### Development Environment Setup
+
+To set up your development environment for this project:
+
+1. **Prerequisites:**
+   - Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+   - Install SQL Server (Express, LocalDB, or full version)
+   - Install a code editor: Visual Studio 2022, VS Code with C# extension, or JetBrains Rider
+
+2. **Clone and Setup:**
+   ```bash
+   git clone https://github.com/JohanSmarius/LotusPlanningApp.git
+   cd LotusPlanningApp
+   dotnet restore
+   ```
+
+3. **Configure Database:**
+   - Update connection string in `appsettings.json`:
+     ```json
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=LotusPlanningDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+     }
+     ```
+   - Apply migrations:
+     ```bash
+     dotnet ef database update --project Infrastructure --startup-project LotusPlanningApp/LotusPlanningApp
+     ```
+
+4. **Run the Application:**
+   ```bash
+   dotnet run --project LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj
+   ```
+
+5. **Verify Setup:**
+   - Application should start at `https://localhost:7001`
+   - All tests should pass: `dotnet test`
+
+---
+
 ### Repository Structure
 
 ```
@@ -94,6 +133,19 @@ LotusPlanningApp/
 - Add **unit tests** for business logic.
 - Use **records** for immutable data structures (Commands, Queries, DTOs).
 - Prefer **nullable reference types** (`?`) for optional values.
+
+### Security Best Practices
+- **Never store secrets in code**: Use `appsettings.json`, environment variables, or Azure Key Vault for sensitive data.
+- **Always validate user input**: Sanitize and validate all input before processing.
+- **Use parameterized queries**: Entity Framework Core provides this by default; never concatenate SQL strings.
+- **Implement proper authentication**: Use ASP.NET Core Identity with strong password requirements.
+- **Enforce authorization**: Always check user permissions before allowing access to sensitive operations.
+- **Protect against CSRF**: ASP.NET Core includes anti-forgery tokens by default; ensure they're used in forms.
+- **Use HTTPS**: Always use HTTPS in production environments.
+- **Sanitize output**: Blazor automatically encodes output; be cautious when using `MarkupString` or raw HTML.
+- **Keep dependencies updated**: Regularly update NuGet packages to patch security vulnerabilities.
+- **Log security events**: Log authentication failures, authorization failures, and suspicious activities.
+- **Use proper error handling**: Don't expose sensitive information in error messages to users.
 
 ### Build and Test Commands
 
@@ -429,6 +481,27 @@ builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 - Use ARIA attributes for modals, alerts, and navigation.
 - Provide clear error messages and validation feedback.
 - Test with screen readers and mobile devices.
+
+---
+
+### Performance & Optimization
+- **Minimize database queries**: Use EF Core's `Include()` to eager load related data when needed.
+- **Use async/await consistently**: All I/O operations should be async to avoid blocking threads.
+- **Implement caching**: Cache frequently accessed, rarely changing data using `IMemoryCache`.
+- **Optimize Blazor rendering**: Use `@key` directive to help Blazor track component identity efficiently.
+- **Lazy loading**: Use lazy loading for large navigation properties when appropriate.
+- **Pagination**: Implement pagination for large lists using `Skip()` and `Take()`.
+- **Connection pooling**: EF Core handles this automatically; ensure you're not disposing contexts prematurely.
+- **Avoid N+1 queries**: Use `.Include()` or projection to load related data efficiently.
+
+### Error Handling & Logging
+- **Use try-catch blocks**: Wrap handler logic in try-catch to handle exceptions gracefully.
+- **Log exceptions**: Use `ILogger<T>` to log errors with appropriate log levels.
+- **Return meaningful errors**: Return user-friendly error messages; log technical details.
+- **Use application insights**: Consider adding Application Insights for production monitoring.
+- **Handle database errors**: Catch `DbUpdateException` and `DbUpdateConcurrencyException` specifically.
+- **Validate early**: Validate input in commands before processing to fail fast.
+- **Circuit breaker pattern**: Consider implementing retry logic for transient failures.
 
 ---
 
