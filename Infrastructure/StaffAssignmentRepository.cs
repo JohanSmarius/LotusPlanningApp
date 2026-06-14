@@ -130,6 +130,32 @@ public class StaffAssignmentRepository : IStaffAssignmentRepository
         return assignment;
     }
 
+    public async Task<StaffAssignment?> RecordAssignmentCompletionAsync(int assignmentId, int? kmDriven, string? customerSignature, string? customerSignedName)
+    {
+        var assignment = await GetAssignmentByIdAsync(assignmentId);
+        if (assignment == null)
+        {
+            return null;
+        }
+
+        assignment.KmDriven = kmDriven;
+        assignment.CustomerSignature = customerSignature;
+        assignment.CustomerSignedName = customerSignedName;
+
+        // Set or clear the signed timestamp based on whether a signature is present
+        if (!string.IsNullOrWhiteSpace(customerSignature))
+        {
+            assignment.CustomerSignedAt ??= DateTime.UtcNow;
+        }
+        else
+        {
+            assignment.CustomerSignedAt = null;
+        }
+
+        await UpdateAssignmentAsync(assignment);
+        return assignment;
+    }
+
     public async Task<bool> IsStaffAvailableAsync(int staffId, DateTime startTime, DateTime endTime, int? excludeAssignmentId = null)
     {
         var query = _context.StaffAssignments

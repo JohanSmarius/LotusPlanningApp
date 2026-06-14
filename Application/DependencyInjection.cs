@@ -91,6 +91,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(ICommandHandler<CheckOutStaffCommand, StaffAssignment?>), typeof(CheckOutStaffCommandHandler));
         services.AddScoped<DeleteStaffAssignmentCommandHandler>();
         services.AddScoped(typeof(ICommandHandler<DeleteStaffAssignmentCommand, bool>), typeof(DeleteStaffAssignmentCommandHandler));
+        services.AddScoped<RecordAssignmentCompletionCommandHandler>();
+        services.AddScoped(typeof(ICommandHandler<RecordAssignmentCompletionCommand, StaffAssignment?>), typeof(RecordAssignmentCompletionCommandHandler));
 
         // Register Staff Assignment Query Handlers
         services.AddScoped<GetAllAssignmentsQueryHandler>();
