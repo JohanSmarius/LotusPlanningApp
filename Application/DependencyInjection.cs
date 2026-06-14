@@ -126,6 +126,10 @@ public static class DependencyInjection
         services.AddScoped<SearchCustomersQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<SearchCustomersQuery, List<CustomerDTO>>), typeof(SearchCustomersQueryHandler));
 
+        // Register Invoice Command Handlers
+        services.AddScoped<GenerateInvoicePdfCommandHandler>();
+        services.AddScoped(typeof(ICommandHandler<GenerateInvoicePdfCommand, byte[]>), typeof(GenerateInvoicePdfCommandHandler));
+
         // Register legacy wrappers for backward compatibility
         services.AddScoped<IEventService, EventService>();
         services.AddScoped<ICreateEventUseCase, CreateEventUseCase>();

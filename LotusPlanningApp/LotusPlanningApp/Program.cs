@@ -88,6 +88,7 @@ builder.Services.AddApplicationLayer();
 // Register infrastructure services
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICalendarService, CalendarService>();
+builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();

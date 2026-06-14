@@ -35,6 +35,14 @@ public interface IEmailService
     Task SendEventInvoiceNotificationAsync(Event @event);
     
     /// <summary>
+    /// Sends an invoice PDF email with the PDF attached to the customer
+    /// </summary>
+    /// <param name="event">The event being invoiced</param>
+    /// <param name="pdfAttachment">The invoice PDF content as a byte array</param>
+    /// <param name="purchaseOrderNumber">The customer's PO number</param>
+    Task SendInvoicePdfEmailAsync(Event @event, byte[] pdfAttachment, string purchaseOrderNumber);
+
+    /// <summary>
     /// Sends a general email
     /// </summary>
     /// <param name="to">Recipient email address</param>
