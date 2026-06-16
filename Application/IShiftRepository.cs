@@ -16,5 +16,6 @@ public interface IShiftRepository
     Task<Shift> UpdateShiftAsync(Shift shift);
     Task DeleteShiftAsync(int id);
     Task<List<Shift>> GetUpcomingShiftsAsync();
+    Task<List<Shift>> GetOpenShiftsAsync();
     Task<List<Shift>> GetShiftsByDateAsync(DateTime date);
 }

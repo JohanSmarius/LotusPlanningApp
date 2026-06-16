@@ -63,6 +63,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(IQueryHandler<GetShiftsByEventIdQuery, List<Shift>>), typeof(GetShiftsByEventIdQueryHandler));
         services.AddScoped<GetUpcomingShiftsQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<GetUpcomingShiftsQuery, List<Shift>>), typeof(GetUpcomingShiftsQueryHandler));
+        services.AddScoped<GetOpenShiftsQueryHandler>();
+        services.AddScoped(typeof(IQueryHandler<GetOpenShiftsQuery, List<Shift>>), typeof(GetOpenShiftsQueryHandler));
 
         // Register Staff Command Handlers
         services.AddScoped<CreateStaffCommandHandler>();

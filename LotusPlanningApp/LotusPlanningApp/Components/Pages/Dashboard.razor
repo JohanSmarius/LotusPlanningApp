@@ -1,6 +1,7 @@
 @page "/dashboard"
 @attribute [Authorize]
 @using Application
+@using Application.Commands.StaffAssignments
 @using Application.DataAdapters
 @using Application.Queries.Events
 @using Application.Queries.Shifts
@@ -21,6 +22,8 @@
 @inject GetActiveStaffQueryHandler GetActiveStaffHandler
 @inject GetAllStaffQueryHandler GetAllStaffHandler
 @inject GetAssignmentsByStaffIdQueryHandler GetAssignmentsByStaffIdHandler
+@inject GetOpenShiftsQueryHandler GetOpenShiftsHandler
+@inject Application.Commands.StaffAssignments.CreateStaffAssignmentCommandHandler CreateStaffAssignmentHandler
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
@@ -181,6 +184,114 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Open shifts available for application -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-door-open me-2"></i>Beschikbare open deelopdrachten
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (applySuccessMessage != null)
+                            {
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-check-circle me-2"></i>@applySuccessMessage
+                                    <button type="button" class="btn-close" @onclick="() => applySuccessMessage = null"></button>
+                                </div>
+                            }
+                            @if (applyErrorMessage != null)
+                            {
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-exclamation-circle me-2"></i>@applyErrorMessage
+                                    <button type="button" class="btn-close" @onclick="() => applyErrorMessage = null"></button>
+                                </div>
+                            }
+                            @if (openShifts.Any())
+                            {
+                                var appliedShiftIds = myAssignments.Select(a => a.ShiftId).ToHashSet();
+                                <div class="row">
+                                    @foreach (var shift in openShifts.OrderBy(s => s.StartTime))
+                                    {
+                                        var eventItem = shift.Event;
+                                        var alreadyApplied = appliedShiftIds.Contains(shift.Id);
+                                        <div class="col-md-6 col-lg-4 mb-3">
+                                            <div class="card h-100 border-0 bg-light">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                                        <h6 class="card-title mb-0">@shift.Name</h6>
+                                                        <span class="badge bg-primary">Open</span>
+                                                    </div>
+                                                    <p class="card-text small mb-2">
+                                                        <strong><i class="fas fa-calendar me-1"></i>Opdracht:</strong><br/>
+                                                        @eventItem.Name
+                                                    </p>
+                                                    <p class="card-text small mb-2">
+                                                        <strong><i class="fas fa-map-marker-alt me-1"></i>Locatie:</strong><br/>
+                                                        @eventItem.Location
+                                                    </p>
+                                                    <p class="card-text small mb-2">
+                                                        <strong><i class="fas fa-clock me-1"></i>Tijd:</strong><br/>
+                                                        @shift.StartTime.ToString("g") - @shift.EndTime.ToString("t")
+                                                    </p>
+                                                    <p class="card-text small mb-2">
+                                                        <strong><i class="fas fa-users me-1"></i>Bezetting:</strong><br/>
+                                                        @shift.StaffAssignments.Count / @shift.RequiredStaff
+                                                    </p>
+                                                    @if (shift.Description != null)
+                                                    {
+                                                        <p class="card-text small mb-2">
+                                                            <strong><i class="fas fa-info-circle me-1"></i>Beschrijving:</strong><br/>
+                                                            @shift.Description
+                                                        </p>
+                                                    }
+                                                    <div class="mt-3">
+                                                        @if (alreadyApplied)
+                                                        {
+                                                            <span class="badge bg-success">
+                                                                <i class="fas fa-check me-1"></i>Al aangemeld
+                                                            </span>
+                                                        }
+                                                        else if (currentUserStaff != null)
+                                                        {
+                                                            <button class="btn btn-sm btn-success"
+                                                                    @onclick="() => ApplyForShiftAsync(shift)"
+                                                                    disabled="@isApplying">
+                                                                @if (isApplying && applyingShiftId == shift.Id)
+                                                                {
+                                                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fas fa-hand-paper me-1"></i>
+                                                                }
+                                                                Aanmelden
+                                                            </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-muted small">Geen personeelsprofiel gekoppeld</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-5">
+                                    <i class="fas fa-check-circle fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">Er zijn momenteel geen open deelopdrachten beschikbaar</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
 
         @if (isAdmin)
@@ -308,7 +419,12 @@
     private List<Entities.Shift> todaysShifts = new();
     private List<Entities.Staff> activeStaff = new();
     private List<Entities.StaffAssignment> myAssignments = new();
+    private List<Entities.Shift> openShifts = new();
     private Entities.Staff? currentUserStaff;
+    private bool isApplying = false;
+    private int? applyingShiftId = null;
+    private string? applySuccessMessage = null;
+    private string? applyErrorMessage = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -333,8 +449,11 @@
             }
             else
             {
-                // Load user-specific assignments
-                await LoadMyAssignmentsAsync(user);
+                // Load user-specific assignments and open shifts in parallel
+                await Task.WhenAll(
+                    LoadMyAssignmentsAsync(user),
+                    LoadOpenShiftsAsync()
+                );
             }
         }
         catch (Exception ex)
@@ -406,6 +525,66 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading user assignments: {ex.Message}");
+        }
+    }
+
+    private async Task LoadOpenShiftsAsync()
+    {
+        try
+        {
+            var query = new GetOpenShiftsQuery();
+            openShifts = await GetOpenShiftsHandler.Handle(query, CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading open shifts: {ex.Message}");
+        }
+    }
+
+    private async Task ApplyForShiftAsync(Entities.Shift shift)
+    {
+        if (currentUserStaff == null || isApplying)
+            return;
+
+        isApplying = true;
+        applyingShiftId = shift.Id;
+        applySuccessMessage = null;
+        applyErrorMessage = null;
+
+        try
+        {
+            var assignment = new Entities.StaffAssignment
+            {
+                ShiftId = shift.Id,
+                StaffId = currentUserStaff.Id,
+                Role = StaffRole.LOTUS,
+                Status = AssignmentStatus.Assigned,
+                AssignedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            var command = new CreateStaffAssignmentCommand(assignment);
+            await CreateStaffAssignmentHandler.Handle(command, CancellationToken.None);
+
+            applySuccessMessage = $"Je bent succesvol aangemeld voor de deelopdracht '{shift.Name}'.";
+
+            // Refresh assignments and open shifts to reflect the change
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            await Task.WhenAll(
+                LoadMyAssignmentsAsync(authState.User),
+                LoadOpenShiftsAsync()
+            );
+        }
+        catch (Exception ex)
+        {
+            applyErrorMessage = $"Aanmelden mislukt: {ex.Message}";
+            Console.WriteLine($"Error applying for shift: {ex.Message}");
+        }
+        finally
+        {
+            isApplying = false;
+            applyingShiftId = null;
+            StateHasChanged();
         }
     }
 

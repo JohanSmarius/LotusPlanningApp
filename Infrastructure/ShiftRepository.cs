@@ -92,6 +92,18 @@ public class ShiftRepository : IShiftRepository
             .ToListAsync();
     }
 
+    public async Task<List<Shift>> GetOpenShiftsAsync()
+    {
+        var now = DateTime.UtcNow;
+        return await _context.Shifts
+            .Include(s => s.Event)
+            .Include(s => s.StaffAssignments)
+            .ThenInclude(sa => sa.Staff)
+            .Where(s => s.Status == ShiftStatus.Open && s.StartTime >= now)
+            .OrderBy(s => s.StartTime)
+            .ToListAsync();
+    }
+
     public async Task<List<Shift>> GetShiftsByDateAsync(DateTime date)
     {
         var startOfDay = date.Date;
