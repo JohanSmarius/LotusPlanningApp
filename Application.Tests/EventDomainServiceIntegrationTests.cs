@@ -14,10 +14,11 @@ public class EventDomainServiceIntegrationTests
 
         // Act
         services.AddApplicationLayer();
-        using var provider = services.BuildServiceProvider();
+        using var provider = services.BuildServiceProvider(validateScopes: true);
+        using var scope = provider.CreateScope();
 
         // Assert
-        Assert.NotNull(provider.GetService<EventDomainService>());
+        _ = scope.ServiceProvider.GetRequiredService<EventDomainService>();
     }
 
     [Fact]
