@@ -554,7 +554,7 @@ else
         newShift = new Shift
         {
             EventId = eventDetail.Id,
-            Name = $"Deelopdracht - {eventDetail.Name}",
+            Name = eventDetail.Name,
             StartTime = eventDetail.StartDate,
             EndTime = eventDetail.EndDate,
             RequiredStaff = 1,
