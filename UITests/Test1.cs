@@ -4,24 +4,24 @@
     public class Test1 : PageTest
     {
         [TestMethod]
-        public async Task HomepageHasPlaywrightInTitleAndGetStartedLinkLinkingToTheIntroPage()
+        public async Task HomepageHasTitleAndButtonToManageEvents()
         {
-            await Page.GotoAsync("https://playwright.dev");
+            await Page.GotoAsync("http://localhost:5087");
 
             // Expect a title "to contain" a substring.
-            await Expect(Page).ToHaveTitleAsync(new Regex("Playwright"));
+            await Expect(Page).ToHaveTitleAsync(new Regex("LOTUS Planning App"));
 
             // create a locator
-            var getStarted = Page.Locator("text=Get Started");
+            var manageEvents = Page.Locator("text=Opdrachten beheren");
 
             // Expect an attribute "to be strictly equal" to the value.
-            await Expect(getStarted).ToHaveAttributeAsync("href", "/docs/intro");
+            await Expect(manageEvents).ToHaveAttributeAsync("href", "/events");
 
-            // Click the get started link.
-            await getStarted.ClickAsync();
+            // Click the manage events link.
+            await manageEvents.ClickAsync();
 
-            // Expects the URL to contain intro.
-            await Expect(Page).ToHaveURLAsync(new Regex(".*intro"));
+            // Expects the URL to contain events.
+            await Expect(Page).ToHaveURLAsync(new Regex(".*events"));
         }
 
         [TestMethod]
