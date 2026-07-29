@@ -12,16 +12,18 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand, Eve
     private readonly IEventRepository _repository;
     private readonly IEmailService _emailService;
     private readonly ILogger<UpdateEventCommandHandler> _logger;
-    private readonly EventDomainService _domainService = new();
+    private readonly EventDomainService _domainService;
 
     public UpdateEventCommandHandler(
         IEventRepository repository,
         IEmailService emailService,
-        ILogger<UpdateEventCommandHandler> logger)
+        ILogger<UpdateEventCommandHandler> logger,
+        EventDomainService domainService)
     {
         _repository = repository;
         _emailService = emailService;
         _logger = logger;
+        _domainService = domainService;
     }
 
     public async Task<Event> Handle(UpdateEventCommand command, CancellationToken cancellationToken = default)
