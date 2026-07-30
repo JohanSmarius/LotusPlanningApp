@@ -89,6 +89,158 @@ public class EmailService : IEmailService
     }
 
     /// <summary>
+    /// Sends an invoice PDF email with the PDF attached to the customer
+    /// </summary>
+    public async Task SendInvoicePdfEmailAsync(Event @event, byte[] pdfAttachment, string purchaseOrderNumber)
+    {
+        var recipientEmail = @event.Customer?.Email ?? @event.ContactEmail;
+        if (string.IsNullOrEmpty(recipientEmail))
+        {
+            _logger.LogWarning("Cannot send invoice PDF for event {EventId}: No recipient email available", @event.Id);
+            return;
+        }
+
+        var invoiceNumber = $"INV-{@event.Id:D6}-{DateTime.UtcNow:yyyyMM}";
+        var subject = $"Factuur {invoiceNumber} - {@event.Name}";
+        var htmlBody = GenerateInvoicePdfEmailBody(@event, purchaseOrderNumber, invoiceNumber);
+
+        await SendEmailWithAttachmentAsync(
+            recipientEmail,
+            subject,
+            htmlBody,
+            pdfAttachment,
+            $"Factuur-{invoiceNumber}.pdf",
+            "application/pdf");
+    }
+
+    /// <summary>
+    /// Sends an email with a binary attachment using SMTP
+    /// </summary>
+    private async Task SendEmailWithAttachmentAsync(
+        string to,
+        string subject,
+        string htmlBody,
+        byte[] attachment,
+        string attachmentFileName,
+        string attachmentContentType)
+    {
+        try
+        {
+            var smtpConfig = _configuration.GetSection("EmailSettings");
+            var host = smtpConfig["SmtpHost"];
+            var port = int.Parse(smtpConfig["SmtpPort"] ?? "587");
+            var username = smtpConfig["SmtpUsername"];
+            var password = smtpConfig["SmtpPassword"];
+            var fromEmail = smtpConfig["FromEmail"];
+            var fromName = smtpConfig["FromName"] ?? "LOTUS Planning App";
+            var enableSsl = bool.Parse(smtpConfig["EnableSsl"] ?? "true");
+
+            if (string.IsNullOrEmpty(host))
+            {
+                _logger.LogWarning("Email settings not configured. Skipping email to {Email}", to);
+                return;
+            }
+
+            using var client = new SmtpClient(host, port);
+
+            client.EnableSsl = enableSsl;
+            if (!string.IsNullOrEmpty(username))
+            {
+                client.Credentials = new NetworkCredential(username, password);
+            }
+
+            var fromAddress = fromEmail ?? username ?? "noreply@lotusapp.com";
+
+            using var message = new MailMessage
+            {
+                From = new MailAddress(fromAddress, fromName),
+                Subject = subject,
+                Body = htmlBody,
+                IsBodyHtml = true
+            };
+
+            message.To.Add(to);
+
+            // Attach the PDF – the MailMessage owns and disposes the stream on disposal
+            var attachmentStream = new MemoryStream(attachment);
+            message.Attachments.Add(new Attachment(attachmentStream, attachmentFileName, attachmentContentType));
+
+            await client.SendMailAsync(message);
+            _logger.LogInformation("Email with attachment sent successfully to {Email}", to);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send email with attachment to {Email}", to);
+        }
+    }
+
+    /// <summary>
+    /// Generates the HTML body for the invoice PDF notification email
+    /// </summary>
+    private string GenerateInvoicePdfEmailBody(Event @event, string purchaseOrderNumber, string invoiceNumber)
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine("<!DOCTYPE html>");
+        sb.AppendLine("<html>");
+        sb.AppendLine("<head>");
+        sb.AppendLine("    <meta charset='utf-8'>");
+        sb.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1.0'>");
+        sb.AppendLine("    <title>Factuur LOTUS</title>");
+        sb.AppendLine("    <style>");
+        sb.AppendLine("        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }");
+        sb.AppendLine("        .container { max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }");
+        sb.AppendLine("        .header { background: #0d6efd; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }");
+        sb.AppendLine("        .content { background: white; padding: 20px; border-radius: 0 0 8px 8px; }");
+        sb.AppendLine("        .detail-row { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 4px; }");
+        sb.AppendLine("        .detail-label { font-weight: bold; color: #495057; }");
+        sb.AppendLine("        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #6c757d; }");
+        sb.AppendLine("        .highlight { background: #d1ecf1; padding: 15px; border-radius: 4px; border-left: 4px solid #0d6efd; margin: 15px 0; }");
+        sb.AppendLine("    </style>");
+        sb.AppendLine("</head>");
+        sb.AppendLine("<body>");
+        sb.AppendLine("    <div class='container'>");
+        sb.AppendLine("        <div class='header'>");
+        sb.AppendLine("            <h1>Factuur LOTUS</h1>");
+        sb.AppendLine("        </div>");
+        sb.AppendLine("        <div class='content'>");
+
+        var greeting = !string.IsNullOrEmpty(@event.Customer?.FullName)
+            ? @event.Customer.FullName
+            : @event.ContactPerson ?? "Geachte relatie";
+        sb.AppendLine($"            <p>Beste <strong>{greeting}</strong>,</p>");
+
+        sb.AppendLine("            <p>Hierbij ontvangt u de factuur voor de geleverde diensten door LOTUS.</p>");
+        sb.AppendLine("            <p>De factuur is als bijlage aan deze e-mail toegevoegd (PDF).</p>");
+
+        sb.AppendLine("            <div class='highlight'>");
+        sb.AppendLine($"                <p><strong>Factuurnummer:</strong> {invoiceNumber}</p>");
+        sb.AppendLine($"                <p><strong>Inkoopordernummer:</strong> {purchaseOrderNumber}</p>");
+        sb.AppendLine($"                <p><strong>Opdracht:</strong> {@event.Name}</p>");
+        sb.AppendLine($"                <p><strong>Datum:</strong> {@event.StartDate:d MMMM yyyy}</p>");
+        sb.AppendLine("            </div>");
+
+        sb.AppendLine("            <div class='detail-row'>");
+        sb.AppendLine($"                <div class='detail-label'>Locatie:</div>");
+        sb.AppendLine($"                <div>{@event.Location}</div>");
+        sb.AppendLine("            </div>");
+
+        sb.AppendLine("            <p>Bij vragen over deze factuur kunt u contact opnemen via <a href='mailto:info@lotus-tilburg.nl'>info@lotus-tilburg.nl</a>.</p>");
+        sb.AppendLine("            <p>Met vriendelijke groet,<br/><strong>LOTUS</strong></p>");
+
+        sb.AppendLine("        </div>");
+        sb.AppendLine("        <div class='footer'>");
+        sb.AppendLine($"            <p>Factuurdatum: {DateTime.UtcNow:d MMMM yyyy}</p>");
+        sb.AppendLine($"            <p>Referentie: EVENT-{@event.Id:D6}</p>");
+        sb.AppendLine("        </div>");
+        sb.AppendLine("    </div>");
+        sb.AppendLine("</body>");
+        sb.AppendLine("</html>");
+
+        return sb.ToString();
+    }
+
+    /// <summary>
     /// Sends a general email using SMTP
     /// </summary>
     public async Task SendEmailAsync(string to, string subject, string htmlBody)
