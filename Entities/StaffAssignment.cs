@@ -27,6 +27,27 @@ public class StaffAssignment
 
     public DateTime? UpdatedAt { get; set; }
 
+    /// <summary>
+    /// Number of kilometres driven by the staff member from their home to the assignment location.
+    /// </summary>
+    public int? KmDriven { get; set; }
+
+    /// <summary>
+    /// Base64-encoded PNG image of the customer's signature.
+    /// </summary>
+    public string? CustomerSignature { get; set; }
+
+    /// <summary>
+    /// Name of the customer representative who signed for the completion of the assignment.
+    /// </summary>
+    [StringLength(100)]
+    public string? CustomerSignedName { get; set; }
+
+    /// <summary>
+    /// The moment the customer signature was recorded.
+    /// </summary>
+    public DateTime? CustomerSignedAt { get; set; }
+
     // Navigation properties
     public Shift Shift { get; set; } = null!;
     public Staff Staff { get; set; } = null!;

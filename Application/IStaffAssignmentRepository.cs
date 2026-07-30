@@ -17,4 +17,5 @@ public interface IStaffAssignmentRepository
     Task<StaffAssignment?> CheckInStaffAsync(int assignmentId);
     Task<StaffAssignment?> CheckOutStaffAsync(int assignmentId);
     Task<bool> IsStaffAvailableAsync(int staffId, DateTime startTime, DateTime endTime, int? excludeAssignmentId = null);
+    Task<StaffAssignment?> RecordAssignmentCompletionAsync(int assignmentId, int? kmDriven, string? customerSignature, string? customerSignedName);
 }
