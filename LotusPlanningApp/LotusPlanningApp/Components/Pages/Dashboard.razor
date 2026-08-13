@@ -23,6 +23,7 @@
 @inject GetAssignmentsByStaffIdQueryHandler GetAssignmentsByStaffIdHandler
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Dashboard - LOTUS Planning App</PageTitle>
@@ -320,6 +321,13 @@
             // Check if user is admin
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
+
+            if (user.IsInRole("FinancialDepartment"))
+            {
+                NavigationManager.NavigateTo("/financial-dashboard");
+                return;
+            }
+
             isAdmin = user.IsInRole("Admin");
 
             if (isAdmin)

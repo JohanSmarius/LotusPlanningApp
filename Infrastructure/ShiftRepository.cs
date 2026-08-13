@@ -105,4 +105,15 @@ public class ShiftRepository : IShiftRepository
             .OrderBy(s => s.StartTime)
             .ToListAsync();
     }
+
+    public async Task<List<Shift>> GetShiftsPastEndDateAsync(DateTime referenceDate, CancellationToken cancellationToken = default)
+    {
+        return await _context.Shifts
+            .Include(s => s.Event)
+            .Include(s => s.StaffAssignments)
+            .ThenInclude(sa => sa.Staff)
+            .Where(s => s.EndTime < referenceDate)
+            .OrderByDescending(s => s.EndTime)
+            .ToListAsync(cancellationToken);
+    }
 }

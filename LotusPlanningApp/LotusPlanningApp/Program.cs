@@ -191,7 +191,7 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
     var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
     // Create roles if they don't exist
-    string[] roles = { "Admin", "Lotus", "Customer" };
+    string[] roles = { "Admin", "Lotus", "Customer", "FinancialDepartment" };
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
@@ -254,4 +254,3 @@ async Task BackfillStaffForExistingUsersAsync(IServiceProvider serviceProvider)
         await commandDispatcher.DispatchAsync<LinkUserToStaffByEmailCommand, bool>(linkCommand);
     }
 }
-
