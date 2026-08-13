@@ -38,6 +38,17 @@ public class EmailService : IEmailService
     }
 
     /// <summary>
+    /// Sends a staff assignment deletion notification email
+    /// </summary>
+    public async Task SendStaffAssignmentDeletionNotificationAsync(Staff staff, Shift shift, Event @event)
+    {
+        var subject = $"Shift Assignment Cancelled: {@event.Name}";
+        var htmlBody = GenerateAssignmentDeletionEmailBody(staff, shift, @event);
+
+        await SendEmailAsync(staff.Email, subject, htmlBody);
+    }
+
+    /// <summary>
     /// Sends an event planned notification email to the contact person
     /// </summary>
     public async Task SendEventPlannedNotificationAsync(Event @event)
@@ -269,6 +280,72 @@ public class EmailService : IEmailService
         sb.AppendLine("</body>");
         sb.AppendLine("</html>");
         
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Generates the HTML body for staff assignment deletion notification email
+    /// </summary>
+    private string GenerateAssignmentDeletionEmailBody(Staff staff, Shift shift, Event @event)
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine("<!DOCTYPE html>");
+        sb.AppendLine("<html>");
+        sb.AppendLine("<head>");
+        sb.AppendLine("    <meta charset='utf-8'>");
+        sb.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1.0'>");
+        sb.AppendLine("    <title>Shift Assignment Cancelled</title>");
+        sb.AppendLine("    <style>");
+        sb.AppendLine("        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }");
+        sb.AppendLine("        .container { max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }");
+        sb.AppendLine("        .header { background: #dc3545; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }");
+        sb.AppendLine("        .content { background: white; padding: 20px; border-radius: 0 0 8px 8px; }");
+        sb.AppendLine("        .detail-row { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 4px; }");
+        sb.AppendLine("        .detail-label { font-weight: bold; color: #495057; }");
+        sb.AppendLine("        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #6c757d; }");
+        sb.AppendLine("    </style>");
+        sb.AppendLine("</head>");
+        sb.AppendLine("<body>");
+        sb.AppendLine("    <div class='container'>");
+        sb.AppendLine("        <div class='header'>");
+        sb.AppendLine("            <h1>Shift Assignment Cancelled</h1>");
+        sb.AppendLine("        </div>");
+        sb.AppendLine("        <div class='content'>");
+
+        sb.AppendLine($"            <p>Hello <strong>{System.Net.WebUtility.HtmlEncode(staff.FullName)}</strong>,</p>");
+        sb.AppendLine("            <p>Your assignment to the following shift has been cancelled:</p>");
+
+        sb.AppendLine("            <h3>Event Details</h3>");
+        sb.AppendLine("            <div class='detail-row'>");
+        sb.AppendLine($"                <div class='detail-label'>Event Name:</div>");
+        sb.AppendLine($"                <div>{System.Net.WebUtility.HtmlEncode(@event.Name)}</div>");
+        sb.AppendLine("            </div>");
+        sb.AppendLine("            <div class='detail-row'>");
+        sb.AppendLine($"                <div class='detail-label'>Location:</div>");
+        sb.AppendLine($"                <div>{System.Net.WebUtility.HtmlEncode(@event.Location)}</div>");
+        sb.AppendLine("            </div>");
+
+        sb.AppendLine("            <h3>Shift Details</h3>");
+        sb.AppendLine("            <div class='detail-row'>");
+        sb.AppendLine($"                <div class='detail-label'>Shift Name:</div>");
+        sb.AppendLine($"                <div>{System.Net.WebUtility.HtmlEncode(shift.Name)}</div>");
+        sb.AppendLine("            </div>");
+        sb.AppendLine("            <div class='detail-row'>");
+        sb.AppendLine($"                <div class='detail-label'>Shift Time:</div>");
+        sb.AppendLine($"                <div>{shift.StartTime:g} - {shift.EndTime:g}</div>");
+        sb.AppendLine("            </div>");
+
+        sb.AppendLine("            <p>If you believe this is an error, please contact the event organizer.</p>");
+        sb.AppendLine("        </div>");
+        sb.AppendLine("        <div class='footer'>");
+        sb.AppendLine("            <p>This is an automated notification from the Medical First Aid Event Manager.</p>");
+        sb.AppendLine($"            <p>Email sent on {DateTime.UtcNow:g} UTC</p>");
+        sb.AppendLine("        </div>");
+        sb.AppendLine("    </div>");
+        sb.AppendLine("</body>");
+        sb.AppendLine("</html>");
+
         return sb.ToString();
     }
 
