@@ -130,6 +130,17 @@ public class StaffAssignmentRepository : IStaffAssignmentRepository
         return assignment;
     }
 
+    public async Task<StaffAssignment?> UpdateRiddenKmAsync(int assignmentId, int riddenKm)
+    {
+        var assignment = await GetAssignmentByIdAsync(assignmentId);
+        if (assignment != null)
+        {
+            assignment.RiddenKm = riddenKm;
+            await UpdateAssignmentAsync(assignment);
+        }
+        return assignment;
+    }
+
     public async Task<bool> IsStaffAvailableAsync(int staffId, DateTime startTime, DateTime endTime, int? excludeAssignmentId = null)
     {
         var query = _context.StaffAssignments
