@@ -1,5 +1,6 @@
 @page "/financial-dashboard"
 @attribute [Authorize(Roles = "FinancialDepartment")]
+@implements IDisposable
 @using Application.Queries.Shifts
 @using Entities
 @inject GetShiftsPastEndDateQueryHandler GetShiftsPastEndDateHandler
@@ -22,6 +23,17 @@
         <div class="d-flex justify-content-center py-5">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Laden...</span>
+            </div>
+        </div>
+    }
+    else if (hasError)
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="alert alert-danger d-inline-flex align-items-center mb-0" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    @errorMessage
+                </div>
             </div>
         </div>
     }
@@ -74,14 +86,27 @@
 
 @code {
     private bool isLoading = true;
+    private bool hasError;
     private List<Shift> shiftsPastEndDate = new();
+    private string errorMessage = "Er is een fout opgetreden bij het laden van het financieel dashboard.";
+    private readonly CancellationTokenSource cancellationTokenSource = new();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var query = new GetShiftsPastEndDateQuery();
-            shiftsPastEndDate = await GetShiftsPastEndDateHandler.Handle(query);
+            shiftsPastEndDate = await GetShiftsPastEndDateHandler.Handle(query, cancellationTokenSource.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            hasError = false;
+            shiftsPastEndDate = new();
+        }
+        catch
+        {
+            hasError = true;
+            shiftsPastEndDate = new();
         }
         finally
         {
@@ -100,5 +125,11 @@
             ShiftStatus.Cancelled => "danger",
             _ => "secondary"
         };
+    }
+
+    public void Dispose()
+    {
+        cancellationTokenSource.Cancel();
+        cancellationTokenSource.Dispose();
     }
 }

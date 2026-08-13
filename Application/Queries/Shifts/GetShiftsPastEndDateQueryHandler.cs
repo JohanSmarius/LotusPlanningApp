@@ -18,11 +18,6 @@ public class GetShiftsPastEndDateQueryHandler : IQueryHandler<GetShiftsPastEndDa
     public async Task<List<Shift>> Handle(GetShiftsPastEndDateQuery query, CancellationToken cancellationToken = default)
     {
         var referenceDate = query.ReferenceDate ?? DateTime.UtcNow;
-        var allShifts = await _repository.GetAllShiftsAsync();
-
-        return allShifts
-            .Where(shift => shift.EndTime < referenceDate)
-            .OrderByDescending(shift => shift.EndTime)
-            .ToList();
+        return await _repository.GetShiftsPastEndDateAsync(referenceDate, cancellationToken);
     }
 }
