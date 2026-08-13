@@ -1,0 +1,283 @@
+@page "/shifts/{ShiftId:int}/assignments/{AssignmentId:int}/signoff"
+@attribute [Authorize(Roles = "Admin,Lotus")]
+@rendermode InteractiveServer
+@using Application.Commands.StaffAssignments
+@using Application.Queries.Shifts
+@using Entities
+@inject SignOffStaffAssignmentCommandHandler SignOffHandler
+@inject GetShiftByIdQueryHandler GetShiftByIdHandler
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<PageTitle>Klanthandtekening - LOTUS Planning App</PageTitle>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Laden...</span>
+        </div>
+    </div>
+}
+else if (assignment == null)
+{
+    <div class="container-fluid">
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Toewijzing niet gevonden</strong>
+        </div>
+        <a href="/shifts/details/@ShiftId" class="btn btn-primary">
+            <i class="bi bi-arrow-left me-2"></i>Terug
+        </a>
+    </div>
+}
+else if (assignment.SignedOffAt.HasValue)
+{
+    <!-- Already signed off -->
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="h3 mb-0 text-primary">
+                    <i class="bi bi-patch-check me-2"></i>Reeds afgetekend
+                </h1>
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle me-2"></i>
+                    <strong>Afgetekend op @assignment.SignedOffAt.Value.ToLocalTime().ToString("f")</strong>
+                </div>
+                <dl class="row">
+                    <dt class="col-sm-4">Uren gewerkt</dt>
+                    <dd class="col-sm-8">@assignment.ActualHours u</dd>
+                    <dt class="col-sm-4">Kilometers gereden</dt>
+                    <dd class="col-sm-8">@assignment.KilometersDriven km</dd>
+                </dl>
+                @if (!string.IsNullOrEmpty(assignment.ClientSignature))
+                {
+                    <label class="form-label text-muted small">HANDTEKENING</label>
+                    <div class="border rounded p-2 d-inline-block">
+                        <img src="@assignment.ClientSignature" alt="Handtekening" class="img-fluid" style="max-height:150px;" />
+                    </div>
+                }
+            </div>
+        </div>
+        <a href="/shifts/details/@ShiftId" class="btn btn-outline-secondary mt-3">
+            <i class="bi bi-arrow-left me-2"></i>Terug naar deelopdracht
+        </a>
+    </div>
+}
+else
+{
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/shifts/details/@ShiftId" class="text-decoration-none">@shiftName</a>
+                        </li>
+                        <li class="breadcrumb-item active">Klanthandtekening</li>
+                    </ol>
+                </nav>
+                <h1 class="h3 mb-0 text-primary">
+                    <i class="bi bi-pen me-2"></i>Klanthandtekening
+                </h1>
+                <p class="text-muted">
+                    @assignment.Staff.FullName &mdash; @shiftName
+                </p>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+            </div>
+        }
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-clock me-2"></i>Uren en kilometers
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="form-label" for="actualHours">
+                            Aantal gewerkte uren <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input id="actualHours" type="number" step="0.5" min="0" max="24"
+                                   class="form-control form-control-lg"
+                                   @bind="actualHours" />
+                            <span class="input-group-text">u</span>
+                        </div>
+                        <div class="form-text">Berekend: @CalculatedHours u</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label" for="kilometersDriven">
+                            Aantal kilometers gereden <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input id="kilometersDriven" type="number" step="1" min="0"
+                                   class="form-control form-control-lg"
+                                   @bind="kilometersDriven" />
+                            <span class="input-group-text">km</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-pen me-2"></i>Handtekening klant
+                </h5>
+                <button class="btn btn-sm btn-outline-light" @onclick="ClearSignature" type="button">
+                    <i class="bi bi-eraser me-1"></i>Wissen
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <canvas id="signatureCanvas"
+                        width="800" height="300"
+                        class="w-100 border-0 rounded-bottom"
+                        style="touch-action: none; cursor: crosshair; background: #fff;">
+                </canvas>
+            </div>
+            <div class="card-footer text-muted small">
+                <i class="bi bi-info-circle me-1"></i>
+                Laat de klant hieronder tekenen (touch of muis)
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button class="btn btn-success btn-lg" @onclick="SubmitSignOff" disabled="@isSaving">
+                @if (isSaving)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                }
+                else
+                {
+                    <i class="bi bi-check-circle me-2"></i>
+                }
+                Bevestigen en opslaan
+            </button>
+            <a href="/shifts/details/@ShiftId" class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-x-circle me-2"></i>Annuleren
+            </a>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int ShiftId { get; set; }
+    [Parameter] public int AssignmentId { get; set; }
+
+    private bool isLoading = true;
+    private bool isSaving = false;
+    private bool _padInitialized = false;
+    private string? errorMessage;
+    private StaffAssignment? assignment;
+    private string shiftName = string.Empty;
+
+    private decimal actualHours;
+    private decimal kilometersDriven;
+
+    private string CalculatedHours
+    {
+        get
+        {
+            if (assignment?.Shift == null) return "–";
+            var h = (decimal)(assignment.Shift.EndTime - assignment.Shift.StartTime).TotalHours;
+            return Math.Round(h, 2).ToString("0.##");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var shift = await GetShiftByIdHandler.Handle(new GetShiftByIdQuery(ShiftId));
+        if (shift != null)
+        {
+            shiftName = shift.Name;
+            assignment = shift.StaffAssignments.FirstOrDefault(a => a.Id == AssignmentId);
+            if (assignment != null)
+            {
+                // Pre-fill hours with calculated value
+                var calculatedH = (decimal)(shift.EndTime - shift.StartTime).TotalHours;
+                actualHours = Math.Round(calculatedH, 2);
+            }
+        }
+        isLoading = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!_padInitialized && !isLoading && assignment != null && !assignment.SignedOffAt.HasValue)
+        {
+            _padInitialized = true;
+            await JS.InvokeVoidAsync("signaturePad.init", "signatureCanvas");
+        }
+    }
+
+    private async Task ClearSignature()
+    {
+        await JS.InvokeVoidAsync("signaturePad.clear", "signatureCanvas");
+    }
+
+    private async Task SubmitSignOff()
+    {
+        errorMessage = null;
+
+        if (actualHours <= 0)
+        {
+            errorMessage = "Voer een geldig aantal uren in (groter dan 0).";
+            return;
+        }
+
+        if (kilometersDriven < 0)
+        {
+            errorMessage = "Voer een geldig aantal kilometers in (0 of meer).";
+            return;
+        }
+
+        bool empty = await JS.InvokeAsync<bool>("signaturePad.isEmpty", "signatureCanvas");
+        if (empty)
+        {
+            errorMessage = "Er is nog geen handtekening geplaatst.";
+            return;
+        }
+
+        string dataUrl = await JS.InvokeAsync<string>("signaturePad.toDataUrl", "signatureCanvas");
+
+        // Prevent storing oversized signatures (max ~500 KB as base64)
+        if (dataUrl.Length > 700_000)
+        {
+            errorMessage = "De handtekening is te groot. Maak het tekengebied schoon en teken opnieuw.";
+            return;
+        }
+
+        isSaving = true;
+        try
+        {
+            var command = new SignOffStaffAssignmentCommand(AssignmentId, actualHours, kilometersDriven, dataUrl);
+            var result = await SignOffHandler.Handle(command, CancellationToken.None);
+            if (result != null)
+            {
+                Navigation.NavigateTo($"/shifts/details/{ShiftId}");
+            }
+            else
+            {
+                errorMessage = "Opslaan mislukt. Probeer het opnieuw.";
+            }
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+}

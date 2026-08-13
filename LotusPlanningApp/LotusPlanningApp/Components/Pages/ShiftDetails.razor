@@ -278,6 +278,22 @@ else
                                                             <i class="fas fa-calendar-plus me-1"></i>
                                                             Toegewezen: @assignment.AssignedAt.ToString("g")
                                                         </div>
+                                                        <div class="mt-2">
+                                                            @if (assignment.SignedOffAt.HasValue)
+                                                            {
+                                                                <span class="badge bg-success">
+                                                                    <i class="fas fa-signature me-1"></i>
+                                                                    Afgetekend @assignment.SignedOffAt.Value.ToLocalTime().ToString("g")
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="/shifts/@ShiftId/assignments/@assignment.Id/signoff"
+                                                                   class="btn btn-sm btn-outline-primary">
+                                                                    <i class="fas fa-pen me-1"></i>Handtekening klant
+                                                                </a>
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -27,6 +27,26 @@ public class StaffAssignment
 
     public DateTime? UpdatedAt { get; set; }
 
+    /// <summary>
+    /// Actual number of hours worked, as confirmed by the client during sign-off
+    /// </summary>
+    public decimal? ActualHours { get; set; }
+
+    /// <summary>
+    /// Kilometers driven by the staff member, as confirmed by the client during sign-off
+    /// </summary>
+    public decimal? KilometersDriven { get; set; }
+
+    /// <summary>
+    /// Base-64 encoded PNG of the client's signature
+    /// </summary>
+    public string? ClientSignature { get; set; }
+
+    /// <summary>
+    /// Date and time when the client signed off on this assignment
+    /// </summary>
+    public DateTime? SignedOffAt { get; set; }
+
     // Navigation properties
     public Shift Shift { get; set; } = null!;
     public Staff Staff { get; set; } = null!;
