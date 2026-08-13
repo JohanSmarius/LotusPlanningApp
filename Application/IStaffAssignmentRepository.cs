@@ -16,5 +16,6 @@ public interface IStaffAssignmentRepository
     Task DeleteAssignmentAsync(int id);
     Task<StaffAssignment?> CheckInStaffAsync(int assignmentId);
     Task<StaffAssignment?> CheckOutStaffAsync(int assignmentId);
+    Task<StaffAssignment?> UpdateRiddenKmAsync(int assignmentId, int riddenKm);
     Task<bool> IsStaffAvailableAsync(int staffId, DateTime startTime, DateTime endTime, int? excludeAssignmentId = null);
 }
