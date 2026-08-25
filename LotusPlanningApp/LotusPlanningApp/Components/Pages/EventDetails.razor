@@ -4,11 +4,13 @@
 @using Application.DataAdapters
 @using Application.Queries.Events
 @using Application.Commands.Shifts
+@using Application.Commands.Events
 @using Entities
 @inject GetEventByIdQueryHandler GetEventByIdHandler
 @inject CreateShiftCommandHandler CreateShiftHandler
 @inject DeleteShiftCommandHandler DeleteShiftHandler
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 @rendermode InteractiveServer
 
 <PageTitle>Opdrachtdetails - LOTUS Planning App</PageTitle>
@@ -64,6 +66,9 @@ else
                     <div class="btn-group" role="group">
                         <button class="btn btn-outline-primary" @onclick="EditEvent">
                             <i class="fas fa-edit me-2"></i>Opdracht bewerken
+                        </button>
+                        <button class="btn btn-outline-success" @onclick="OpenInvoiceDialog">
+                            <i class="fas fa-file-invoice me-2"></i>Factuur genereren
                         </button>
                     </div>
                 </div>
@@ -451,6 +456,73 @@ else
     </div>
 }
 
+<!-- Invoice Generation Modal -->
+@if (showInvoiceDialog)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5); z-index: 1055;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-invoice me-2"></i>Factuur genereren
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseInvoiceDialog"></button>
+                </div>
+                <EditForm Model="invoiceModel" OnValidSubmit="GenerateInvoicePdf">
+                    <DataAnnotationsValidator />
+                    <div class="modal-body">
+                        @if (!string.IsNullOrEmpty(invoiceErrorMessage))
+                        {
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle me-2"></i>@invoiceErrorMessage
+                            </div>
+                        }
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Factuur aanmaken voor:</strong> @eventDetail?.Name
+                            <br>
+                            <small class="text-muted">
+                                De factuur wordt gegenereerd als PDF en per e-mail verstuurd naar de klant.
+                            </small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Inkoopordernummer (PO-nummer) *</label>
+                            <InputText @bind-Value="invoiceModel.PurchaseOrderNumber"
+                                       class="form-control"
+                                       placeholder="Bijv. PO-2024-001" />
+                            <ValidationMessage For="() => invoiceModel.PurchaseOrderNumber" class="text-danger" />
+                            <div class="form-text">Voer het PO-nummer in dat op de factuur moet worden vermeld.</div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <InputCheckbox @bind-Value="invoiceModel.SendByEmail" class="form-check-input" id="sendByEmail" />
+                                <label class="form-check-label" for="sendByEmail">
+                                    Factuur per e-mail versturen naar de klant
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseInvoiceDialog">Annuleren</button>
+                        <button type="submit" class="btn btn-success" disabled="@isGeneratingInvoice">
+                            @if (isGeneratingInvoice)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                                <span>Bezig...</span>
+                            }
+                            else
+                            {
+                                <i class="fas fa-file-pdf me-2"></i>
+                                <span>Factuur downloaden</span>
+                            }
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     [Parameter] public int EventId { get; set; }
 
@@ -458,9 +530,13 @@ else
     private bool isCreatingShift = false;
     private bool isDeletingShift = false;
     private bool showCreateShiftDialog = false;
+    private bool showInvoiceDialog = false;
+    private bool isGeneratingInvoice = false;
+    private string? invoiceErrorMessage;
     private Event? eventDetail;
     private Shift newShift = new();
     private Shift? shiftToDelete;
+    private InvoiceFormModel invoiceModel = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -655,5 +731,59 @@ else
             isDeletingShift = false;
             StateHasChanged();
         }
+    }
+
+    private void OpenInvoiceDialog()
+    {
+        invoiceModel = new InvoiceFormModel();
+        invoiceErrorMessage = null;
+        showInvoiceDialog = true;
+        StateHasChanged();
+    }
+
+    private void CloseInvoiceDialog()
+    {
+        showInvoiceDialog = false;
+        invoiceErrorMessage = null;
+        StateHasChanged();
+    }
+
+    private async Task GenerateInvoicePdf()
+    {
+        if (eventDetail == null) return;
+
+        isGeneratingInvoice = true;
+        invoiceErrorMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            var encodedPo = Uri.EscapeDataString(invoiceModel.PurchaseOrderNumber);
+            var sendEmail = invoiceModel.SendByEmail.ToString().ToLowerInvariant();
+            var url = $"/api/invoice/event/{eventDetail.Id}/pdf?poNumber={encodedPo}&sendEmail={sendEmail}";
+            await JS.InvokeVoidAsync("open", url, "_blank");
+            showInvoiceDialog = false;
+        }
+        catch (Exception ex)
+        {
+            invoiceErrorMessage = $"Fout bij het genereren van de factuur: {ex.Message}";
+        }
+        finally
+        {
+            isGeneratingInvoice = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Model for the invoice generation form
+    /// </summary>
+    private class InvoiceFormModel
+    {
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "PO-nummer is verplicht.")]
+        [System.ComponentModel.DataAnnotations.StringLength(100, ErrorMessage = "PO-nummer mag maximaal 100 tekens bevatten.")]
+        public string PurchaseOrderNumber { get; set; } = string.Empty;
+
+        public bool SendByEmail { get; set; } = true;
     }
 }

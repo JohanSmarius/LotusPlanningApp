@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.1" />
+    <PackageReference Include="QuestPDF" Version="2025.4.0" />
   </ItemGroup>
 
   <ItemGroup>
