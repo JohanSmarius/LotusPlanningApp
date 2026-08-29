@@ -82,7 +82,38 @@ public class SignOffStaffAssignmentCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_AssignmentAlreadySignedOffOrNotFound_ReturnsNull()
+    public async Task Handle_AssignmentAlreadySignedOff_ReturnsExistingAssignmentUnchanged()
+    {
+        // Arrange
+        var originalSignature = new byte[] { 9 };
+        var signedOffAt = new DateTime(2026, 1, 1, 10, 0, 0, DateTimeKind.Utc);
+        var newSignature = new byte[] { 1, 2, 3 };
+        var command = new SignOffStaffAssignmentCommand(1, 4m, 10m, newSignature);
+        var assignment = new StaffAssignment
+        {
+            Id = 1,
+            ActualHours = 2m,
+            KilometersDriven = 5m,
+            ClientSignature = originalSignature,
+            SignedOffAt = signedOffAt
+        };
+        _mockRepository
+            .Setup(r => r.SignOffAssignmentAsync(1, 4m, 10m, newSignature))
+            .ReturnsAsync(assignment);
+
+        // Act
+        var result = await _handler.Handle(command);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(signedOffAt, result!.SignedOffAt);
+        Assert.Equal(2m, result.ActualHours);
+        Assert.Equal(5m, result.KilometersDriven);
+        Assert.Equal(originalSignature, result.ClientSignature);
+    }
+
+    [Fact]
+    public async Task Handle_AssignmentNotFound_ReturnsNull()
     {
         // Arrange
         var signature = new byte[] { 1, 2, 3 };
