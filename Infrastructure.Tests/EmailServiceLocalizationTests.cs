@@ -24,12 +24,13 @@ public class EmailServiceLocalizationTests
             new ConfigurationBuilder().Build(),
             Mock.Of<ILogger<EmailService>>());
 
-        var method = typeof(EmailService).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var method = typeof(EmailService).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.NotNull(method);
         var arguments = methodName.Contains("Assignment")
             ? new object[] { new Entities.Staff(), new Entities.Shift(), new Entities.Event() }
             : new object[] { new Entities.Event() };
 
-        var body = (string)method.Invoke(service, arguments)!;
+        var body = (string)method!.Invoke(service, arguments)!;
 
         Assert.Contains($"<title>{expectedTitle}</title>", body);
     }
