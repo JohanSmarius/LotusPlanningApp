@@ -100,31 +100,11 @@ public class StaffAssignmentRepository : IStaffAssignmentRepository
 
     public async Task DeleteAssignmentAsync(int id)
     {
-        var assignment = await GetAssignmentByIdAsync(id);
+        var assignment = await _context.StaffAssignments.FindAsync(id);
         if (assignment != null)
         {
             _context.StaffAssignments.Remove(assignment);
             await _context.SaveChangesAsync();
-
-            if (assignment.Staff != null && assignment.Shift?.Event != null)
-            {
-                try
-                {
-                    await _emailService.SendStaffAssignmentDeletionNotificationAsync(
-                        assignment.Staff,
-                        assignment.Shift,
-                        assignment.Shift.Event);
-
-                    _logger.LogInformation("Assignment deletion notification email sent to {Email} for shift {ShiftName}",
-                        assignment.Staff.Email, assignment.Shift.Name);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to send assignment deletion notification email to {Email} for shift {ShiftName}",
-                        assignment.Staff?.Email, assignment.Shift?.Name);
-                    // Don't throw - we don't want email failures to prevent assignment deletion
-                }
-            }
         }
     }
 
