@@ -24,8 +24,11 @@ public class StaffRepository : IStaffRepository
 
     public async Task<List<Entities.Staff>> GetAllStaffExcludingAdminsAsync()
     {
-        // Get all staff members that are NOT linked to users with the "Admin" role
-        // Using a single query with joins for better performance
+        // Get staff members that are:
+        // 1. NOT linked to users with the "Admin" role
+        // 2. NOT linked to users with the "Customer" role (clients)
+        // 3. OR not linked to any user yet (unregistered staff)
+        // This ensures only actual LOTUS staff members are shown, not clients
         return await _context.Staff
             .Where(staff => !_context.Users
                 .Join(_context.UserRoles,
@@ -36,7 +39,7 @@ public class StaffRepository : IStaffRepository
                     ur => ur.userRole.RoleId,
                     role => role.Id,
                     (ur, role) => new { ur.user, role })
-                .Where(x => x.role.Name == "Admin" && x.user.StaffId == staff.Id)
+                .Where(x => (x.role.Name == "Admin" || x.role.Name == "Customer") && x.user.StaffId == staff.Id)
                 .Any())
             .OrderBy(s => s.LastName)
             .ThenBy(s => s.FirstName)
