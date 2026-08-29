@@ -251,9 +251,19 @@ else
         // Strip the data URL prefix to get raw PNG bytes for binary storage
         const string prefix = "data:image/png;base64,";
         string base64 = dataUrl.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-            ? dataUrl[prefix.Length..].TrimStart()
-            : dataUrl;
-        byte[] pngBytes = Convert.FromBase64String(base64);
+            ? dataUrl[prefix.Length..].Trim()
+            : dataUrl.Trim();
+
+        byte[] pngBytes;
+        try
+        {
+            pngBytes = Convert.FromBase64String(base64);
+        }
+        catch (FormatException)
+        {
+            errorMessage = "De handtekening kon niet worden verwerkt. Wis de handtekening en teken opnieuw.";
+            return;
+        }
 
         isSaving = true;
         try
