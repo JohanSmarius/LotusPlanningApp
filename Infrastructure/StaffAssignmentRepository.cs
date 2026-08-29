@@ -160,4 +160,26 @@ public class StaffAssignmentRepository : IStaffAssignmentRepository
 
         return !await query.AnyAsync();
     }
+
+public async Task<StaffAssignment?> SignOffAssignmentAsync(int assignmentId, decimal actualHours, decimal kilometersDriven, byte[] clientSignature)
+{
+    var assignment = await GetAssignmentByIdAsync(assignmentId);
+    if (assignment == null)
+    {
+        return null;
+    }
+
+    // Prevent overwriting an existing client sign-off.
+    if (assignment.SignedOffAt.HasValue)
+    {
+        return assignment;
+    }
+
+    assignment.ActualHours = actualHours;
+    assignment.KilometersDriven = kilometersDriven;
+    assignment.ClientSignature = clientSignature;
+    assignment.SignedOffAt = DateTime.UtcNow;
+    await UpdateAssignmentAsync(assignment);
+
+    return assignment;
 }
