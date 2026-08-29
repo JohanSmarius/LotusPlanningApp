@@ -22,25 +22,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6f7985e8-637f-463e-8cbb-e17a45e340ea" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Layout/NavMenu.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Layout/NavMenu.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/Customers.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/Customers.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventEdit.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventEdit.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventsPage.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/EventsPage.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Commands/Shifts/DeleteShiftCommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Commands/Shifts/DeleteShiftCommandHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Commands/StaffAssignments/CreateStaffAssignmentCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Commands/StaffAssignments/CreateStaffAssignmentCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Commands/StaffAssignments/CreateStaffAssignmentCommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Commands/StaffAssignments/CreateStaffAssignmentCommandHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/IStaffAssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/IStaffAssignmentRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/StaffAssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/StaffAssignmentRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftEdit.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftEdit.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/johansmarius/Projects/LotusApp/LotusApp" value="37lIUCKQjAyzrmF6htMpUchUAf8" />
+    </persistenceIdMap>
+  </component>
   <component name="DpaMonitoringSettings">
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="4" />
+    <option name="cachedIndexableFilesCount" value="9" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="demo-ghcopilot" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -56,6 +74,9 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2daf28f444a931539170211ca2938c578379fc27224b311defb481946de691d/SqliteException.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4852f4b57d749bbfb9d5b865e0784974ee5f56de4427c6e584fb4ecd193c751/StringBuilder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/68b06b8592b1287fd78f3ee68566d6a38d6e2f45b9a9e6ebd4d0e9972f7c29/Object.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
@@ -63,6 +84,65 @@
     <urls />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.7493035683367895" />
+      <entry key="MS500" value="4.386724585323952" />
+      <entry key="S2" value="10.790508204630562" />
+      <entry key="S5" value="22.411236740751615" />
+      <entry key="S10" value="38.10508795499847" />
+      <entry key="S30" value="69.66591960659599" />
+      <entry key="S60" value="85.35515875643517" />
+      <entry key="M2" value="96.21529825187359" />
+      <entry key="M5" value="105.63665154742957" />
+      <entry key="M10" value="113.53635881427365" />
+      <entry key="M15" value="119.664447661186" />
+      <entry key="M30" value="130.59117481128717" />
+      <entry key="H1" value="139.17551156457728" />
+      <entry key="H2" value="144.61069028459897" />
+      <entry key="H4" value="147.67566176406427" />
+      <entry key="D1" value="150.42697310304735" />
+      <entry key="W1" value="150.9176613879995" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.6962416056049476" />
+      <entry key="MS500" value="4.363790982614385" />
+      <entry key="S2" value="10.776259707121485" />
+      <entry key="S5" value="22.399078033061183" />
+      <entry key="S10" value="38.09452437458888" />
+      <entry key="S30" value="69.65926840965813" />
+      <entry key="S60" value="85.35101229487135" />
+      <entry key="M2" value="96.21289910779896" />
+      <entry key="M5" value="105.63554471858363" />
+      <entry key="M10" value="113.53573836444357" />
+      <entry key="M15" value="119.66400111805882" />
+      <entry key="M30" value="130.59092312446148" />
+      <entry key="H1" value="139.1753747683014" />
+      <entry key="H2" value="144.61061844697582" />
+      <entry key="H4" value="147.67562487903848" />
+      <entry key="D1" value="150.426966811297" />
+      <entry key="W1" value="150.9176604855068" />
+    </decayedShown>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -71,38 +151,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.LotusPlanningApp: http.executor": "Debug",
-    "Aspire Host.LotusApp.AppHost: http.executor": "Debug",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "cidr.known.project.marker": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.web.browsers",
-    "settings.editor.splitter.proportion": "0.24451666",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Users/johansmarius/Applications/Rider.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.LotusPlanningApp: http.executor&quot;: &quot;Debug&quot;,
+    &quot;Aspire Host.LotusApp.AppHost: http.executor&quot;: &quot;Debug&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.web.browsers&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.24451666&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/johansmarius/Applications/Rider.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "sqlite"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlite&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1767981642384" />
     <option name="spentUsd" value="0.28403232" />
@@ -304,6 +386,8 @@
       <workItem from="1771681186602" duration="458000" />
       <workItem from="1771686675986" duration="234000" />
       <workItem from="1771687007442" duration="2117000" />
+      <workItem from="1783776178275" duration="1770000" />
+      <workItem from="1783970039404" duration="2112000" />
     </task>
     <servers />
   </component>
@@ -343,6 +427,32 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Infrastructure/EmailService.cs</url>
+          <line>33</line>
+          <properties documentPath="$PROJECT_DIR$/Infrastructure/EmailService.cs" containingFunctionPresentation="Method 'SendStaffAssignmentNotificationAsync'">
+            <startOffsets>
+              <option value="1007" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1056" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Infrastructure/EmailService.cs</url>
+          <line>44</line>
+          <properties documentPath="$PROJECT_DIR$/Infrastructure/EmailService.cs" containingFunctionPresentation="Method 'SendStaffAssignmentDeletionNotificationAsync'">
+            <startOffsets>
+              <option value="1428" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1487" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

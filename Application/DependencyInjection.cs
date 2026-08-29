@@ -65,6 +65,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(IQueryHandler<GetShiftsByEventIdQuery, List<Shift>>), typeof(GetShiftsByEventIdQueryHandler));
         services.AddScoped<GetUpcomingShiftsQueryHandler>();
         services.AddScoped(typeof(IQueryHandler<GetUpcomingShiftsQuery, List<Shift>>), typeof(GetUpcomingShiftsQueryHandler));
+        services.AddScoped<GetShiftsPastEndDateQueryHandler>();
+        services.AddScoped(typeof(IQueryHandler<GetShiftsPastEndDateQuery, List<Shift>>), typeof(GetShiftsPastEndDateQueryHandler));
 
         // Register Staff Command Handlers
         services.AddScoped<CreateStaffCommandHandler>();
@@ -91,6 +93,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(ICommandHandler<CheckInStaffCommand, StaffAssignment?>), typeof(CheckInStaffCommandHandler));
         services.AddScoped<CheckOutStaffCommandHandler>();
         services.AddScoped(typeof(ICommandHandler<CheckOutStaffCommand, StaffAssignment?>), typeof(CheckOutStaffCommandHandler));
+        services.AddScoped<UpdateRiddenKmCommandHandler>();
+        services.AddScoped(typeof(ICommandHandler<UpdateRiddenKmCommand, StaffAssignment?>), typeof(UpdateRiddenKmCommandHandler));
         services.AddScoped<DeleteStaffAssignmentCommandHandler>();
         services.AddScoped(typeof(ICommandHandler<DeleteStaffAssignmentCommand, bool>), typeof(DeleteStaffAssignmentCommandHandler));
         services.AddScoped<SignOffStaffAssignmentCommandHandler>();

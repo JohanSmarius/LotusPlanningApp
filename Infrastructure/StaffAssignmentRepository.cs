@@ -58,32 +58,35 @@ public class StaffAssignmentRepository : IStaffAssignmentRepository
             .ToListAsync();
     }
 
-    public async Task<StaffAssignment> CreateAssignmentAsync(StaffAssignment assignment)
+    public async Task<StaffAssignment> CreateAssignmentAsync(StaffAssignment assignment, bool sendNotification = true)
     {
         assignment.AssignedAt = DateTime.UtcNow;
         _context.StaffAssignments.Add(assignment);
         await _context.SaveChangesAsync();
 
-        // Load the full assignment with related data for email notification
-        var fullAssignment = await GetAssignmentByIdAsync(assignment.Id);
-        if (fullAssignment?.Staff != null && fullAssignment.Shift?.Event != null)
+        if (sendNotification)
         {
-            try
+            // Load the full assignment with related data for email notification
+            var fullAssignment = await GetAssignmentByIdAsync(assignment.Id);
+            if (fullAssignment?.Staff != null && fullAssignment.Shift?.Event != null)
             {
-                // Send email notification to the assigned staff member
-                await _emailService.SendStaffAssignmentNotificationAsync(
-                    fullAssignment.Staff, 
-                    fullAssignment.Shift, 
-                    fullAssignment.Shift.Event);
+                try
+                {
+                    // Send email notification to the assigned staff member
+                    await _emailService.SendStaffAssignmentNotificationAsync(
+                        fullAssignment.Staff, 
+                        fullAssignment.Shift, 
+                        fullAssignment.Shift.Event);
 
-                _logger.LogInformation("Assignment notification email sent to {Email} for shift {ShiftName}", 
-                    fullAssignment.Staff.Email, fullAssignment.Shift.Name);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to send assignment notification email to {Email} for shift {ShiftName}", 
-                    fullAssignment.Staff?.Email, fullAssignment.Shift?.Name);
-                // Don't throw - we don't want email failures to prevent assignment creation
+                    _logger.LogInformation("Assignment notification email sent to {Email} for shift {ShiftName}", 
+                        fullAssignment.Staff.Email, fullAssignment.Shift.Name);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to send assignment notification email to {Email} for shift {ShiftName}", 
+                        fullAssignment.Staff?.Email, fullAssignment.Shift?.Name);
+                    // Don't throw - we don't want email failures to prevent assignment creation
+                }
             }
         }
 
@@ -125,6 +128,17 @@ public class StaffAssignmentRepository : IStaffAssignmentRepository
         if (assignment != null)
         {
             assignment.Status = AssignmentStatus.CheckedOut;
+            await UpdateAssignmentAsync(assignment);
+        }
+        return assignment;
+    }
+
+    public async Task<StaffAssignment?> UpdateRiddenKmAsync(int assignmentId, int riddenKm)
+    {
+        var assignment = await GetAssignmentByIdAsync(assignmentId);
+        if (assignment != null)
+        {
+            assignment.RiddenKm = riddenKm;
             await UpdateAssignmentAsync(assignment);
         }
         return assignment;

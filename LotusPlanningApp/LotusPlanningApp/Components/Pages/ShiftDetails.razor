@@ -1,11 +1,16 @@
 @page "/shifts/details/{ShiftId:int}"
 @attribute [Authorize(Roles = "Admin,Lotus")]
 @using Application
+@using Application.Commands.StaffAssignments
 @using Application.DataAdapters
 @using Application.Queries.Shifts
 @using Entities
+@using Microsoft.AspNetCore.Components.Authorization
 @inject GetShiftByIdQueryHandler GetShiftByIdHandler
+@inject UpdateRiddenKmCommandHandler UpdateRiddenKmHandler
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+@inject Microsoft.AspNetCore.Identity.UserManager<LotusPlanningApp.Data.ApplicationUser> UserManager
 @rendermode InteractiveServer
 
 <PageTitle>Opdrachtdetails - LOTUS Planning App</PageTitle>
@@ -278,6 +283,58 @@ else
                                                             <i class="fas fa-calendar-plus me-1"></i>
                                                             Toegewezen: @assignment.AssignedAt.ToString("g")
                                                         </div>
+                                                        @if (shiftDetail.EndTime <= DateTime.Now && (isAdmin || assignment.StaffId == currentUserStaffId))
+                                                        {
+                                                            <div class="mt-2">
+                                                                @if (riddenKmEditAssignmentId == assignment.Id)
+                                                                {
+                                                                    <div class="input-group input-group-sm">
+                                                                        <span class="input-group-text"><i class="fas fa-road"></i></span>
+                                                                        <input type="number" class="form-control" min="0" max="10000"
+                                                                               @bind="riddenKmInputValue"
+                                                                               placeholder="km" />
+                                                                        <button class="btn btn-success" @onclick="() => SaveRiddenKm(assignment.Id)" disabled="@isSavingKm">
+                                                                            @if (isSavingKm)
+                                                                            {
+                                                                                <span class="spinner-border spinner-border-sm"></span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <i class="fas fa-check"></i>
+                                                                            }
+                                                                        </button>
+                                                                        <button class="btn btn-outline-secondary" @onclick="CancelRiddenKmEdit">
+                                                                            <i class="fas fa-times"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="d-flex align-items-center gap-2">
+                                                                        <span class="small text-muted">
+                                                                            <i class="fas fa-road me-1"></i>
+                                                                            @if (assignment.RiddenKm.HasValue)
+                                                                            {
+                                                                                @($"Gereden km: {assignment.RiddenKm} km")
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span class="fst-italic">Geen km ingevuld</span>
+                                                                            }
+                                                                        </span>
+                                                                        <button class="btn btn-outline-primary btn-sm" @onclick="() => StartRiddenKmEdit(assignment.Id, assignment.RiddenKm)">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                        else if (assignment.RiddenKm.HasValue)
+                                                        {
+                                                            <div class="small text-muted mt-1">
+                                                                <i class="fas fa-road me-1"></i>Gereden km: @assignment.RiddenKm km
+                                                            </div>
+                                                        }
                                                         <div class="mt-2">
                                                             @if (assignment.SignedOffAt.HasValue)
                                                             {
@@ -336,10 +393,26 @@ else
     [Parameter] public int ShiftId { get; set; }
 
     private bool isLoading = true;
+    private bool isAdmin = false;
+    private int? currentUserStaffId;
     private Shift? shiftDetail;
+
+    private int? riddenKmEditAssignmentId;
+    private int riddenKmInputValue;
+    private bool isSavingKm;
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        isAdmin = user.IsInRole("Admin");
+
+        if (!isAdmin && user.Identity?.IsAuthenticated == true)
+        {
+            var appUser = await UserManager.GetUserAsync(user);
+            currentUserStaffId = appUser?.StaffId;
+        }
+
         await LoadShiftDetails();
         isLoading = false;
     }
@@ -354,6 +427,40 @@ else
     {
         var query = new GetShiftByIdQuery(ShiftId);
         shiftDetail = await GetShiftByIdHandler.Handle(query);
+    }
+
+    private void StartRiddenKmEdit(int assignmentId, int? currentKm)
+    {
+        riddenKmEditAssignmentId = assignmentId;
+        riddenKmInputValue = currentKm ?? 0;
+    }
+
+    private void CancelRiddenKmEdit()
+    {
+        riddenKmEditAssignmentId = null;
+        riddenKmInputValue = 0;
+    }
+
+    private async Task SaveRiddenKm(int assignmentId)
+    {
+        if (riddenKmInputValue < 0 || riddenKmInputValue > 10000)
+            return;
+
+        isSavingKm = true;
+        try
+        {
+            // Pass the requesting staff ID so the handler can verify ownership for non-admins.
+            var requestingStaffId = isAdmin ? (int?)null : currentUserStaffId;
+            var command = new UpdateRiddenKmCommand(assignmentId, riddenKmInputValue, requestingStaffId);
+            await UpdateRiddenKmHandler.Handle(command);
+            riddenKmEditAssignmentId = null;
+            riddenKmInputValue = 0;
+            await LoadShiftDetails();
+        }
+        finally
+        {
+            isSavingKm = false;
+        }
     }
 
     private void GoBack()

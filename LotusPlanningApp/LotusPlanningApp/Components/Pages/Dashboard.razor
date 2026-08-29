@@ -23,6 +23,7 @@
 @inject GetAssignmentsByStaffIdQueryHandler GetAssignmentsByStaffIdHandler
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Dashboard - LOTUS Planning App</PageTitle>
@@ -160,6 +161,9 @@
                                                         <span class="badge bg-@GetAssignmentStatusColor(assignment.Status) me-1">
                                                             @assignment.Status
                                                         </span>
+                                                        <a href="@($"/shifts/details/{shift.Id}")" class="btn btn-sm btn-primary ms-2" title="Shift details bekijken">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
                                                         <a href="@($"/api/calendar/shift/{shift.Id}.ics")" class="btn btn-sm btn-success ms-2" title="Kalenderbestand downloaden">
                                                             <i class="fas fa-download"></i>
                                                         </a>
@@ -317,6 +321,13 @@
             // Check if user is admin
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
+
+            if (user.IsInRole("FinancialDepartment"))
+            {
+                NavigationManager.NavigateTo("/financial-dashboard");
+                return;
+            }
+
             isAdmin = user.IsInRole("Admin");
 
             if (isAdmin)

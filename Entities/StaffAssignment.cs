@@ -47,6 +47,12 @@ public class StaffAssignment
     /// </summary>
     public DateTime? SignedOffAt { get; set; }
 
+    /// <summary>
+    /// Number of kilometres ridden during the assignment, entered by staff after the shift ends.
+    /// </summary>
+    [Range(0, 10000)]
+    public int? RiddenKm { get; set; }
+
     // Navigation properties
     public Shift Shift { get; set; } = null!;
     public Staff Staff { get; set; } = null!;

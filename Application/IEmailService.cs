@@ -35,6 +35,14 @@ public interface IEmailService
     Task SendEventInvoiceNotificationAsync(Event @event);
     
     /// <summary>
+    /// Sends a staff assignment deletion notification email
+    /// </summary>
+    /// <param name="staff">The staff member being removed from the shift</param>
+    /// <param name="shift">The shift from which the staff member is removed</param>
+    /// <param name="event">The event containing the shift</param>
+    Task SendStaffAssignmentDeletionNotificationAsync(Staff staff, Shift shift, Event @event);
+
+    /// <summary>
     /// Sends a general email
     /// </summary>
     /// <param name="to">Recipient email address</param>
