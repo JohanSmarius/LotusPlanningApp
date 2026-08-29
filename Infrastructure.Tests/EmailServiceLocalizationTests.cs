@@ -50,7 +50,12 @@ public class EmailServiceLocalizationTests
             Assert.Contains($"<title>{expectedTitle}</title>", generateBody(service));
         }
 
-        private static Entities.Staff CreateStaff() => new() { FirstName = "Test", LastName = "Medewerker" };
+        private static Entities.Staff CreateStaff() => new()
+        {
+            FirstName = "Test",
+            LastName = "Medewerker",
+            Email = "test@example.com"
+        };
 
         private static Entities.Shift CreateShift()
         {
@@ -63,6 +68,8 @@ public class EmailServiceLocalizationTests
             Id = 1,
             Name = "Testevenement",
             Location = "Testlocatie",
-            ContactPerson = "Testcontact"
+            ContactPerson = "Testcontact",
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddHours(2)
         };
     }
