@@ -31,7 +31,7 @@ public class EmailService : IEmailService
     /// </summary>
     public async Task SendStaffAssignmentNotificationAsync(Staff staff, Shift shift, Event @event)
     {
-        var subject = $"Dienst toegewezen: {@event.Name}";
+        var subject = $"Opdracht toegewezen: {@event.Name}";
         var htmlBody = GenerateAssignmentEmailBody(staff, shift, @event);
         
         await SendEmailAsync(staff.Email, subject, htmlBody);
@@ -42,7 +42,7 @@ public class EmailService : IEmailService
     /// </summary>
     public async Task SendStaffAssignmentDeletionNotificationAsync(Staff staff, Shift shift, Event @event)
     {
-        var subject = $"Diensttoewijzing geannuleerd: {@event.Name}";
+        var subject = $"Opdracht geannuleerd: {@event.Name}";
         var htmlBody = GenerateAssignmentDeletionEmailBody(staff, shift, @event);
 
         await SendEmailAsync(staff.Email, subject, htmlBody);
@@ -76,7 +76,7 @@ public class EmailService : IEmailService
             return;
         }
 
-        var subject = $"Evenement bevestigd: {@event.Name}";
+        var subject = $"Opdrachtbevestiging: {@event.Name}";
         var htmlBody = GenerateEventConfirmationEmailBody(@event);
         
         await SendEmailAsync(@event.ContactEmail, subject, htmlBody);

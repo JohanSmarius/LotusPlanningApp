@@ -22,19 +22,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6f7985e8-637f-463e-8cbb-e17a45e340ea" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LotusApp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Application/Commands/Shifts/DeleteShiftCommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Commands/Shifts/DeleteShiftCommandHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Application/Commands/StaffAssignments/CreateStaffAssignmentCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Commands/StaffAssignments/CreateStaffAssignmentCommand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Application/Commands/StaffAssignments/CreateStaffAssignmentCommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Commands/StaffAssignments/CreateStaffAssignmentCommandHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Application/IStaffAssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Application/IStaffAssignmentRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/StaffAssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/StaffAssignmentRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftEdit.razor" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Components/Pages/ShiftEdit.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/appsettings.Development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/LotusPlanningApp/LotusPlanningApp/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -410,7 +398,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Configure .idea workspace settings for the LotusApp project" />
-    <option name="LAST_COMMIT_MESSAGE" value="Configure .idea workspace settings for the LotusApp project" />
+    <MESSAGE value="Add unit tests for DeleteShiftCommandHandler to verify email notifications and shift deletion logic." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add unit tests for DeleteShiftCommandHandler to verify email notifications and shift deletion logic." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
