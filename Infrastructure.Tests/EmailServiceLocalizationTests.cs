@@ -13,41 +13,45 @@ public class EmailServiceLocalizationTests
         [Fact]
         public void AssignmentEmailBody_UsesDutchTitle()
         {
-            AssertDutchTitle(service => service.GenerateAssignmentEmailBody(CreateStaff(), CreateShift(), CreateEvent()), "Diensttoewijzing");
+            AssertDutchContent(service => service.GenerateAssignmentEmailBody(CreateStaff(), CreateShift(), CreateEvent()), "Diensttoewijzing", "Hallo");
         }
 
         [Fact]
         public void AssignmentDeletionEmailBody_UsesDutchTitle()
         {
-            AssertDutchTitle(service => service.GenerateAssignmentDeletionEmailBody(CreateStaff(), CreateShift(), CreateEvent()), "Diensttoewijzing geannuleerd");
+            AssertDutchContent(service => service.GenerateAssignmentDeletionEmailBody(CreateStaff(), CreateShift(), CreateEvent()), "Diensttoewijzing geannuleerd", "Hallo");
         }
 
         [Fact]
         public void EventConfirmationEmailBody_UsesDutchTitle()
         {
-            AssertDutchTitle(service => service.GenerateEventConfirmationEmailBody(CreateEvent()), "Evenementbevestiging");
+            AssertDutchContent(service => service.GenerateEventConfirmationEmailBody(CreateEvent()), "Evenementbevestiging", "Hallo");
         }
 
         [Fact]
         public void EventPlannedEmailBody_UsesDutchTitle()
         {
-            AssertDutchTitle(service => service.GenerateEventPlannedEmailBody(CreateEvent()), "Update evenementplanning");
+            AssertDutchContent(service => service.GenerateEventPlannedEmailBody(CreateEvent()), "Update evenementplanning", "Hallo");
         }
 
         [Fact]
         public void EventInvoiceEmailBody_UsesDutchTitle()
         {
-            AssertDutchTitle(service => service.GenerateEventInvoiceEmailBody(CreateEvent()), "Factuur evenement");
+            AssertDutchContent(service => service.GenerateEventInvoiceEmailBody(CreateEvent()), "Factuur evenement", "Beste");
         }
 
-        private static void AssertDutchTitle(Func<EmailService, string> generateBody, string expectedTitle)
+        private static void AssertDutchContent(Func<EmailService, string> generateBody, string expectedTitle, string expectedGreeting)
         {
             var service = new EmailService(
                 Options.Create(new EmailOptions()),
                 new ConfigurationBuilder().Build(),
                 Mock.Of<ILogger<EmailService>>());
 
-            Assert.Contains($"<title>{expectedTitle}</title>", generateBody(service));
+            var body = generateBody(service);
+            Assert.Contains($"<title>{expectedTitle}</title>", body);
+            Assert.Contains($"<h1>", body);
+            Assert.Contains(expectedTitle, body);
+            Assert.Contains(expectedGreeting, body);
         }
 
         private static Entities.Staff CreateStaff() => new()
