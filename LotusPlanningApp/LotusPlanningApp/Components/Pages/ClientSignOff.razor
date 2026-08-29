@@ -54,11 +54,11 @@ else if (assignment.SignedOffAt.HasValue)
                     <dt class="col-sm-4">Kilometers gereden</dt>
                     <dd class="col-sm-8">@assignment.KilometersDriven km</dd>
                 </dl>
-                @if (!string.IsNullOrEmpty(assignment.ClientSignature))
+                @if (assignment.ClientSignature is { Length: > 0 })
                 {
                     <label class="form-label text-muted small">HANDTEKENING</label>
                     <div class="border rounded p-2 d-inline-block">
-                        <img src="@assignment.ClientSignature" alt="Handtekening" class="img-fluid" style="max-height:150px;" />
+                        <img src="data:image/png;base64,@Convert.ToBase64String(assignment.ClientSignature)" alt="Handtekening" class="img-fluid" style="max-height:150px;" />
                     </div>
                 }
             </div>
@@ -186,6 +186,7 @@ else
 
     /// <summary>
     /// Raw bytes from the SignaturePad component (UTF-8 encoded data URL string).
+    /// Decoded to raw PNG bytes before storage.
     /// </summary>
     private byte[] signatureBytes = Array.Empty<byte>();
 
@@ -247,10 +248,17 @@ else
             return;
         }
 
+        // Strip the data URL prefix to get raw PNG bytes for binary storage
+        const string prefix = "data:image/png;base64,";
+        string base64 = dataUrl.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+            ? dataUrl[prefix.Length..].TrimStart()
+            : dataUrl;
+        byte[] pngBytes = Convert.FromBase64String(base64);
+
         isSaving = true;
         try
         {
-            var command = new SignOffStaffAssignmentCommand(AssignmentId, actualHours, kilometersDriven, dataUrl);
+            var command = new SignOffStaffAssignmentCommand(AssignmentId, actualHours, kilometersDriven, pngBytes);
             var result = await SignOffHandler.Handle(command, CancellationToken.None);
             if (result != null)
             {

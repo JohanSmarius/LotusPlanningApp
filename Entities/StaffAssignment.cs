@@ -38,9 +38,9 @@ public class StaffAssignment
     public decimal? KilometersDriven { get; set; }
 
     /// <summary>
-    /// Base-64 encoded PNG of the client's signature
+    /// Raw PNG bytes of the client's signature
     /// </summary>
-    public string? ClientSignature { get; set; }
+    public byte[]? ClientSignature { get; set; }
 
     /// <summary>
     /// Date and time when the client signed off on this assignment

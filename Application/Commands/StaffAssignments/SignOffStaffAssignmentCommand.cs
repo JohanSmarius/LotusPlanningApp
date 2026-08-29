@@ -10,4 +10,4 @@ public record SignOffStaffAssignmentCommand(
     int AssignmentId,
     decimal ActualHours,
     decimal KilometersDriven,
-    string ClientSignature) : ICommand<StaffAssignment?>;
+    byte[] ClientSignature) : ICommand<StaffAssignment?>;

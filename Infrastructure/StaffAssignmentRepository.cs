@@ -147,7 +147,7 @@ public class StaffAssignmentRepository : IStaffAssignmentRepository
         return !await query.AnyAsync();
     }
 
-    public async Task<StaffAssignment?> SignOffAssignmentAsync(int assignmentId, decimal actualHours, decimal kilometersDriven, string clientSignature)
+    public async Task<StaffAssignment?> SignOffAssignmentAsync(int assignmentId, decimal actualHours, decimal kilometersDriven, byte[] clientSignature)
     {
         var assignment = await GetAssignmentByIdAsync(assignmentId);
         if (assignment != null)
