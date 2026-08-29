@@ -20,13 +20,24 @@ public class SignOffStaffAssignmentCommandHandler : ICommandHandler<SignOffStaff
         _logger = logger;
     }
 
-    public async Task<StaffAssignment?> Handle(SignOffStaffAssignmentCommand command, CancellationToken cancellationToken = default)
+public async Task<StaffAssignment?> Handle(SignOffStaffAssignmentCommand command, CancellationToken cancellationToken = default)
+{
+    if (command.ActualHours <= 0 || command.KilometersDriven < 0 || command.ClientSignature.Length == 0)
     {
-        var assignment = await _repository.SignOffAssignmentAsync(
+        _logger.LogWarning(
+            "Rejected sign-off for assignment {AssignmentId} due to invalid input (Hours={Hours}, Km={Km}, SignatureBytes={SignatureBytes}).",
             command.AssignmentId,
             command.ActualHours,
             command.KilometersDriven,
-            command.ClientSignature);
+            command.ClientSignature.Length);
+        return null;
+    }
+
+    var assignment = await _repository.SignOffAssignmentAsync(
+        command.AssignmentId,
+        command.ActualHours,
+        command.KilometersDriven,
+        command.ClientSignature);
 
         if (assignment != null)
         {
