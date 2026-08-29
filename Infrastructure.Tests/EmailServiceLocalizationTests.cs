@@ -10,42 +10,59 @@ namespace Infrastructure.Tests;
 
 public class EmailServiceLocalizationTests
 {
-    [Theory]
-    [InlineData("GenerateAssignmentEmailBody", "Diensttoewijzing")]
-    [InlineData("GenerateAssignmentDeletionEmailBody", "Diensttoewijzing geannuleerd")]
-    [InlineData("GenerateEventConfirmationEmailBody", "Evenementbevestiging")]
-    [InlineData("GenerateEventPlannedEmailBody", "Update evenementplanning")]
-    [InlineData("GenerateEventInvoiceEmailBody", "Factuur evenement")]
-    public void GeneratedEmailBody_UsesDutchTitle(string methodName, string expectedTitle)
-    {
-        var service = new EmailService(
-            Options.Create(new EmailOptions()),
-            new ConfigurationBuilder().Build(),
-            Mock.Of<ILogger<EmailService>>());
+        [Fact]
+        public void AssignmentEmailBody_UsesDutchTitle()
+        {
+            AssertDutchTitle(service => service.GenerateAssignmentEmailBody(CreateStaff(), CreateShift(), CreateEvent()), "Diensttoewijzing");
+        }
 
-        var @event = new Entities.Event
+        [Fact]
+        public void AssignmentDeletionEmailBody_UsesDutchTitle()
+        {
+            AssertDutchTitle(service => service.GenerateAssignmentDeletionEmailBody(CreateStaff(), CreateShift(), CreateEvent()), "Diensttoewijzing geannuleerd");
+        }
+
+        [Fact]
+        public void EventConfirmationEmailBody_UsesDutchTitle()
+        {
+            AssertDutchTitle(service => service.GenerateEventConfirmationEmailBody(CreateEvent()), "Evenementbevestiging");
+        }
+
+        [Fact]
+        public void EventPlannedEmailBody_UsesDutchTitle()
+        {
+            AssertDutchTitle(service => service.GenerateEventPlannedEmailBody(CreateEvent()), "Update evenementplanning");
+        }
+
+        [Fact]
+        public void EventInvoiceEmailBody_UsesDutchTitle()
+        {
+            AssertDutchTitle(service => service.GenerateEventInvoiceEmailBody(CreateEvent()), "Factuur evenement");
+        }
+
+        private static void AssertDutchTitle(Func<EmailService, string> generateBody, string expectedTitle)
+        {
+            var service = new EmailService(
+                Options.Create(new EmailOptions()),
+                new ConfigurationBuilder().Build(),
+                Mock.Of<ILogger<EmailService>>());
+
+            Assert.Contains($"<title>{expectedTitle}</title>", generateBody(service));
+        }
+
+        private static Entities.Staff CreateStaff() => new() { FirstName = "Test", LastName = "Medewerker" };
+
+        private static Entities.Shift CreateShift()
+        {
+            var startTime = DateTime.UtcNow;
+            return new Entities.Shift { Name = "Testdienst", StartTime = startTime, EndTime = startTime.AddHours(1) };
+        }
+
+        private static Entities.Event CreateEvent() => new()
         {
             Id = 1,
             Name = "Testevenement",
             Location = "Testlocatie",
             ContactPerson = "Testcontact"
         };
-        var body = methodName switch
-        {
-            "GenerateAssignmentEmailBody" => service.GenerateAssignmentEmailBody(
-                new Entities.Staff { FirstName = "Test", LastName = "Medewerker" },
-                new Entities.Shift { Name = "Testdienst", EndTime = DateTime.UtcNow.AddHours(1) },
-                @event),
-            "GenerateAssignmentDeletionEmailBody" => service.GenerateAssignmentDeletionEmailBody(
-                new Entities.Staff { FirstName = "Test", LastName = "Medewerker" },
-                new Entities.Shift { Name = "Testdienst", EndTime = DateTime.UtcNow.AddHours(1) },
-                @event),
-            "GenerateEventConfirmationEmailBody" => service.GenerateEventConfirmationEmailBody(@event),
-            "GenerateEventPlannedEmailBody" => service.GenerateEventPlannedEmailBody(@event),
-            "GenerateEventInvoiceEmailBody" => service.GenerateEventInvoiceEmailBody(@event),
-            _ => throw new ArgumentOutOfRangeException(nameof(methodName), methodName, null)
-        };
-
-        Assert.Contains($"<title>{expectedTitle}</title>", body);
     }
-}
