@@ -1,4 +1,3 @@
-using System.Reflection;
 using Infrastructure;
 using LotusPlanningApp.Configuration;
 using Microsoft.Extensions.Configuration;
@@ -24,13 +23,28 @@ public class EmailServiceLocalizationTests
             new ConfigurationBuilder().Build(),
             Mock.Of<ILogger<EmailService>>());
 
-        var method = typeof(EmailService).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
-        Assert.NotNull(method);
-        var arguments = methodName.Contains("Assignment")
-            ? new object[] { new Entities.Staff(), new Entities.Shift(), new Entities.Event() }
-            : new object[] { new Entities.Event() };
-
-        var body = (string)method!.Invoke(service, arguments)!;
+        var @event = new Entities.Event
+        {
+            Id = 1,
+            Name = "Testevenement",
+            Location = "Testlocatie",
+            ContactPerson = "Testcontact"
+        };
+        var body = methodName switch
+        {
+            "GenerateAssignmentEmailBody" => service.GenerateAssignmentEmailBody(
+                new Entities.Staff { FirstName = "Test", LastName = "Medewerker" },
+                new Entities.Shift { Name = "Testdienst", EndTime = DateTime.UtcNow.AddHours(1) },
+                @event),
+            "GenerateAssignmentDeletionEmailBody" => service.GenerateAssignmentDeletionEmailBody(
+                new Entities.Staff { FirstName = "Test", LastName = "Medewerker" },
+                new Entities.Shift { Name = "Testdienst", EndTime = DateTime.UtcNow.AddHours(1) },
+                @event),
+            "GenerateEventConfirmationEmailBody" => service.GenerateEventConfirmationEmailBody(@event),
+            "GenerateEventPlannedEmailBody" => service.GenerateEventPlannedEmailBody(@event),
+            "GenerateEventInvoiceEmailBody" => service.GenerateEventInvoiceEmailBody(@event),
+            _ => throw new ArgumentOutOfRangeException(nameof(methodName), methodName, null)
+        };
 
         Assert.Contains($"<title>{expectedTitle}</title>", body);
     }

@@ -158,7 +158,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for staff assignment notification email
     /// </summary>
-    private string GenerateAssignmentEmailBody(Staff staff, Shift shift, Event @event)
+    internal string GenerateAssignmentEmailBody(Staff staff, Shift shift, Event @event)
     {
         var sb = new StringBuilder();
         
@@ -286,7 +286,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for staff assignment deletion notification email
     /// </summary>
-    private string GenerateAssignmentDeletionEmailBody(Staff staff, Shift shift, Event @event)
+    internal string GenerateAssignmentDeletionEmailBody(Staff staff, Shift shift, Event @event)
     {
         var sb = new StringBuilder();
 
@@ -352,7 +352,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for event confirmation notification email
     /// </summary>
-    private string GenerateEventConfirmationEmailBody(Event @event)
+    internal string GenerateEventConfirmationEmailBody(Event @event)
     {
         var sb = new StringBuilder();
         
@@ -483,7 +483,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for event planned notification email
     /// </summary>
-    private string GenerateEventPlannedEmailBody(Event @event)
+    internal string GenerateEventPlannedEmailBody(Event @event)
     {
         var sb = new StringBuilder();
         
@@ -629,7 +629,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for event invoice notification email
     /// </summary>
-    private string GenerateEventInvoiceEmailBody(Event @event)
+    internal string GenerateEventInvoiceEmailBody(Event @event)
     {
         var sb = new StringBuilder();
         
