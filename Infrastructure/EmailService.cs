@@ -31,7 +31,7 @@ public class EmailService : IEmailService
     /// </summary>
     public async Task SendStaffAssignmentNotificationAsync(Staff staff, Shift shift, Event @event)
     {
-        var subject = $"Shift Assignment: {@event.Name}";
+        var subject = $"Dienst toegewezen: {@event.Name}";
         var htmlBody = GenerateAssignmentEmailBody(staff, shift, @event);
         
         await SendEmailAsync(staff.Email, subject, htmlBody);
@@ -42,7 +42,7 @@ public class EmailService : IEmailService
     /// </summary>
     public async Task SendStaffAssignmentDeletionNotificationAsync(Staff staff, Shift shift, Event @event)
     {
-        var subject = $"Shift Assignment Cancelled: {@event.Name}";
+        var subject = $"Diensttoewijzing geannuleerd: {@event.Name}";
         var htmlBody = GenerateAssignmentDeletionEmailBody(staff, shift, @event);
 
         await SendEmailAsync(staff.Email, subject, htmlBody);
@@ -59,7 +59,7 @@ public class EmailService : IEmailService
             return;
         }
 
-        var subject = $"Event Planning Update: {@event.Name}";
+        var subject = $"Update evenementplanning: {@event.Name}";
         var htmlBody = GenerateEventPlannedEmailBody(@event);
         
         await SendEmailAsync(@event.ContactEmail, subject, htmlBody);
@@ -76,7 +76,7 @@ public class EmailService : IEmailService
             return;
         }
 
-        var subject = $"Event Confirmed: {@event.Name}";
+        var subject = $"Evenement bevestigd: {@event.Name}";
         var htmlBody = GenerateEventConfirmationEmailBody(@event);
         
         await SendEmailAsync(@event.ContactEmail, subject, htmlBody);
@@ -93,7 +93,7 @@ public class EmailService : IEmailService
             return;
         }
 
-        var subject = $"Invoice for Event: {@event.Name}";
+        var subject = $"Factuur voor evenement: {@event.Name}";
         var htmlBody = GenerateEventInvoiceEmailBody(@event);
         
         await SendEmailAsync(_emailOptions.Value.FinancialDepartmentEmail, subject, htmlBody);
@@ -158,7 +158,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for staff assignment notification email
     /// </summary>
-    private string GenerateAssignmentEmailBody(Staff staff, Shift shift, Event @event)
+    internal string GenerateAssignmentEmailBody(Staff staff, Shift shift, Event @event)
     {
         var sb = new StringBuilder();
         
@@ -167,7 +167,7 @@ public class EmailService : IEmailService
         sb.AppendLine("<head>");
         sb.AppendLine("    <meta charset='utf-8'>");
         sb.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1.0'>");
-        sb.AppendLine("    <title>Shift Assignment Notification</title>");
+        sb.AppendLine("    <title>Diensttoewijzing</title>");
         sb.AppendLine("    <style>");
         sb.AppendLine("        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }");
         sb.AppendLine("        .container { max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }");
@@ -187,32 +187,32 @@ public class EmailService : IEmailService
         sb.AppendLine("<body>");
         sb.AppendLine("    <div class='container'>");
         sb.AppendLine("        <div class='header'>");
-        sb.AppendLine("            <h1>?? Shift Assignment Notification</h1>");
+        sb.AppendLine("            <h1>?? Diensttoewijzing</h1>");
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='content'>");
         
-        sb.AppendLine($"            <p>Hello <strong>{staff.FullName}</strong>,</p>");
-        sb.AppendLine("            <p>You have been assigned to a new shift. Please review the details below:</p>");
+        sb.AppendLine($"            <p>Hallo <strong>{staff.FullName}</strong>,</p>");
+        sb.AppendLine("            <p>Je bent toegewezen aan een nieuwe dienst. Bekijk hieronder de details:</p>");
         
         // Event Details
-        sb.AppendLine("            <h3>?? Event Details</h3>");
+        sb.AppendLine("            <h3>?? Evenementdetails</h3>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Name:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Naam evenement:</div>");
         sb.AppendLine($"                <div>{@event.Name}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Location:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Locatie:</div>");
         sb.AppendLine($"                <div>?? {@event.Location}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Duration:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Duur evenement:</div>");
         sb.AppendLine($"                <div>??? {@event.StartDate:g} - {@event.EndDate:g}</div>");
         sb.AppendLine("            </div>");
         
         if (!string.IsNullOrEmpty(@event.Description))
         {
             sb.AppendLine("            <div class='detail-row'>");
-            sb.AppendLine($"                <div class='detail-label'>Event Description:</div>");
+            sb.AppendLine($"                <div class='detail-label'>Omschrijving evenement:</div>");
             sb.AppendLine($"                <div>{@event.Description}</div>");
             sb.AppendLine("            </div>");
         }
@@ -220,7 +220,7 @@ public class EmailService : IEmailService
         if (!string.IsNullOrEmpty(@event.ContactPerson))
         {
             sb.AppendLine("            <div class='detail-row'>");
-            sb.AppendLine($"                <div class='detail-label'>Event Contact:</div>");
+            sb.AppendLine($"                <div class='detail-label'>Contactpersoon evenement:</div>");
             sb.AppendLine($"                <div>?? {@event.ContactPerson}");
             if (!string.IsNullOrEmpty(@event.ContactPhone))
             {
@@ -231,50 +231,50 @@ public class EmailService : IEmailService
         }
         
         // Shift Details
-        sb.AppendLine("            <h3>? Your Shift Details</h3>");
+        sb.AppendLine("            <h3>? Jouw dienstdetails</h3>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Shift Name:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Naam dienst:</div>");
         sb.AppendLine($"                <div>{shift.Name}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Shift Time:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Diensttijd:</div>");
         sb.AppendLine($"                <div>?? {shift.StartTime:g} - {shift.EndTime:g}</div>");
         sb.AppendLine("            </div>");
         
         var duration = shift.EndTime - shift.StartTime;
         var durationText = duration.TotalHours >= 24 
-            ? $"{duration.Days}d {duration.Hours}h" 
-            : $"{duration.Hours}h {duration.Minutes}m";
+            ? $"{duration.Days} d {duration.Hours} u"
+            : $"{duration.Hours} u {duration.Minutes} min";
         
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Duration:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Duur:</div>");
         sb.AppendLine($"                <div>?? {durationText}</div>");
         sb.AppendLine("            </div>");
         
         if (!string.IsNullOrEmpty(shift.Description))
         {
             sb.AppendLine("            <div class='detail-row'>");
-            sb.AppendLine($"                <div class='detail-label'>Shift Description:</div>");
+            sb.AppendLine($"                <div class='detail-label'>Omschrijving dienst:</div>");
             sb.AppendLine($"                <div>{shift.Description}</div>");
             sb.AppendLine("            </div>");
         }
         
         // Important Notes
-        sb.AppendLine("            <h3>?? Important Notes</h3>");
+        sb.AppendLine("            <h3>?? Belangrijke opmerkingen</h3>");
         sb.AppendLine("            <ul>");
-        sb.AppendLine("                <li>Please arrive <strong>15 minutes early</strong> for briefing</li>");
-        sb.AppendLine("                <li>Bring your certification documents and ID</li>");
-        sb.AppendLine("                <li>Wear appropriate medical/first aid attire</li>");
-        sb.AppendLine("                <li>Contact the event organizer if you cannot attend</li>");
+        sb.AppendLine("                <li>Kom voor de briefing <strong>15 minuten eerder</strong></li>");
+        sb.AppendLine("                <li>Neem je certificaten en legitimatiebewijs mee</li>");
+        sb.AppendLine("                <li>Draag passende medische/EHBO-kleding</li>");
+        sb.AppendLine("                <li>Neem contact op met de organisator als je niet aanwezig kunt zijn</li>");
         sb.AppendLine("            </ul>");
         
-        sb.AppendLine("            <p><strong>Thank you for your service!</strong></p>");
-        sb.AppendLine("            <p>If you have any questions about this assignment, please contact the event organizer.</p>");
+        sb.AppendLine("            <p><strong>Bedankt voor je inzet!</strong></p>");
+        sb.AppendLine("            <p>Neem bij vragen over deze toewijzing contact op met de organisator.</p>");
         
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='footer'>");
-        sb.AppendLine("            <p>This is an automated notification from the Medical First Aid Event Manager.</p>");
-        sb.AppendLine($"            <p>Email sent on {DateTime.UtcNow:g} UTC</p>");
+        sb.AppendLine("            <p>Dit is een automatisch bericht van de LOTUS-planningsapp.</p>");
+        sb.AppendLine($"            <p>E-mail verzonden op {DateTime.UtcNow:g} UTC</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");
         sb.AppendLine("</body>");
@@ -286,7 +286,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for staff assignment deletion notification email
     /// </summary>
-    private string GenerateAssignmentDeletionEmailBody(Staff staff, Shift shift, Event @event)
+    internal string GenerateAssignmentDeletionEmailBody(Staff staff, Shift shift, Event @event)
     {
         var sb = new StringBuilder();
 
@@ -295,7 +295,7 @@ public class EmailService : IEmailService
         sb.AppendLine("<head>");
         sb.AppendLine("    <meta charset='utf-8'>");
         sb.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1.0'>");
-        sb.AppendLine("    <title>Shift Assignment Cancelled</title>");
+        sb.AppendLine("    <title>Diensttoewijzing geannuleerd</title>");
         sb.AppendLine("    <style>");
         sb.AppendLine("        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }");
         sb.AppendLine("        .container { max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }");
@@ -309,38 +309,38 @@ public class EmailService : IEmailService
         sb.AppendLine("<body>");
         sb.AppendLine("    <div class='container'>");
         sb.AppendLine("        <div class='header'>");
-        sb.AppendLine("            <h1>Shift Assignment Cancelled</h1>");
+        sb.AppendLine("            <h1>Diensttoewijzing geannuleerd</h1>");
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='content'>");
 
-        sb.AppendLine($"            <p>Hello <strong>{System.Net.WebUtility.HtmlEncode(staff.FullName)}</strong>,</p>");
-        sb.AppendLine("            <p>Your assignment to the following shift has been cancelled:</p>");
+        sb.AppendLine($"            <p>Hallo <strong>{System.Net.WebUtility.HtmlEncode(staff.FullName)}</strong>,</p>");
+        sb.AppendLine("            <p>Je toewijzing aan de volgende dienst is geannuleerd:</p>");
 
-        sb.AppendLine("            <h3>Event Details</h3>");
+        sb.AppendLine("            <h3>Evenementdetails</h3>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Name:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Naam evenement:</div>");
         sb.AppendLine($"                <div>{System.Net.WebUtility.HtmlEncode(@event.Name)}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Location:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Locatie:</div>");
         sb.AppendLine($"                <div>{System.Net.WebUtility.HtmlEncode(@event.Location)}</div>");
         sb.AppendLine("            </div>");
 
-        sb.AppendLine("            <h3>Shift Details</h3>");
+        sb.AppendLine("            <h3>Dienstdetails</h3>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Shift Name:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Naam dienst:</div>");
         sb.AppendLine($"                <div>{System.Net.WebUtility.HtmlEncode(shift.Name)}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Shift Time:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Diensttijd:</div>");
         sb.AppendLine($"                <div>{shift.StartTime:g} - {shift.EndTime:g}</div>");
         sb.AppendLine("            </div>");
 
-        sb.AppendLine("            <p>If you believe this is an error, please contact the event organizer.</p>");
+        sb.AppendLine("            <p>Neem contact op met de organisator als je denkt dat dit niet klopt.</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='footer'>");
-        sb.AppendLine("            <p>This is an automated notification from the Medical First Aid Event Manager.</p>");
-        sb.AppendLine($"            <p>Email sent on {DateTime.UtcNow:g} UTC</p>");
+        sb.AppendLine("            <p>Dit is een automatisch bericht van de LOTUS-planningsapp.</p>");
+        sb.AppendLine($"            <p>E-mail verzonden op {DateTime.UtcNow:g} UTC</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");
         sb.AppendLine("</body>");
@@ -352,7 +352,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for event confirmation notification email
     /// </summary>
-    private string GenerateEventConfirmationEmailBody(Event @event)
+    internal string GenerateEventConfirmationEmailBody(Event @event)
     {
         var sb = new StringBuilder();
         
@@ -361,7 +361,7 @@ public class EmailService : IEmailService
         sb.AppendLine("<head>");
         sb.AppendLine("    <meta charset='utf-8'>");
         sb.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1.0'>");
-        sb.AppendLine("    <title>Event Confirmation</title>");
+        sb.AppendLine("    <title>Evenementbevestiging</title>");
         sb.AppendLine("    <style>");
         sb.AppendLine("        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }");
         sb.AppendLine("        .container { max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }");
@@ -378,55 +378,55 @@ public class EmailService : IEmailService
         sb.AppendLine("<body>");
         sb.AppendLine("    <div class='container'>");
         sb.AppendLine("        <div class='header'>");
-        sb.AppendLine("            <h1>? Event Confirmation</h1>");
+        sb.AppendLine("            <h1>? Evenementbevestiging</h1>");
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='content'>");
         
         if (!string.IsNullOrEmpty(@event.ContactPerson))
         {
-            sb.AppendLine($"            <p>Hello <strong>{@event.ContactPerson}</strong>,</p>");
+            sb.AppendLine($"            <p>Hallo <strong>{@event.ContactPerson}</strong>,</p>");
         }
         else
         {
-            sb.AppendLine("            <p>Hello,</p>");
+            sb.AppendLine("            <p>Hallo,</p>");
         }
         
-        sb.AppendLine("            <p>Great news! Your event request has been <strong>confirmed</strong> by our medical first aid team.</p>");
+        sb.AppendLine("            <p>Goed nieuws! Je aanvraag voor het evenement is <strong>bevestigd</strong> door ons LOTUS-team.</p>");
         
         sb.AppendLine("            <div class='highlight'>");
-        sb.AppendLine("                <h3>?? Your Event is Confirmed!</h3>");
-        sb.AppendLine("                <p>We are pleased to confirm that medical first aid coverage has been arranged for your event.</p>");
+        sb.AppendLine("                <h3>?? Je evenement is bevestigd!</h3>");
+        sb.AppendLine("                <p>We bevestigen graag dat de medische hulpverlening voor je evenement is geregeld.</p>");
         sb.AppendLine("            </div>");
         
         // Event Details
-        sb.AppendLine("            <h3>?? Event Details</h3>");
+        sb.AppendLine("            <h3>?? Evenementdetails</h3>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Name:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Naam evenement:</div>");
         sb.AppendLine($"                <div>{@event.Name}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Location:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Locatie:</div>");
         sb.AppendLine($"                <div>?? {@event.Location}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Duration:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Duur evenement:</div>");
         sb.AppendLine($"                <div>??? {@event.StartDate:g} - {@event.EndDate:g}</div>");
         sb.AppendLine("            </div>");
         
         var duration = @event.EndDate - @event.StartDate;
         var durationText = duration.TotalDays >= 1 
-            ? $"{duration.Days} day(s), {duration.Hours} hour(s)" 
-            : $"{duration.Hours} hour(s), {duration.Minutes} minute(s)";
+            ? $"{duration.Days} dag(en), {duration.Hours} uur"
+            : $"{duration.Hours} uur, {duration.Minutes} minuten";
         
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Duration:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Duur:</div>");
         sb.AppendLine($"                <div>?? {durationText}</div>");
         sb.AppendLine("            </div>");
         
         if (!string.IsNullOrEmpty(@event.Description))
         {
             sb.AppendLine("            <div class='detail-row'>");
-            sb.AppendLine($"                <div class='detail-label'>Event Description:</div>");
+            sb.AppendLine($"                <div class='detail-label'>Omschrijving evenement:</div>");
             sb.AppendLine($"                <div>{@event.Description}</div>");
             sb.AppendLine("            </div>");
         }
@@ -434,44 +434,44 @@ public class EmailService : IEmailService
         // Status Badge
         sb.AppendLine("            <div class='detail-row'>");
         sb.AppendLine($"                <div class='detail-label'>Status:</div>");
-        sb.AppendLine($"                <div><span class='badge badge-success'>? Confirmed</span></div>");
+        sb.AppendLine($"                <div><span class='badge badge-success'>? Bevestigd</span></div>");
         sb.AppendLine("            </div>");
         
         // What's Next Section
-        sb.AppendLine("            <h3>?? What Happens Next?</h3>");
+        sb.AppendLine("            <h3>?? Hoe gaat het verder?</h3>");
         sb.AppendLine("            <ul>");
-        sb.AppendLine("                <li><strong>Staff Assignment:</strong> Our team will assign qualified medical first aid personnel to your event</li>");
-        sb.AppendLine("                <li><strong>Pre-Event Contact:</strong> You will be contacted 24-48 hours before the event with final details</li>");
-        sb.AppendLine("                <li><strong>Day of Event:</strong> Our staff will arrive 30 minutes early for setup and briefing</li>");
-        sb.AppendLine("                <li><strong>Equipment:</strong> All necessary medical equipment and supplies will be provided</li>");
+        sb.AppendLine("                <li><strong>Personeelstoewijzing:</strong> ons team wijst gekwalificeerd personeel toe aan je evenement</li>");
+        sb.AppendLine("                <li><strong>Contact vooraf:</strong> we nemen 24-48 uur voor het evenement contact met je op</li>");
+        sb.AppendLine("                <li><strong>Dag van het evenement:</strong> ons personeel arriveert 30 minuten eerder voor de opbouw en briefing</li>");
+        sb.AppendLine("                <li><strong>Materialen:</strong> alle benodigde medische materialen worden verzorgd</li>");
         sb.AppendLine("            </ul>");
         
         // Important Notes
-        sb.AppendLine("            <h3>?? Important Information</h3>");
+        sb.AppendLine("            <h3>?? Belangrijke informatie</h3>");
         sb.AppendLine("            <ul>");
-        sb.AppendLine("                <li>Please ensure adequate parking and access for our medical team</li>");
-        sb.AppendLine("                <li>Notify us immediately if there are any changes to your event details</li>");
-        sb.AppendLine("                <li>Our team will need access to power outlets for medical equipment</li>");
-        sb.AppendLine("                <li>A designated area for the first aid station should be available</li>");
+        sb.AppendLine("                <li>Zorg voor voldoende parkeergelegenheid en toegang voor ons team</li>");
+        sb.AppendLine("                <li>Laat het ons direct weten als evenementdetails wijzigen</li>");
+        sb.AppendLine("                <li>Ons team heeft toegang tot stopcontacten voor medische apparatuur nodig</li>");
+        sb.AppendLine("                <li>Er moet een geschikte plek voor de EHBO-post beschikbaar zijn</li>");
         sb.AppendLine("            </ul>");
         
         // Contact Information
-        sb.AppendLine("            <h3>?? Need to Make Changes?</h3>");
-        sb.AppendLine("            <p>If you need to make any changes to your event or have questions, please contact us as soon as possible:</p>");
+        sb.AppendLine("            <h3>?? Wil je iets wijzigen?</h3>");
+        sb.AppendLine("            <p>Neem zo snel mogelijk contact met ons op als je iets aan je evenement wilt wijzigen of vragen hebt:</p>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine("                <div>?? Email: <a href='mailto:events@medicalfirstaid.com'>events@medicalfirstaid.com</a></div>");
-        sb.AppendLine("                <div>?? Phone: +1 (555) 123-4567</div>");
-        sb.AppendLine("                <div>?? Office Hours: Monday-Friday, 8:00 AM - 6:00 PM</div>");
+        sb.AppendLine("                <div>?? E-mail: <a href='mailto:events@medicalfirstaid.com'>events@medicalfirstaid.com</a></div>");
+        sb.AppendLine("                <div>?? Telefoon: +1 (555) 123-4567</div>");
+        sb.AppendLine("                <div>?? Openingstijden: maandag-vrijdag, 08:00 - 18:00 uur</div>");
         sb.AppendLine("            </div>");
         
-        sb.AppendLine("            <p><strong>Thank you for choosing our medical first aid services!</strong></p>");
-        sb.AppendLine("            <p>We look forward to providing professional medical coverage for your event.</p>");
+        sb.AppendLine("            <p><strong>Bedankt dat je voor onze medische hulpverlening kiest!</strong></p>");
+        sb.AppendLine("            <p>We kijken ernaar uit om professionele medische hulpverlening voor je evenement te verzorgen.</p>");
         
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='footer'>");
-        sb.AppendLine("            <p>This is an automated confirmation from the Medical First Aid Event Manager.</p>");
-        sb.AppendLine($"            <p>Confirmation sent on {DateTime.UtcNow:g} UTC</p>");
-        sb.AppendLine($"            <p>Reference ID: EVENT-{@event.Id:D6}</p>");
+        sb.AppendLine("            <p>Dit is een automatische bevestiging van de LOTUS-planningsapp.</p>");
+        sb.AppendLine($"            <p>Bevestiging verzonden op {DateTime.UtcNow:g} UTC</p>");
+        sb.AppendLine($"            <p>Referentie-ID: EVENT-{@event.Id:D6}</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");
         sb.AppendLine("</body>");
@@ -483,7 +483,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for event planned notification email
     /// </summary>
-    private string GenerateEventPlannedEmailBody(Event @event)
+    internal string GenerateEventPlannedEmailBody(Event @event)
     {
         var sb = new StringBuilder();
         
@@ -492,7 +492,7 @@ public class EmailService : IEmailService
         sb.AppendLine("<head>");
         sb.AppendLine("    <meta charset='utf-8'>");
         sb.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1.0'>");
-        sb.AppendLine("    <title>Event Planning Update</title>");
+        sb.AppendLine("    <title>Update evenementplanning</title>");
         sb.AppendLine("    <style>");
         sb.AppendLine("        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }");
         sb.AppendLine("        .container { max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }");
@@ -509,115 +509,115 @@ public class EmailService : IEmailService
         sb.AppendLine("<body>");
         sb.AppendLine("    <div class='container'>");
         sb.AppendLine("        <div class='header'>");
-        sb.AppendLine("            <h1>?? Event Planning Update</h1>");
+        sb.AppendLine("            <h1>?? Update evenementplanning</h1>");
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='content'>");
         
         if (!string.IsNullOrEmpty(@event.ContactPerson))
         {
-            sb.AppendLine($"            <p>Hello <strong>{@event.ContactPerson}</strong>,</p>");
+            sb.AppendLine($"            <p>Hallo <strong>{@event.ContactPerson}</strong>,</p>");
         }
         else
         {
-            sb.AppendLine("            <p>Hello,</p>");
+            sb.AppendLine("            <p>Hallo,</p>");
         }
         
-        sb.AppendLine("            <p>Good news! We have started planning the medical first aid coverage for your event.</p>");
+        sb.AppendLine("            <p>Goed nieuws! We zijn gestart met de planning van de medische hulpverlening voor je evenement.</p>");
         
         sb.AppendLine("            <div class='highlight'>");
-        sb.AppendLine("                <h3>?? Your Event is Now Being Planned</h3>");
-        sb.AppendLine("                <p>Our team has reviewed your event request and we are now in the planning phase. This means we are working on:</p>");
+        sb.AppendLine("                <h3>?? Je evenement wordt nu gepland</h3>");
+        sb.AppendLine("                <p>Ons team heeft je aanvraag beoordeeld en werkt nu aan:</p>");
         sb.AppendLine("                <ul>");
-        sb.AppendLine("                    <li>Assessing the medical coverage requirements for your event</li>");
-        sb.AppendLine("                    <li>Scheduling appropriate medical staff</li>");
-        sb.AppendLine("                    <li>Preparing necessary medical equipment and supplies</li>");
-        sb.AppendLine("                    <li>Planning the first aid station setup</li>");
+        sb.AppendLine("                    <li>het bepalen van de benodigde medische hulpverlening</li>");
+        sb.AppendLine("                    <li>het inplannen van geschikt medisch personeel</li>");
+        sb.AppendLine("                    <li>het voorbereiden van benodigde medische apparatuur en materialen</li>");
+        sb.AppendLine("                    <li>het plannen van de EHBO-post</li>");
         sb.AppendLine("                </ul>");
         sb.AppendLine("            </div>");
         
         // Event Details
-        sb.AppendLine("            <h3>?? Event Details</h3>");
+        sb.AppendLine("            <h3>?? Evenementdetails</h3>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Name:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Naam evenement:</div>");
         sb.AppendLine($"                <div>{@event.Name}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Location:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Locatie:</div>");
         sb.AppendLine($"                <div>?? {@event.Location}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Duration:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Duur evenement:</div>");
         sb.AppendLine($"                <div>?? {@event.StartDate:g} - {@event.EndDate:g}</div>");
         sb.AppendLine("            </div>");
         
         var duration = @event.EndDate - @event.StartDate;
         var durationText = duration.TotalDays >= 1 
-            ? $"{duration.Days} day(s), {duration.Hours} hour(s)" 
-            : $"{duration.Hours} hour(s), {duration.Minutes} minute(s)";
+            ? $"{duration.Days} dag(en), {duration.Hours} uur"
+            : $"{duration.Hours} uur, {duration.Minutes} minuten";
         
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Duration:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Duur:</div>");
         sb.AppendLine($"                <div>?? {durationText}</div>");
         sb.AppendLine("            </div>");
         
         if (!string.IsNullOrEmpty(@event.Description))
         {
             sb.AppendLine("            <div class='detail-row'>");
-            sb.AppendLine($"                <div class='detail-label'>Event Description:</div>");
+            sb.AppendLine($"                <div class='detail-label'>Omschrijving evenement:</div>");
             sb.AppendLine($"                <div>{@event.Description}</div>");
             sb.AppendLine("            </div>");
         }
         
         // Status Badge
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Current Status:</div>");
-        sb.AppendLine($"                <div><span class='badge badge-primary'>?? Planned</span></div>");
+        sb.AppendLine($"                <div class='detail-label'>Huidige status:</div>");
+        sb.AppendLine($"                <div><span class='badge badge-primary'>?? Ingepland</span></div>");
         sb.AppendLine("            </div>");
         
         // What's Next Section
-        sb.AppendLine("            <h3>?? What Happens Next?</h3>");
+        sb.AppendLine("            <h3>?? Hoe gaat het verder?</h3>");
         sb.AppendLine("            <ul>");
-        sb.AppendLine("                <li><strong>Planning Phase:</strong> Our team will finalize the staffing and coverage plan for your event</li>");
-        sb.AppendLine("                <li><strong>Staff Assignment:</strong> Qualified medical personnel will be assigned to cover your event</li>");
-        sb.AppendLine("                <li><strong>Final Confirmation:</strong> You will receive a confirmation email once everything is confirmed</li>");
-        sb.AppendLine("                <li><strong>Pre-Event Contact:</strong> We will contact you 24-48 hours before the event with final details</li>");
+        sb.AppendLine("                <li><strong>Planningsfase:</strong> ons team rondt het personeels- en hulpverleningsplan af</li>");
+        sb.AppendLine("                <li><strong>Personeelstoewijzing:</strong> gekwalificeerd medisch personeel wordt toegewezen</li>");
+        sb.AppendLine("                <li><strong>Definitieve bevestiging:</strong> je ontvangt een bevestiging zodra alles geregeld is</li>");
+        sb.AppendLine("                <li><strong>Contact vooraf:</strong> we nemen 24-48 uur voor het evenement contact met je op</li>");
         sb.AppendLine("            </ul>");
         
         // Important Information
-        sb.AppendLine("            <h3>?? Important Information</h3>");
-        sb.AppendLine("            <p>While we are planning your event coverage, please ensure:</p>");
+        sb.AppendLine("            <h3>?? Belangrijke informatie</h3>");
+        sb.AppendLine("            <p>Zorg tijdens de planning voor het volgende:</p>");
         sb.AppendLine("            <ul>");
-        sb.AppendLine("                <li>Event details remain accurate - notify us immediately of any changes</li>");
-        sb.AppendLine("                <li>Adequate parking and access will be available for our medical team</li>");
-        sb.AppendLine("                <li>Power outlets will be accessible for medical equipment</li>");
-        sb.AppendLine("                <li>A suitable area can be designated for the first aid station</li>");
+        sb.AppendLine("                <li>Evenementdetails blijven actueel; geef wijzigingen direct door</li>");
+        sb.AppendLine("                <li>Er is voldoende parkeergelegenheid en toegang voor ons team</li>");
+        sb.AppendLine("                <li>Stopcontacten zijn toegankelijk voor medische apparatuur</li>");
+        sb.AppendLine("                <li>Een geschikte plek voor de EHBO-post kan worden aangewezen</li>");
         sb.AppendLine("            </ul>");
         
         // Estimated Timeline
-        sb.AppendLine("            <h3>? Expected Timeline</h3>");
+        sb.AppendLine("            <h3>? Verwachte planning</h3>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine("                <div>?? <strong>Planning Phase:</strong> Currently in progress</div>");
-        sb.AppendLine("                <div>? <strong>Confirmation:</strong> Within 2-3 business days</div>");
-        sb.AppendLine("                <div>?? <strong>Pre-Event Contact:</strong> 24-48 hours before event</div>");
+        sb.AppendLine("                <div>?? <strong>Planningsfase:</strong> momenteel bezig</div>");
+        sb.AppendLine("                <div>? <strong>Bevestiging:</strong> binnen 2-3 werkdagen</div>");
+        sb.AppendLine("                <div>?? <strong>Contact vooraf:</strong> 24-48 uur voor het evenement</div>");
         sb.AppendLine("            </div>");
         
         // Contact Information
-        sb.AppendLine("            <h3>?? Need to Make Changes or Have Questions?</h3>");
-        sb.AppendLine("            <p>If you need to make any changes to your event or have questions about our planning process, please contact us immediately:</p>");
+        sb.AppendLine("            <h3>?? Wil je iets wijzigen of heb je vragen?</h3>");
+        sb.AppendLine("            <p>Neem direct contact met ons op als je iets aan je evenement wilt wijzigen of vragen hebt over de planning:</p>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine("                <div>?? Email: <a href='mailto:events@medicalfirstaid.com'>events@medicalfirstaid.com</a></div>");
-        sb.AppendLine("                <div>?? Phone: +1 (555) 123-4567</div>");
-        sb.AppendLine("                <div>?? Office Hours: Monday-Friday, 8:00 AM - 6:00 PM</div>");
+        sb.AppendLine("                <div>?? E-mail: <a href='mailto:events@medicalfirstaid.com'>events@medicalfirstaid.com</a></div>");
+        sb.AppendLine("                <div>?? Telefoon: +1 (555) 123-4567</div>");
+        sb.AppendLine("                <div>?? Openingstijden: maandag-vrijdag, 08:00 - 18:00 uur</div>");
         sb.AppendLine("            </div>");
         
-        sb.AppendLine("            <p><strong>Thank you for choosing our medical first aid services!</strong></p>");
-        sb.AppendLine("            <p>We are committed to providing professional and reliable medical coverage for your event.</p>");
+        sb.AppendLine("            <p><strong>Bedankt dat je voor onze medische hulpverlening kiest!</strong></p>");
+        sb.AppendLine("            <p>We zetten ons in voor professionele en betrouwbare medische hulpverlening voor je evenement.</p>");
         
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='footer'>");
-        sb.AppendLine("            <p>This is an automated notification from the Medical First Aid Event Manager.</p>");
-        sb.AppendLine($"            <p>Planning notification sent on {DateTime.UtcNow:g} UTC</p>");
-        sb.AppendLine($"            <p>Reference ID: EVENT-{@event.Id:D6}</p>");
+        sb.AppendLine("            <p>Dit is een automatisch bericht van de LOTUS-planningsapp.</p>");
+        sb.AppendLine($"            <p>Planningsbericht verzonden op {DateTime.UtcNow:g} UTC</p>");
+        sb.AppendLine($"            <p>Referentie-ID: EVENT-{@event.Id:D6}</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");
         sb.AppendLine("</body>");
@@ -629,7 +629,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Generates the HTML body for event invoice notification email
     /// </summary>
-    private string GenerateEventInvoiceEmailBody(Event @event)
+    internal string GenerateEventInvoiceEmailBody(Event @event)
     {
         var sb = new StringBuilder();
         
@@ -638,7 +638,7 @@ public class EmailService : IEmailService
         sb.AppendLine("<head>");
         sb.AppendLine("    <meta charset='utf-8'>");
         sb.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1.0'>");
-        sb.AppendLine("    <title>Event Invoice</title>");
+        sb.AppendLine("    <title>Factuur evenement</title>");
         sb.AppendLine("    <style>");
         sb.AppendLine("        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }");
         sb.AppendLine("        .container { max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }");
@@ -657,137 +657,137 @@ public class EmailService : IEmailService
         sb.AppendLine("<body>");
         sb.AppendLine("    <div class='container'>");
         sb.AppendLine("        <div class='header'>");
-        sb.AppendLine("            <h1>?? Event Invoice</h1>");
+        sb.AppendLine("            <h1>?? Factuur evenement</h1>");
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='content'>");
         
         if (!string.IsNullOrEmpty(@event.ContactPerson))
         {
-            sb.AppendLine($"            <p>Dear <strong>{@event.ContactPerson}</strong>,</p>");
+            sb.AppendLine($"            <p>Beste <strong>{@event.ContactPerson}</strong>,</p>");
         }
         else
         {
-            sb.AppendLine("            <p>Dear Valued Customer,</p>");
+            sb.AppendLine("            <p>Beste klant,</p>");
         }
         
-        sb.AppendLine("            <p>Thank you for choosing our medical first aid services for your event. Your event has been successfully completed, and we are now sending you the invoice for the services provided.</p>");
+        sb.AppendLine("            <p>Bedankt dat je voor onze medische hulpverlening hebt gekozen. Je evenement is afgerond en hierbij ontvang je de factuur voor de geleverde diensten.</p>");
         
         sb.AppendLine("            <div class='highlight'>");
-        sb.AppendLine("                <h3>?? Invoice Ready for Your Event</h3>");
-        sb.AppendLine("                <p>Our medical first aid team successfully provided coverage for your event. Please find the invoice details below and remit payment according to our terms.</p>");
+        sb.AppendLine("                <h3>?? Factuur voor je evenement</h3>");
+        sb.AppendLine("                <p>Ons LOTUS-team heeft de medische hulpverlening voor je evenement verzorgd. Hieronder staan de factuurgegevens en onze betalingsvoorwaarden.</p>");
         sb.AppendLine("            </div>");
         
         // Event Details
-        sb.AppendLine("            <h3>?? Event Details</h3>");
+        sb.AppendLine("            <h3>?? Evenementdetails</h3>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Name:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Naam evenement:</div>");
         sb.AppendLine($"                <div>{@event.Name}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Location:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Locatie:</div>");
         sb.AppendLine($"                <div>?? {@event.Location}</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Date & Time:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Datum en tijd evenement:</div>");
         sb.AppendLine($"                <div>??? {@event.StartDate:g} - {@event.EndDate:g}</div>");
         sb.AppendLine("            </div>");
         
         var duration = @event.EndDate - @event.StartDate;
         var durationText = duration.TotalDays >= 1 
-            ? $"{duration.Days} day(s), {duration.Hours} hour(s)" 
-            : $"{duration.Hours} hour(s), {duration.Minutes} minute(s)";
+            ? $"{duration.Days} dag(en), {duration.Hours} uur"
+            : $"{duration.Hours} uur, {duration.Minutes} minuten";
         
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Duration:</div>");
+        sb.AppendLine($"                <div class='detail-label'>Duur evenement:</div>");
         sb.AppendLine($"                <div>?? {durationText}</div>");
         sb.AppendLine("            </div>");
         
         if (!string.IsNullOrEmpty(@event.Description))
         {
             sb.AppendLine("            <div class='detail-row'>");
-            sb.AppendLine($"                <div class='detail-label'>Event Description:</div>");
+            sb.AppendLine($"                <div class='detail-label'>Omschrijving evenement:</div>");
             sb.AppendLine($"                <div>{@event.Description}</div>");
             sb.AppendLine("            </div>");
         }
         
         // Status Badge
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine($"                <div class='detail-label'>Event Status:</div>");
-        sb.AppendLine($"                <div><span class='badge badge-primary'>?? Invoice Sent</span></div>");
+        sb.AppendLine($"                <div class='detail-label'>Status evenement:</div>");
+        sb.AppendLine($"                <div><span class='badge badge-primary'>?? Factuur verzonden</span></div>");
         sb.AppendLine("            </div>");
         
         // Invoice Information
-        sb.AppendLine("            <h3>?? Invoice Information</h3>");
+        sb.AppendLine("            <h3>?? Factuurgegevens</h3>");
         sb.AppendLine("            <div class='invoice-info'>");
         sb.AppendLine($"                <div class='detail-row'>");
-        sb.AppendLine($"                    <div class='detail-label'>Invoice Number:</div>");
+        sb.AppendLine($"                    <div class='detail-label'>Factuurnummer:</div>");
         sb.AppendLine($"                    <div>INV-{@event.Id:D6}-{DateTime.UtcNow:yyyyMM}</div>");
         sb.AppendLine("                </div>");
         sb.AppendLine($"                <div class='detail-row'>");
-        sb.AppendLine($"                    <div class='detail-label'>Invoice Date:</div>");
+        sb.AppendLine($"                    <div class='detail-label'>Factuurdatum:</div>");
         sb.AppendLine($"                    <div>{DateTime.UtcNow:d}</div>");
         sb.AppendLine("                </div>");
         sb.AppendLine($"                <div class='detail-row'>");
-        sb.AppendLine($"                    <div class='detail-label'>Service Period:</div>");
+        sb.AppendLine($"                    <div class='detail-label'>Periode:</div>");
         sb.AppendLine($"                    <div>{@event.StartDate:d} - {@event.EndDate:d}</div>");
         sb.AppendLine("                </div>");
         sb.AppendLine("            </div>");
         
         // Services Provided Section
-        sb.AppendLine("            <h3>?? Services Provided</h3>");
+        sb.AppendLine("            <h3>?? Geleverde diensten</h3>");
         sb.AppendLine("            <ul>");
-        sb.AppendLine("                <li><strong>Medical First Aid Coverage:</strong> Professional medical staff on-site during event</li>");
-        sb.AppendLine("                <li><strong>Emergency Response:</strong> Immediate medical assistance for any incidents</li>");
-        sb.AppendLine("                <li><strong>Medical Equipment:</strong> Full first aid kit and emergency medical supplies</li>");
-        sb.AppendLine("                <li><strong>Staff Expertise:</strong> Certified medical professionals and first aiders</li>");
-        sb.AppendLine("                <li><strong>Documentation:</strong> Incident reports and medical logs as required</li>");
+        sb.AppendLine("                <li><strong>Medische hulpverlening:</strong> professioneel medisch personeel aanwezig tijdens het evenement</li>");
+        sb.AppendLine("                <li><strong>Noodhulp:</strong> directe medische hulp bij incidenten</li>");
+        sb.AppendLine("                <li><strong>Medische apparatuur:</strong> volledige EHBO-set en medische noodmaterialen</li>");
+        sb.AppendLine("                <li><strong>Deskundigheid personeel:</strong> gecertificeerde medische professionals en hulpverleners</li>");
+        sb.AppendLine("                <li><strong>Documentatie:</strong> incidentrapporten en medische registraties indien nodig</li>");
         sb.AppendLine("            </ul>");
         
         // Payment Instructions
-        sb.AppendLine("            <h3>?? Payment Information</h3>");
+        sb.AppendLine("            <h3>?? Betalingsinformatie</h3>");
         sb.AppendLine("            <div class='highlight'>");
-        sb.AppendLine("                <p><strong>Payment Terms:</strong> Net 30 days from invoice date</p>");
-        sb.AppendLine("                <p><strong>Due Date:</strong> " + DateTime.UtcNow.AddDays(30).ToString("d") + "</p>");
+        sb.AppendLine("                <p><strong>Betalingsvoorwaarden:</strong> binnen 30 dagen na factuurdatum</p>");
+        sb.AppendLine("                <p><strong>Vervaldatum:</strong> " + DateTime.UtcNow.AddDays(30).ToString("d") + "</p>");
         sb.AppendLine("            </div>");
         
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine("                <div><strong>Payment Methods Accepted:</strong></div>");
+        sb.AppendLine("                <div><strong>Geaccepteerde betaalmethoden:</strong></div>");
         sb.AppendLine("                <div>");
         sb.AppendLine("                    <ul>");
-        sb.AppendLine("                        <li>?? Credit Card (Visa, MasterCard, AmEx)</li>");
-        sb.AppendLine("                        <li>?? Bank Transfer</li>");
-        sb.AppendLine("                        <li>?? Check (made payable to Medical First Aid Services)</li>");
-        sb.AppendLine("                        <li>?? Online Payment Portal</li>");
+        sb.AppendLine("                        <li>?? Creditcard (Visa, MasterCard, AmEx)</li>");
+        sb.AppendLine("                        <li>?? Bankoverschrijving</li>");
+        sb.AppendLine("                        <li>?? Cheque (ten name van Medical First Aid Services)</li>");
+        sb.AppendLine("                        <li>?? Online betaalportaal</li>");
         sb.AppendLine("                    </ul>");
         sb.AppendLine("                </div>");
         sb.AppendLine("            </div>");
         
         // Contact Information for Invoice Queries
-        sb.AppendLine("            <h3>?? Invoice Questions?</h3>");
-        sb.AppendLine("            <p>If you have any questions about this invoice or need clarification on the services provided, please contact our billing department:</p>");
+        sb.AppendLine("            <h3>?? Vragen over de factuur?</h3>");
+        sb.AppendLine("            <p>Neem contact op met onze facturatieafdeling als je vragen hebt over deze factuur of de geleverde diensten:</p>");
         sb.AppendLine("            <div class='detail-row'>");
-        sb.AppendLine("                <div>?? Email: <a href='mailto:billing@medicalfirstaid.com'>billing@medicalfirstaid.com</a></div>");
-        sb.AppendLine("                <div>?? Phone: +1 (555) 123-4567 ext. 2</div>");
-        sb.AppendLine("                <div>?? Billing Hours: Monday-Friday, 9:00 AM - 5:00 PM</div>");
+        sb.AppendLine("                <div>?? E-mail: <a href='mailto:billing@medicalfirstaid.com'>billing@medicalfirstaid.com</a></div>");
+        sb.AppendLine("                <div>?? Telefoon: +1 (555) 123-4567, toestel 2</div>");
+        sb.AppendLine("                <div>?? Openingstijden facturatie: maandag-vrijdag, 09:00 - 17:00 uur</div>");
         sb.AppendLine("            </div>");
         
         // Additional Notes
-        sb.AppendLine("            <h3>?? Important Notes</h3>");
+        sb.AppendLine("            <h3>?? Belangrijke opmerkingen</h3>");
         sb.AppendLine("            <ul>");
-        sb.AppendLine("                <li>Please include the invoice number on all payments</li>");
-        sb.AppendLine("                <li>Late payment charges may apply after the due date</li>");
-        sb.AppendLine("                <li>For recurring events, please contact us about volume discounts</li>");
-        sb.AppendLine("                <li>We appreciate your business and look forward to serving you again</li>");
+        sb.AppendLine("                <li>Vermeld het factuurnummer bij alle betalingen</li>");
+        sb.AppendLine("                <li>Na de vervaldatum kunnen kosten voor te late betaling gelden</li>");
+        sb.AppendLine("                <li>Neem voor terugkerende evenementen contact met ons op over volumekorting</li>");
+        sb.AppendLine("                <li>Bedankt voor je vertrouwen; we helpen je graag weer bij een volgend evenement</li>");
         sb.AppendLine("            </ul>");
         
-        sb.AppendLine("            <p><strong>Thank you for choosing our medical first aid services!</strong></p>");
-        sb.AppendLine("            <p>We appreciate your business and hope you were satisfied with our professional medical coverage. Please don't hesitate to contact us for future events.</p>");
+        sb.AppendLine("            <p><strong>Bedankt dat je voor onze medische hulpverlening kiest!</strong></p>");
+        sb.AppendLine("            <p>We waarderen je vertrouwen en hopen dat je tevreden bent over onze professionele medische hulpverlening. Neem gerust contact met ons op voor toekomstige evenementen.</p>");
         
         sb.AppendLine("        </div>");
         sb.AppendLine("        <div class='footer'>");
-        sb.AppendLine("            <p>This invoice was automatically generated by the Medical First Aid Event Manager.</p>");
-        sb.AppendLine($"            <p>Invoice sent on {DateTime.UtcNow:g} UTC</p>");
-        sb.AppendLine($"            <p>Reference ID: EVENT-{@event.Id:D6} | Invoice: INV-{@event.Id:D6}-{DateTime.UtcNow:yyyyMM}</p>");
+        sb.AppendLine("            <p>Deze factuur is automatisch gegenereerd door de LOTUS-planningsapp.</p>");
+        sb.AppendLine($"            <p>Factuur verzonden op {DateTime.UtcNow:g} UTC</p>");
+        sb.AppendLine($"            <p>Referentie-ID: EVENT-{@event.Id:D6} | Factuur: INV-{@event.Id:D6}-{DateTime.UtcNow:yyyyMM}</p>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");
         sb.AppendLine("</body>");
