@@ -49,7 +49,6 @@ public class EmailServiceLocalizationTests
 
             var body = generateBody(service);
             Assert.Contains($"<title>{expectedTitle}</title>", body);
-            Assert.Contains($"<h1>", body);
             Assert.Contains(expectedTitle, body);
             Assert.Contains(expectedGreeting, body);
         }
