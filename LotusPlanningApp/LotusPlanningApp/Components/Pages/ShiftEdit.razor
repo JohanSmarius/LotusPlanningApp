@@ -14,6 +14,7 @@
 @inject CreateStaffAssignmentCommandHandler CreateAssignmentHandler
 @inject DeleteStaffAssignmentCommandHandler DeleteAssignmentHandler
 @inject UpdateShiftCommandHandler UpdateShiftHandler
+@inject IEmailService EmailService
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
@@ -445,6 +446,7 @@ else
     private List<Entities.Staff> filteredAvailableStaff = new();
     private Entities.StaffAssignment? staffToRemove;
     private Dictionary<int, StaffRole> staffRoleSelections = new();
+    private List<StaffAssignment> newAssignmentsInSession = new();
 
     private string staffSearchTerm = string.Empty;
     private string staffRoleFilter = string.Empty;
@@ -619,12 +621,14 @@ else
                 Status = AssignmentStatus.Assigned
             };
 
-            var command = new CreateStaffAssignmentCommand(assignment);
+            var command = new CreateStaffAssignmentCommand(assignment, SendNotification: false);
             var createdAssignment = await CreateAssignmentHandler.Handle(command);
             
             // Add to current assignments with staff info
             createdAssignment.Staff = staffMember;
+            createdAssignment.Shift = shift; // Ensure shift and event are available for email later
             currentAssignments.Add(createdAssignment);
+            newAssignmentsInSession.Add(createdAssignment);
             
             // Remove from available staff and role selection
             availableStaff.Remove(staffMember);
@@ -716,6 +720,22 @@ else
 
             var updateCommand = new UpdateShiftCommand(editShift);
             await UpdateShiftHandler.Handle(updateCommand);
+
+            // Send notifications for new assignments added in this session
+            foreach (var assignment in newAssignmentsInSession)
+            {
+                if (assignment.Staff != null && shift != null)
+                {
+                    try
+                    {
+                        await EmailService.SendStaffAssignmentNotificationAsync(assignment.Staff, shift, shift.Event);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error sending notification to {assignment.Staff.Email}: {ex.Message}");
+                    }
+                }
+            }
             
             // Navigate back to the calling page
             NavigateBack();

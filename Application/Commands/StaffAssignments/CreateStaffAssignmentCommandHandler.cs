@@ -43,7 +43,7 @@ public class CreateStaffAssignmentCommandHandler : ICommandHandler<CreateStaffAs
         assignment.AssignedAt = DateTime.UtcNow;
         assignment.UpdatedAt = DateTime.UtcNow;
 
-        var createdAssignment = await _repository.CreateAssignmentAsync(assignment);
+        var createdAssignment = await _repository.CreateAssignmentAsync(assignment, command.SendNotification);
         _logger.LogInformation("Staff assignment {AssignmentId} created successfully.", createdAssignment.Id);
 
         return createdAssignment;

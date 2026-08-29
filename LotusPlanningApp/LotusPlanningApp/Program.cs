@@ -201,7 +201,7 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
     }
 
     // Create admin user if not exists
-    var adminEmail = "admin@lotus-tilburg.nl";
+    var adminEmail = "admin@lotuskringhwg.nl";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
     if (adminUser == null)
     {
