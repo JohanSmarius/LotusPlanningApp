@@ -13,10 +13,20 @@ public sealed class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Ap
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var startupProjectPath = ResolveStartupProjectPath();
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+            ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
 
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile(Path.Combine(startupProjectPath, "appsettings.json"), optional: false)
-            .AddJsonFile(Path.Combine(startupProjectPath, "appsettings.Development.json"), optional: true)
+        var configurationBuilder = new ConfigurationBuilder()
+            .AddJsonFile(Path.Combine(startupProjectPath, "appsettings.json"), optional: false);
+
+        if (!string.IsNullOrWhiteSpace(environmentName))
+        {
+            configurationBuilder.AddJsonFile(
+                Path.Combine(startupProjectPath, $"appsettings.{environmentName}.json"),
+                optional: true);
+        }
+
+        var configuration = configurationBuilder
             .AddEnvironmentVariables()
             .Build();
 

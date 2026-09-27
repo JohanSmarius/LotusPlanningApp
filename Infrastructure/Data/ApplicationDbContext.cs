@@ -1,10 +1,21 @@
 using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LotusPlanningApp.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : IdentityDbContext<
+            ApplicationUser,
+            IdentityRole,
+            string,
+            IdentityUserClaim<string>,
+            IdentityUserRole<string>,
+            IdentityUserLogin<string>,
+            IdentityRoleClaim<string>,
+            IdentityUserToken<string>,
+            IdentityUserPasskey<string>>(options)
     {
         public DbSet<Event> Events { get; set; } = null!;
         public DbSet<Shift> Shifts { get; set; } = null!;
@@ -59,6 +70,48 @@ namespace LotusPlanningApp.Data
             builder.Entity<Customer>()
                 .HasIndex(c => c.Email)
                 .IsUnique();
+
+            builder.Entity<IdentityUserPasskey<string>>(b =>
+            {
+                b.ToTable("AspNetUserPasskeys");
+                b.HasKey(passkey => passkey.CredentialId);
+                b.Property(passkey => passkey.CredentialId).HasMaxLength(1024);
+                b.Property(passkey => passkey.UserId).IsRequired();
+                b.HasIndex(passkey => passkey.UserId);
+                b.HasOne<ApplicationUser>()
+                    .WithMany()
+                    .HasForeignKey(passkey => passkey.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.OwnsOne(passkey => passkey.Data, passkeyData =>
+                {
+                    passkeyData.ToTable("AspNetUserPasskeys");
+                    passkeyData.ToJson("Data");
+                    passkeyData.WithOwner()
+                        .HasForeignKey("IdentityUserPasskeyCredentialId");
+                    passkeyData.Property<byte[]>("IdentityUserPasskeyCredentialId");
+                    passkeyData.HasKey("IdentityUserPasskeyCredentialId");
+                    passkeyData.Property(data => data.PublicKey).IsRequired();
+                    passkeyData.Property(data => data.AttestationObject).IsRequired();
+                    passkeyData.Property(data => data.ClientDataJson).IsRequired();
+                    passkeyData.PrimitiveCollection(data => data.Transports);
+                });
+
+                b.Navigation(passkey => passkey.Data).IsRequired();
+            });
+
+            builder.Entity<IdentityUserLogin<string>>(b =>
+            {
+                b.Property(login => login.LoginProvider).HasMaxLength(128);
+                b.Property(login => login.ProviderKey).HasMaxLength(128);
+            });
+
+            builder.Entity<IdentityUserToken<string>>(b =>
+            {
+                b.Property(token => token.LoginProvider).HasMaxLength(128);
+                b.Property(token => token.Name).HasMaxLength(128);
+            });
         }
     }
 }
