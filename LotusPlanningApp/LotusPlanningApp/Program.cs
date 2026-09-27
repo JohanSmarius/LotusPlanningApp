@@ -4,7 +4,6 @@ using LotusPlanningApp.Components.Account;
 using LotusPlanningApp.Configuration;
 using LotusPlanningApp.Data;
 using LotusPlanningApp.Services;
-using System.IO;
 using System.Globalization;
 using Application;
 using Application.Commands.StaffAssignments;
@@ -52,17 +51,7 @@ builder.Services.AddAuthentication(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    var dataDirectory = Path.Combine(builder.Environment.ContentRootPath, "AppData");
-    Directory.CreateDirectory(dataDirectory);
-
-    // Ensure SQLite uses an absolute path so migrations and runtime share the same file
-    if (connectionString.Contains("AppData/lotus.db", StringComparison.OrdinalIgnoreCase) ||
-        connectionString.Contains("AppData\\lotus.db", StringComparison.OrdinalIgnoreCase))
-    {
-        connectionString = $"Data Source={Path.Combine(dataDirectory, "lotus.db")}";
-    }
-
-    options.UseSqlite(connectionString);
+    options.UseSqlServer(connectionString);
 });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
