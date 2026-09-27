@@ -183,3 +183,4 @@ public async Task<StaffAssignment?> SignOffAssignmentAsync(int assignmentId, dec
 
     return assignment;
 }
+}
