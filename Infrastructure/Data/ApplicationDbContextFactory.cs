@@ -12,12 +12,11 @@ public sealed class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Ap
     /// <inheritdoc />
     public ApplicationDbContext CreateDbContext(string[] args)
     {
-        var startupProjectPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "LotusPlanningApp", "LotusPlanningApp"));
+        var startupProjectPath = ResolveStartupProjectPath();
 
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(startupProjectPath)
-            .AddJsonFile("appsettings.json", optional: false)
-            .AddJsonFile("appsettings.Development.json", optional: true)
+            .AddJsonFile(Path.Combine(startupProjectPath, "appsettings.json"), optional: false)
+            .AddJsonFile(Path.Combine(startupProjectPath, "appsettings.Development.json"), optional: true)
             .AddEnvironmentVariables()
             .Build();
 
@@ -28,5 +27,31 @@ public sealed class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Ap
         optionsBuilder.UseSqlServer(connectionString);
 
         return new ApplicationDbContext(optionsBuilder.Options);
+    }
+
+    private static string ResolveStartupProjectPath()
+    {
+        var currentDirectory = Directory.GetCurrentDirectory();
+        var candidatePaths = new[]
+        {
+            currentDirectory,
+            Path.Combine(currentDirectory, ".."),
+            Path.Combine(currentDirectory, "..", ".."),
+            Path.Combine(currentDirectory, "..", "..", ".."),
+            Path.Combine(currentDirectory, "..", "LotusPlanningApp", "LotusPlanningApp"),
+            Path.Combine(currentDirectory, "..", "..", "LotusPlanningApp", "LotusPlanningApp"),
+            Path.Combine(currentDirectory, "..", "..", "..", "LotusPlanningApp", "LotusPlanningApp")
+        };
+
+        foreach (var candidatePath in candidatePaths.Select(Path.GetFullPath).Distinct())
+        {
+            if (File.Exists(Path.Combine(candidatePath, "LotusPlanningApp.csproj")) &&
+                File.Exists(Path.Combine(candidatePath, "appsettings.json")))
+            {
+                return candidatePath;
+            }
+        }
+
+        throw new InvalidOperationException("Could not locate the LotusPlanningApp startup project for EF Core design-time services.");
     }
 }
