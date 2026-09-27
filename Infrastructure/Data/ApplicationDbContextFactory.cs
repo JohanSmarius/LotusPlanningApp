@@ -41,24 +41,16 @@ public sealed class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Ap
 
     private static string ResolveStartupProjectPath()
     {
-        var currentDirectory = Directory.GetCurrentDirectory();
-        var candidatePaths = new[]
+        for (var directory = new DirectoryInfo(Directory.GetCurrentDirectory()); directory is not null; directory = directory.Parent)
         {
-            currentDirectory,
-            Path.Combine(currentDirectory, ".."),
-            Path.Combine(currentDirectory, "..", ".."),
-            Path.Combine(currentDirectory, "..", "..", ".."),
-            Path.Combine(currentDirectory, "..", "LotusPlanningApp", "LotusPlanningApp"),
-            Path.Combine(currentDirectory, "..", "..", "LotusPlanningApp", "LotusPlanningApp"),
-            Path.Combine(currentDirectory, "..", "..", "..", "LotusPlanningApp", "LotusPlanningApp")
-        };
+            var startupProject = directory
+                .EnumerateFiles("LotusPlanningApp.csproj", SearchOption.AllDirectories)
+                .FirstOrDefault(file => file.Directory is not null &&
+                                        File.Exists(Path.Combine(file.Directory.FullName, "appsettings.json")));
 
-        foreach (var candidatePath in candidatePaths.Select(Path.GetFullPath).Distinct())
-        {
-            if (File.Exists(Path.Combine(candidatePath, "LotusPlanningApp.csproj")) &&
-                File.Exists(Path.Combine(candidatePath, "appsettings.json")))
+            if (startupProject?.Directory is not null)
             {
-                return candidatePath;
+                return startupProject.Directory.FullName;
             }
         }
 
