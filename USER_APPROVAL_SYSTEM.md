@@ -102,6 +102,12 @@ On application startup, the system:
    - **Status**: Automatically approved
    - **Role**: Admin
 
+Set the secrets locally with:
+```bash
+dotnet user-secrets set "AdminSeed:Username" "admin@example.com" --project LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj
+dotnet user-secrets set "AdminSeed:Password" "your-strong-password" --project LotusPlanningApp/LotusPlanningApp/LotusPlanningApp.csproj
+```
+
 ## User Flows
 
 ### New User Registration Flow
