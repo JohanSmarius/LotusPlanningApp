@@ -97,8 +97,8 @@ This link is only visible to users with the "Admin" role.
 On application startup, the system:
 1. Creates "Admin" and "Lotus" roles if they don't exist
 2. Creates a default admin user:
-   - **Email**: `admin@lotus-tilburg.nl`
-   - **Password**: `Test123!`
+   - **Email**: configured via the `AdminSeed:Username` secret
+   - **Password**: configured via the `AdminSeed:Password` secret
    - **Status**: Automatically approved
    - **Role**: Admin
 
@@ -243,5 +243,5 @@ This will:
 3. Re-seed the admin user
 
 **New Admin Credentials**:
-- Email: `admin@lotus-tilburg.nl`
-- Password: `Test123!`
+- Email: configured via the `AdminSeed:Username` secret
+- Password: configured via the `AdminSeed:Password` secret
