@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialSqlite : Migration
+    public partial class InitialSqlServer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,10 +15,10 @@ namespace Infrastructure.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,29 +29,29 @@ namespace Infrastructure.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: true),
-                    LastName = table.Column<string>(type: "TEXT", nullable: true),
-                    StaffId = table.Column<int>(type: "INTEGER", nullable: true),
-                    IsApproved = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ApprovedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    ApprovedByUserId = table.Column<string>(type: "TEXT", nullable: true),
-                    RegisteredAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CustomerId = table.Column<int>(type: "INTEGER", nullable: true),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StaffId = table.Column<int>(type: "int", nullable: true),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
+                    ApprovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ApprovedByUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RegisteredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,20 +62,20 @@ namespace Infrastructure.Migrations
                 name: "Customers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    Company = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
-                    Address = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
-                    City = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    PostalCode = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    Country = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Company = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    PostalCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -86,17 +86,17 @@ namespace Infrastructure.Migrations
                 name: "Staff",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Phone = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    CertificationLevel = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
-                    CertificationExpiry = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    CertificationLevel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CertificationExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -107,11 +107,11 @@ namespace Infrastructure.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,11 +128,11 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -149,10 +149,10 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -169,9 +169,9 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserPasskeys",
                 columns: table => new
                 {
-                    CredentialId = table.Column<byte[]>(type: "BLOB", maxLength: 1024, nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    Data = table.Column<string>(type: "TEXT", nullable: false)
+                    CredentialId = table.Column<byte[]>(type: "varbinary(1024)", maxLength: 1024, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -188,8 +188,8 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -212,10 +212,10 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -232,24 +232,25 @@ namespace Infrastructure.Migrations
                 name: "Events",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Location = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    ContactPerson = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    ContactPhone = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    ContactEmail = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true),
-                    NotificationSent = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CustomerId = table.Column<int>(type: "INTEGER", nullable: true),
-                    CancellationRequested = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CancellationRequestedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CancellationReason = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ContactPerson = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ContactPhone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    ContactEmail = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    NotificationSent = table.Column<bool>(type: "bit", nullable: false),
+                    RequiredStaffCount = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
+                    CancellationRequested = table.Column<bool>(type: "bit", nullable: false),
+                    CancellationRequestedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CancellationReason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -266,17 +267,17 @@ namespace Infrastructure.Migrations
                 name: "Shifts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    EventId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    StartTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    RequiredStaff = table.Column<int>(type: "INTEGER", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RequiredStaff = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -293,15 +294,20 @@ namespace Infrastructure.Migrations
                 name: "StaffAssignments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ShiftId = table.Column<int>(type: "INTEGER", nullable: false),
-                    StaffId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Role = table.Column<int>(type: "INTEGER", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Notes = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
-                    AssignedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ShiftId = table.Column<int>(type: "int", nullable: false),
+                    StaffId = table.Column<int>(type: "int", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    AssignedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ActualHours = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    KilometersDriven = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    ClientSignature = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    SignedOffAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RiddenKm = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -329,7 +335,8 @@ namespace Infrastructure.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -360,7 +367,8 @@ namespace Infrastructure.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_Email",

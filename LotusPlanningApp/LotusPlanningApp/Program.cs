@@ -4,7 +4,6 @@ using LotusPlanningApp.Components.Account;
 using LotusPlanningApp.Configuration;
 using LotusPlanningApp.Data;
 using LotusPlanningApp.Services;
-using System.IO;
 using System.Globalization;
 using Application;
 using Application.Commands.StaffAssignments;
@@ -52,17 +51,7 @@ builder.Services.AddAuthentication(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    var dataDirectory = Path.Combine(builder.Environment.ContentRootPath, "AppData");
-    Directory.CreateDirectory(dataDirectory);
-
-    // Ensure SQLite uses an absolute path so migrations and runtime share the same file
-    if (connectionString.Contains("AppData/lotus.db", StringComparison.OrdinalIgnoreCase) ||
-        connectionString.Contains("AppData\\lotus.db", StringComparison.OrdinalIgnoreCase))
-    {
-        connectionString = $"Data Source={Path.Combine(dataDirectory, "lotus.db")}";
-    }
-
-    options.UseSqlite(connectionString);
+    options.UseSqlServer(connectionString);
 });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -117,6 +106,7 @@ builder.Services.Configure<EmailOptions>(
 
 // Register IOptions<EmailOptions> if you need to inject it directly elsewhere
 builder.Services.AddOptions<EmailOptions>().Bind(builder.Configuration.GetSection(EmailOptions.SectionName));
+builder.Services.AddOptions<AdminSeedOptions>().Bind(builder.Configuration.GetSection(AdminSeedOptions.SectionName));
 
 var app = builder.Build();
 
@@ -189,6 +179,8 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
 {
     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var adminSeedOptions = serviceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<AdminSeedOptions>>().Value;
+    var logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("AdminSeed");
 
     // Create roles if they don't exist
     string[] roles = { "Admin", "Lotus", "Customer", "FinancialDepartment" };
@@ -200,24 +192,39 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
         }
     }
 
+    if (string.IsNullOrWhiteSpace(adminSeedOptions.Username))
+    {
+        logger.LogWarning("Admin seed username is not configured. Skipping admin account seeding.");
+        return;
+    }
+
     // Create admin user if not exists
-    var adminEmail = "admin@lotuskringhwg.nl";
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    var adminUser = await userManager.FindByEmailAsync(adminSeedOptions.Username);
     if (adminUser == null)
     {
+        if (string.IsNullOrWhiteSpace(adminSeedOptions.Password))
+        {
+            logger.LogWarning("Admin seed password is not configured. Skipping admin account creation.");
+            return;
+        }
+
         adminUser = new ApplicationUser
         {
-            UserName = adminEmail,
-            Email = adminEmail,
+            UserName = adminSeedOptions.Username,
+            Email = adminSeedOptions.Username,
             EmailConfirmed = true,
             IsApproved = true, // Admin is automatically approved
             ApprovedAt = new DateTime(2025,1,1),
             RegisteredAt = new DateTime(2025,1,1)
         };
-        var result = await userManager.CreateAsync(adminUser, "Test123!");
+        var result = await userManager.CreateAsync(adminUser, adminSeedOptions.Password);
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+        else
+        {
+            logger.LogError("Failed to seed admin account for {AdminUsername}: {Errors}", adminSeedOptions.Username, string.Join("; ", result.Errors.Select(error => error.Description)));
         }
     }
     else if (!adminUser.IsApproved)
